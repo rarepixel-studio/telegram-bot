@@ -2,25 +2,24 @@
 
 namespace Telegram\Bot\MethodObjects;
 
-namespace Telegram\Bot\MethodObjects;
-
 use Telegram\Bot\Objects\LinkPreviewOptions;
+use Telegram\Bot\Objects\ReplyParameters;
 
-class SendMessage
+class SendMessage extends BaseObject
 {
-    private int|string $chat_id;
-    private string $text;
+    protected int|string $chat_id;
+    protected string $text;
 
-    private ?string $business_connection_id = null;
-    private ?int $message_thread_id = null;
-    private ?string $parse_mode = null;
-    private ?array $entities = null;
-    private ?LinkPreviewOptions $link_preview_options = null;
-    private ?bool $disable_notification = null;
-    private ?bool $protect_content = null;
-    private ?string $message_effect_id = null;
-    private ?object $reply_parameters = null;
-    private ?object $reply_markup = null;
+    protected ?string $business_connection_id = null;
+    protected ?int $message_thread_id = null;
+    protected ?string $parse_mode = null;
+    protected ?array $entities = null;
+    protected ?LinkPreviewOptions $link_preview_options = null;
+    protected ?bool $disable_notification = null;
+    protected ?bool $protect_content = null;
+    protected ?string $message_effect_id = null;
+    protected ?ReplyParameters $reply_parameters = null;
+    protected ?object $reply_markup = null;
 
     // Constructor with required parameters
     public function __construct(int|string $chat_id, string $text)
@@ -141,12 +140,12 @@ class SendMessage
         $this->reply_parameters = $reply_parameters;
     }
 
-    public function getReplyMarkup(): ?object
+    public function getReplyMarkup(): ?ReplyParameters
     {
         return $this->reply_markup;
     }
 
-    public function setReplyMarkup(?object $reply_markup): void
+    public function setReplyMarkup(?ReplyParameters $reply_markup): void
     {
         $this->reply_markup = $reply_markup;
     }
