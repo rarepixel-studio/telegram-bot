@@ -26,9 +26,13 @@ class EditStoryRequest extends TelegramApiRequest
      * @param  int  $story_id  Identifier of the story to edit
      */
     public function __construct(
+        protected string $business_connection_id,
         protected int|string $chat_id,
         protected int $story_id,
-    ) {}
+        protected InputMedia $content, // Required param
+    ) {
+        $this->params['content'] = $content;
+    }
 
     protected array $params = [];
 
@@ -60,6 +64,9 @@ class EditStoryRequest extends TelegramApiRequest
 
     public function validate(): void
     {
+        if (empty($this->business_connection_id)) {
+            throw new TelegramValidationException('business_connection_id cannot be empty');
+        }
         if ($this->story_id <= 0) {
             throw new TelegramValidationException('story_id must be greater than 0');
         }
@@ -68,8 +75,10 @@ class EditStoryRequest extends TelegramApiRequest
     public function buildParams(): array
     {
         return [
+            'business_connection_id' => $this->business_connection_id,
             'chat_id' => $this->chat_id,
             'story_id' => $this->story_id,
+            'content' => $this->params['content'] ?? null,
         ] + $this->params;
     }
 }

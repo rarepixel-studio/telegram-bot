@@ -18,6 +18,7 @@ class DeleteStoryRequest extends TelegramApiRequest
      * @param  int  $story_id  Identifier of the story to delete
      */
     public function __construct(
+        protected string $business_connection_id,
         protected int|string $chat_id,
         protected int $story_id,
     ) {}
@@ -29,6 +30,9 @@ class DeleteStoryRequest extends TelegramApiRequest
 
     public function validate(): void
     {
+        if (empty($this->business_connection_id)) {
+            throw new TelegramValidationException('business_connection_id cannot be empty');
+        }
         if ($this->story_id <= 0) {
             throw new TelegramValidationException('story_id must be greater than 0');
         }
@@ -37,6 +41,7 @@ class DeleteStoryRequest extends TelegramApiRequest
     public function buildParams(): array
     {
         return [
+            'business_connection_id' => $this->business_connection_id,
             'chat_id' => $this->chat_id,
             'story_id' => $this->story_id,
         ];

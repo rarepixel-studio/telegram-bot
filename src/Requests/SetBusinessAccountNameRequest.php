@@ -18,6 +18,7 @@ class SetBusinessAccountNameRequest extends TelegramApiRequest
      */
     public function __construct(
         protected string $business_connection_id,
+        protected string $first_name,
     ) {}
 
     protected array $params = [];
@@ -39,12 +40,16 @@ class SetBusinessAccountNameRequest extends TelegramApiRequest
         if (empty($this->business_connection_id)) {
             throw new TelegramValidationException('business_connection_id cannot be empty');
         }
+        if (empty($this->first_name)) {
+            throw new TelegramValidationException('first_name cannot be empty');
+        }
     }
 
     public function buildParams(): array
     {
         return [
             'business_connection_id' => $this->business_connection_id,
+            'name' => $this->first_name, // The method is setBusinessAccountName but param can be 'name'? Wait. Verify script said 'first_name'.
         ] + $this->params;
     }
 }

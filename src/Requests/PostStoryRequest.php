@@ -25,8 +25,10 @@ class PostStoryRequest extends TelegramApiRequest
      * @param  InputMedia  $content  The content of the story
      */
     public function __construct(
+        protected string $business_connection_id,
         protected int|string $chat_id,
         protected InputMedia $content,
+        protected int $active_period,
     ) {}
 
     protected array $params = [];
@@ -52,14 +54,21 @@ class PostStoryRequest extends TelegramApiRequest
 
     public function validate(): void
     {
-        // Basic validation
+        if (empty($this->business_connection_id)) {
+            throw new TelegramValidationException('business_connection_id cannot be empty');
+        }
+        if ($this->active_period <= 0) {
+            throw new TelegramValidationException('active_period must be greater than 0');
+        }
     }
 
     public function buildParams(): array
     {
         return [
+            'business_connection_id' => $this->business_connection_id,
             'chat_id' => $this->chat_id,
             'content' => $this->content,
+            'active_period' => $this->active_period,
         ] + $this->params;
     }
 }

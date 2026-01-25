@@ -36,6 +36,7 @@ class SendChecklistRequest extends TelegramApiRequest
      * @param  InputChecklist|array  $checklist  A JSON-serialized object describing the checklist to be sent
      */
     public function __construct(
+        protected string $business_connection_id,
         protected int|string $chat_id,
         protected InputChecklist|array $checklist,
     ) {}
@@ -167,6 +168,7 @@ class SendChecklistRequest extends TelegramApiRequest
     public function buildParams(): array
     {
         return [
+            'business_connection_id' => $this->business_connection_id,
             'chat_id' => $this->chat_id,
             'checklist' => $this->checklist,
         ] + $this->params;

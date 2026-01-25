@@ -20,6 +20,7 @@ class GiftPremiumSubscriptionRequest extends TelegramApiRequest
     public function __construct(
         protected int $user_id,
         protected int $month_count,
+        protected int $star_count,
     ) {}
 
     public function getMethod(): string
@@ -36,6 +37,9 @@ class GiftPremiumSubscriptionRequest extends TelegramApiRequest
         if (! in_array($this->month_count, [1, 3, 6, 12])) {
             throw new TelegramValidationException('month_count must be one of: 1, 3, 6, 12');
         }
+        if ($this->star_count <= 0) {
+            throw new TelegramValidationException('star_count must be greater than 0');
+        }
     }
 
     public function buildParams(): array
@@ -43,6 +47,7 @@ class GiftPremiumSubscriptionRequest extends TelegramApiRequest
         return [
             'user_id' => $this->user_id,
             'month_count' => $this->month_count,
+            'star_count' => $this->star_count,
         ];
     }
 }

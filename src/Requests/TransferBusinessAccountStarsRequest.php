@@ -23,7 +23,7 @@ class TransferBusinessAccountStarsRequest extends TelegramApiRequest
      */
     public function __construct(
         protected string $business_connection_id,
-        protected int $amount,
+        protected int $star_count,
         protected string $transfer_id,
         protected int|string $recipient,
     ) {}
@@ -45,8 +45,8 @@ class TransferBusinessAccountStarsRequest extends TelegramApiRequest
         if (empty($this->business_connection_id)) {
             throw new TelegramValidationException('business_connection_id cannot be empty');
         }
-        if ($this->amount <= 0) {
-            throw new TelegramValidationException('amount must be greater than 0');
+        if ($this->star_count <= 0) {
+            throw new TelegramValidationException('star_count must be greater than 0');
         }
         if (empty($this->transfer_id)) {
             throw new TelegramValidationException('transfer_id cannot be empty');
@@ -57,7 +57,7 @@ class TransferBusinessAccountStarsRequest extends TelegramApiRequest
     {
         return [
             'business_connection_id' => $this->business_connection_id,
-            'amount' => $this->amount,
+            'star_count' => $this->star_count,
             'transfer_id' => $this->transfer_id,
             'recipient' => $this->recipient,
         ] + $this->params;

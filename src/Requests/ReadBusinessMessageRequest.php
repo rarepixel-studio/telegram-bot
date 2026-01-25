@@ -18,6 +18,8 @@ class ReadBusinessMessageRequest extends TelegramApiRequest
      */
     public function __construct(
         protected string $business_connection_id,
+        protected int|string $chat_id,
+        protected int $message_id,
     ) {}
 
     public function getMethod(): string
@@ -30,12 +32,17 @@ class ReadBusinessMessageRequest extends TelegramApiRequest
         if (empty($this->business_connection_id)) {
             throw new TelegramValidationException('business_connection_id cannot be empty');
         }
+        if ($this->message_id <= 0) {
+            throw new TelegramValidationException('message_id must be greater than 0');
+        }
     }
 
     public function buildParams(): array
     {
         return [
             'business_connection_id' => $this->business_connection_id,
+            'chat_id' => $this->chat_id,
+            'message_id' => $this->message_id,
         ];
     }
 }

@@ -19,9 +19,9 @@ class TransferGiftRequest extends TelegramApiRequest
      * @param  int|string  $recipient_id  Unique identifier of the recipient
      */
     public function __construct(
-        protected int $user_id,
-        protected string $gift_id,
-        protected int|string $recipient_id,
+        protected string $business_connection_id,
+        protected string $owned_gift_id,
+        protected int|string $new_owner_chat_id,
     ) {}
 
     protected array $params = [];
@@ -35,20 +35,20 @@ class TransferGiftRequest extends TelegramApiRequest
 
     public function validate(): void
     {
-        if ($this->user_id <= 0) {
-            throw new TelegramValidationException('user_id must be greater than 0');
+        if (empty($this->business_connection_id)) {
+            throw new TelegramValidationException('business_connection_id cannot be empty');
         }
-        if (empty($this->gift_id)) {
-            throw new TelegramValidationException('gift_id cannot be empty');
+        if (empty($this->owned_gift_id)) {
+            throw new TelegramValidationException('owned_gift_id cannot be empty');
         }
     }
 
     public function buildParams(): array
     {
         return [
-            'user_id' => $this->user_id,
-            'gift_id' => $this->gift_id,
-            'recipient_id' => $this->recipient_id,
+            'business_connection_id' => $this->business_connection_id,
+            'owned_gift_id' => $this->owned_gift_id,
+            'new_owner_chat_id' => $this->new_owner_chat_id,
         ] + $this->params;
     }
 }

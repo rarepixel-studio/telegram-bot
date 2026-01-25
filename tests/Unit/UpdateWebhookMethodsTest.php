@@ -5,10 +5,15 @@ namespace Telegram\Bot\Tests\Unit;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\TestCase;
 use Telegram\Bot\Exceptions\TelegramValidationException;
+use Telegram\Bot\Objects\InputMediaPhoto;
+use Telegram\Bot\Objects\InputPaidMediaPhoto;
+use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\Update;
 use Telegram\Bot\Objects\WebhookInfo;
 use Telegram\Bot\Requests\DeleteWebhookRequest;
 use Telegram\Bot\Requests\GetUpdatesRequest;
+use Telegram\Bot\Requests\SendMediaGroupRequest;
+use Telegram\Bot\Requests\SendPaidMediaRequest;
 use Telegram\Bot\Requests\SetWebhookRequest;
 use Telegram\Bot\Tests\Mocks\Mocker;
 
@@ -71,6 +76,40 @@ class UpdateWebhookMethodsTest extends TestCase
     }
 
     /** @test */
+    public function it_handles_send_media_group_request_with_handle_request()
+    {
+        $api = Mocker::createApiResponse(
+            [
+                ['message_id' => 1],
+            ]
+        );
+
+        $media = [
+            new InputMediaPhoto(['media' => 'file_id_1']),
+            new InputMediaPhoto(['media' => 'file_id_2']),
+        ];
+        $request = new SendMediaGroupRequest(123, $media);
+
+        $response = $api->handleRequest($request);
+
+        $this->assertInstanceOf(Collection::class, $response);
+        $this->assertInstanceOf(Message::class, $response->first());
+    }
+
+    /** @test */
+    public function it_handles_send_paid_media_request_with_handle_request()
+    {
+        $api = Mocker::createApiResponse(['message_id' => 10]);
+
+        $media = [new InputPaidMediaPhoto(['media' => 'file_id'])];
+        $request = new SendPaidMediaRequest(123, 1, $media);
+
+        $response = $api->handleRequest($request);
+
+        $this->assertInstanceOf(Message::class, $response);
+    }
+
+    /** @test */
     public function it_sets_webhook_when_request_object_is_used()
     {
         $api = Mocker::createApiResponse(true);
@@ -102,6 +141,4 @@ class UpdateWebhookMethodsTest extends TestCase
 
         $this->assertTrue($response);
     }
-
 }
-
