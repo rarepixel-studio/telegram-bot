@@ -17,7 +17,6 @@ class TransferBusinessAccountStarsRequest extends TelegramApiRequest
 
     /**
      * @param  string  $business_connection_id  Unique identifier of the business connection
-     * @param  int  $amount  Number of Telegram Stars to be transferred
      * @param  string  $transfer_id  Unique identifier of the transfer
      * @param  int|string  $recipient  Unique identifier for the chat or username of the recipient
      */

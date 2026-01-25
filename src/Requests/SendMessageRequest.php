@@ -288,7 +288,10 @@ class SendMessageRequest extends TelegramApiRequest
         $this->validateLinkPreviewOptions();
         $this->validateSuggestedPostParametersProperty();
         $this->validateReplyParametersProperty();
-        $this->validateReplyMarkupProperty();
+
+        if ($this->replyMarkup !== null) {
+            $this->validateReplyMarkupProperty($this->replyMarkup);
+        }
     }
 
     /**
@@ -348,32 +351,6 @@ class SendMessageRequest extends TelegramApiRequest
             $object = ReplyParameters::fromArray($this->replyParameters);
             $object->validate();
             $this->replyParameters = $object;
-        }
-    }
-
-    /**
-     * Validate reply markup property.
-     *
-     * @throws TelegramValidationException
-     */
-    private function validateReplyMarkupProperty(): void
-    {
-        if ($this->replyMarkup instanceof InlineKeyboardMarkup
-            || $this->replyMarkup instanceof ReplyKeyboardMarkup
-            || $this->replyMarkup instanceof ReplyKeyboardRemove
-            || $this->replyMarkup instanceof ForceReply
-        ) {
-            $this->replyMarkup->validate();
-
-            return;
-        }
-
-        if (is_array($this->replyMarkup)) {
-            $object = $this->normalizeReplyMarkupArray($this->replyMarkup);
-            if ($object !== null) {
-                $object->validate();
-                $this->replyMarkup = $object;
-            }
         }
     }
 

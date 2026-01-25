@@ -13,10 +13,6 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
  */
 class UpgradeGiftRequest extends TelegramApiRequest
 {
-    /**
-     * @param  int  $user_id  Unique identifier of the user
-     * @param  string  $gift_id  Identifier of the gift
-     */
     public function __construct(
         protected string $business_connection_id,
         protected string $owned_gift_id,

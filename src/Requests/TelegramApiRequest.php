@@ -202,22 +202,33 @@ abstract class TelegramApiRequest implements ApiRequestInterface
             return;
         }
 
-        $value = $params['reply_markup'];
-        if ($value instanceof InlineKeyboardMarkup
-            || $value instanceof ReplyKeyboardMarkup
-            || $value instanceof ReplyKeyboardRemove
-            || $value instanceof ForceReply
+        $this->validateReplyMarkupProperty($params['reply_markup']);
+    }
+
+    /**
+     * Validate and normalize a reply markup property.
+     *
+     * @param  mixed  $property  Reference to the property to validate
+     *
+     * @throws TelegramValidationException
+     */
+    protected function validateReplyMarkupProperty(mixed &$property): void
+    {
+        if ($property instanceof InlineKeyboardMarkup
+            || $property instanceof ReplyKeyboardMarkup
+            || $property instanceof ReplyKeyboardRemove
+            || $property instanceof ForceReply
         ) {
-            $value->validate();
+            $property->validate();
 
             return;
         }
 
-        if (is_array($value)) {
-            $object = $this->normalizeReplyMarkupArray($value);
+        if (is_array($property)) {
+            $object = $this->normalizeReplyMarkupArray($property);
             if ($object !== null) {
                 $object->validate();
-                $params['reply_markup'] = $object;
+                $property = $object;
             }
         }
     }
