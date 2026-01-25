@@ -40,7 +40,8 @@ class RestrictChatMemberRequestTest extends TestCase
 
         $this->assertEquals(-100123456789, $array['chat_id']);
         $this->assertEquals(12345, $array['user_id']);
-        $this->assertIsArray($array['permissions']);
+        $this->assertIsString($array['permissions']);
+        $this->assertSame(json_encode($permissions), $array['permissions']);
         $this->assertEquals($futureTime, $array['until_date']);
     }
 
@@ -50,7 +51,8 @@ class RestrictChatMemberRequestTest extends TestCase
         $request->validate();
 
         $array = $request->toArray();
-        $this->assertIsArray($array['permissions']);
+        $this->assertIsString($array['permissions']);
+        $this->assertSame(json_encode(['can_send_messages' => false]), $array['permissions']);
     }
 
     public function test_it_returns_correct_method_name()

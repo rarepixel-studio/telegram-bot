@@ -24,7 +24,7 @@ class DeleteMessagesRequestTest extends TestCase
         $array = $request->toArray();
 
         $this->assertEquals(123, $array['chat_id']);
-        $this->assertEquals([456, 789], $array['message_ids']);
+        $this->assertSame(json_encode([456, 789]), $array['message_ids']);
     }
 
     public function test_it_returns_correct_method_name()

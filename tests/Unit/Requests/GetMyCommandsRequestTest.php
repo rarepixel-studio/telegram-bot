@@ -15,7 +15,7 @@ class GetMyCommandsRequestTest extends TestCase
 
         $array = $request->toArray();
 
-        $this->assertEquals(['type' => 'default'], $array['scope']);
+        $this->assertSame(json_encode(['type' => 'default']), $array['scope']);
         $this->assertEquals('en', $array['language_code']);
     }
 

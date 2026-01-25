@@ -33,7 +33,7 @@ class DeleteBusinessMessagesRequestTest extends TestCase
         $array = $request->toArray();
 
         $this->assertEquals('conn_123', $array['business_connection_id']);
-        $this->assertEquals([1, 2, 3], $array['message_ids']);
+        $this->assertSame(json_encode([1, 2, 3]), $array['message_ids']);
     }
 
     public function test_it_returns_correct_method_name()

@@ -97,6 +97,13 @@ abstract class TelegramApiRequest implements ApiRequestInterface
             $params[$key] = $this->normalizeValue($value);
         }
 
+        // JSON-encode nested arrays for Telegram API
+        foreach ($params as $key => $value) {
+            if (is_array($value)) {
+                $params[$key] = json_encode($value);
+            }
+        }
+
         return $this->filterNullValues($params);
     }
 

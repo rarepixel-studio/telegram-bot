@@ -103,7 +103,7 @@ class SendPollRequestTest extends TestCase
 
         $this->assertEquals(12345, $array['chat_id']);
         $this->assertEquals('What is your favorite color?', $array['question']);
-        $this->assertEquals(['Red', 'Blue', 'Green'], $array['options']);
+        $this->assertSame(json_encode(['Red', 'Blue', 'Green']), $array['options']);
         $this->assertEquals('quiz', $array['type']);
         $this->assertEquals(0, $array['correct_option_id']);
         $this->assertEquals('Red is correct!', $array['explanation']);

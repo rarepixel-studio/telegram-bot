@@ -15,7 +15,8 @@ class SetChatPermissionsRequestTest extends TestCase
         $array = $request->toArray();
 
         $this->assertEquals(-100123456789, $array['chat_id']);
-        $this->assertIsArray($array['permissions']);
+        $this->assertIsString($array['permissions']);
+        $this->assertSame(json_encode($permissions), $array['permissions']);
     }
 
     public function test_it_sets_optional_parameters()

@@ -27,7 +27,7 @@ class SetStickerMaskPositionRequestTest extends TestCase
         $array = $request->toArray();
 
         $this->assertEquals('sticker', $array['sticker']);
-        $this->assertEquals($mask->toArray(), $array['mask_position']);
+        $this->assertSame(json_encode($mask->toArray()), $array['mask_position']);
     }
 
     public function test_it_returns_correct_method_name()

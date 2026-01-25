@@ -35,8 +35,8 @@ class SetMessageReactionRequestTest extends TestCase
 
         $this->assertEquals(12345, $array['chat_id']);
         $this->assertEquals(100, $array['message_id']);
-        $this->assertIsArray($array['reaction']);
-        $this->assertCount(1, $array['reaction']);
+        $this->assertIsString($array['reaction']);
+        $this->assertSame(json_encode([['type' => 'emoji', 'emoji' => '👍']]), $array['reaction']);
     }
 
     public function test_it_sets_optional_parameters()

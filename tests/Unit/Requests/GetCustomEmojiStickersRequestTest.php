@@ -23,7 +23,7 @@ class GetCustomEmojiStickersRequestTest extends TestCase
 
         $array = $request->toArray();
 
-        $this->assertEquals(['id1', 'id2'], $array['custom_emoji_ids']);
+        $this->assertSame(json_encode(['id1', 'id2']), $array['custom_emoji_ids']);
     }
 
     public function test_it_returns_correct_method_name()

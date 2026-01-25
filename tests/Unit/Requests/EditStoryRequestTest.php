@@ -29,7 +29,7 @@ class EditStoryRequestTest extends TestCase
 
         $this->assertEquals(123, $array['chat_id']);
         $this->assertEquals(55, $array['story_id']);
-        $this->assertEquals($media->toArray(), $array['content']);
+        $this->assertSame(json_encode($media->toArray()), $array['content']);
         $this->assertEquals('Edited story', $array['caption']);
     }
 

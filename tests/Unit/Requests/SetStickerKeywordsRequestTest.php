@@ -25,7 +25,7 @@ class SetStickerKeywordsRequestTest extends TestCase
         $array = $request->toArray();
 
         $this->assertEquals('sticker', $array['sticker']);
-        $this->assertEquals(['funny', 'cat'], $array['keywords']);
+        $this->assertSame(json_encode(['funny', 'cat']), $array['keywords']);
     }
 
     public function test_it_returns_correct_method_name()

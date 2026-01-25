@@ -18,7 +18,7 @@ class PostStoryRequestTest extends TestCase
         $array = $request->toArray();
 
         $this->assertEquals(123, $array['chat_id']);
-        $this->assertEquals($media->toArray(), $array['content']);
+        $this->assertSame(json_encode($media->toArray()), $array['content']);
         $this->assertEquals('Cool story', $array['caption']);
         $this->assertEquals('Markdown', $array['parse_mode']);
     }

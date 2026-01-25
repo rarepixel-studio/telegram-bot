@@ -90,9 +90,8 @@ class SendChecklistRequestTest extends TestCase
         $array = $request->toArray();
 
         $this->assertEquals(12345, $array['chat_id']);
-        $this->assertIsArray($array['checklist']); // Should be array after normalization
-        $this->assertArrayHasKey('title', $array['checklist']);
-        $this->assertEquals('My Checklist', $array['checklist']['title']);
+        $this->assertIsString($array['checklist']);
+        $this->assertSame(json_encode($checklist), $array['checklist']);
         $this->assertTrue($array['disable_notification']);
     }
 

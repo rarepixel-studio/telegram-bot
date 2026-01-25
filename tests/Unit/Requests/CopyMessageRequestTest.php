@@ -61,7 +61,7 @@ class CopyMessageRequestTest extends TestCase
 
         $params = $request->toArray();
 
-        $this->assertSame([
+        $expected = json_encode([
             'inline_keyboard' => [
                 [
                     [
@@ -70,6 +70,8 @@ class CopyMessageRequestTest extends TestCase
                     ],
                 ],
             ],
-        ], $params['reply_markup']);
+        ]);
+
+        $this->assertSame($expected, $params['reply_markup']);
     }
 }

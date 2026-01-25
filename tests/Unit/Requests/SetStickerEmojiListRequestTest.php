@@ -33,7 +33,7 @@ class SetStickerEmojiListRequestTest extends TestCase
         $array = $request->toArray();
 
         $this->assertEquals('sticker', $array['sticker']);
-        $this->assertEquals(['😀', '😃'], $array['emoji_list']);
+        $this->assertSame(json_encode(['😀', '😃']), $array['emoji_list']);
     }
 
     public function test_it_returns_correct_method_name()

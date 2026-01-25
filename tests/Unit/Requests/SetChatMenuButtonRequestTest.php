@@ -16,7 +16,7 @@ class SetChatMenuButtonRequestTest extends TestCase
         $array = $request->toArray();
 
         $this->assertEquals(12345, $array['chat_id']);
-        $this->assertEquals(['type' => 'default'], $array['menu_button']);
+        $this->assertSame(json_encode(['type' => 'default']), $array['menu_button']);
     }
 
     public function test_it_returns_correct_method_name()

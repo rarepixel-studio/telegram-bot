@@ -28,7 +28,7 @@ class ReplaceStickerInSetRequestTest extends TestCase
         $this->assertEquals(123, $array['user_id']);
         $this->assertEquals('name', $array['name']);
         $this->assertEquals('old_sticker', $array['old_sticker']);
-        $this->assertEquals($sticker->toArray(), $array['sticker']);
+        $this->assertSame(json_encode($sticker->toArray()), $array['sticker']);
     }
 
     public function test_it_returns_correct_method_name()

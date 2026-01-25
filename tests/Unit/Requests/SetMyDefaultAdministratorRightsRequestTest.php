@@ -15,7 +15,7 @@ class SetMyDefaultAdministratorRightsRequestTest extends TestCase
 
         $array = $request->toArray();
 
-        $this->assertEquals(['is_anonymous' => true], $array['rights']);
+        $this->assertSame(json_encode(['is_anonymous' => true]), $array['rights']);
         $this->assertTrue($array['for_channels']);
     }
 

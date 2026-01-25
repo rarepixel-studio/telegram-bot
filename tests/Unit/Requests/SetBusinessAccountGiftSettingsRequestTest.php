@@ -26,7 +26,7 @@ class SetBusinessAccountGiftSettingsRequestTest extends TestCase
         $array = $request->toArray();
 
         $this->assertEquals('conn_123', $array['business_connection_id']);
-        $this->assertEquals($settings->toArray(), $array['gift_settings']);
+        $this->assertSame(json_encode($settings->toArray()), $array['gift_settings']);
     }
 
     public function test_it_returns_correct_method_name()

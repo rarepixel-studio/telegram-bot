@@ -36,7 +36,7 @@ class CreateNewStickerSetRequestTest extends TestCase
         $this->assertEquals(123, $array['user_id']);
         $this->assertEquals('name', $array['name']);
         $this->assertEquals('title', $array['title']);
-        $this->assertEquals(['stickers'], $array['stickers']);
+        $this->assertSame(json_encode(['stickers']), $array['stickers']);
         $this->assertEquals('regular', $array['sticker_type']);
     }
 

@@ -45,6 +45,7 @@ class SendVideoNoteRequestTest extends TestCase
 
         $params = $request->toArray();
 
-        $this->assertSame($sendDate, $params['suggested_post_parameters']['send_date']);
+        $this->assertIsString($params['suggested_post_parameters']);
+        $this->assertSame(json_encode(['send_date' => $sendDate]), $params['suggested_post_parameters']);
     }
 }
