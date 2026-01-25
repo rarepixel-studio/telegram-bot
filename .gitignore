@@ -3,5 +3,6 @@ composer.lock
 vendor/
 build/
 .idea/
+.claude/
 .phpunit.result.cache
 tests/env.php
