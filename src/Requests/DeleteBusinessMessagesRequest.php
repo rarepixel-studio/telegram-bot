@@ -14,6 +14,13 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class DeleteBusinessMessagesRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'message_ids',
+    ];
+
+    /**
      * @param  string  $business_connection_id  Unique identifier of the business connection
      * @param  array  $message_ids  List of message identifiers to delete
      */

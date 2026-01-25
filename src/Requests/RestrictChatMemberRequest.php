@@ -14,6 +14,13 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
  */
 class RestrictChatMemberRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'permissions',
+    ];
+
     protected array $params = [];
 
     /**

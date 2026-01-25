@@ -19,6 +19,16 @@ use Telegram\Bot\Objects\SuggestedPostParameters;
  */
 class SendChecklistRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'checklist',
+        'suggested_post_parameters',
+        'reply_parameters',
+        'reply_markup',
+    ];
+
     protected array $params = [];
 
     /**

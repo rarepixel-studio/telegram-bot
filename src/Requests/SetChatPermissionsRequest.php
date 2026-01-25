@@ -11,6 +11,13 @@ namespace Telegram\Bot\Requests;
  */
 class SetChatPermissionsRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'permissions',
+    ];
+
     protected array $params = [];
 
     /**

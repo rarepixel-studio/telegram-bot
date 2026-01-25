@@ -14,6 +14,14 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class CreateInvoiceLinkRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'prices',
+        'suggested_tip_amounts',
+    ];
+
+    /**
      * @param  string  $title  Product name, 1-32 characters
      * @param  string  $description  Product description, 1-255 characters
      * @param  string  $payload  Bot-defined invoice payload, 1-128 bytes
@@ -171,7 +179,7 @@ class CreateInvoiceLinkRequest extends TelegramApiRequest
             'description' => $this->description,
             'payload' => $this->payload,
             'currency' => $this->currency,
-            'prices' => json_encode($this->prices),
+            'prices' => $this->prices,
         ] + $this->params;
     }
 }

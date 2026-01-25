@@ -19,6 +19,13 @@ use Telegram\Bot\Objects\ReplyParameters;
  */
 class SendDiceRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'reply_markup',
+    ];
+
     protected array $params = [];
 
     /**

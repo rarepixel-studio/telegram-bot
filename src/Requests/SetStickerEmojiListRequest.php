@@ -14,6 +14,13 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class SetStickerEmojiListRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'emoji_list',
+    ];
+
+    /**
      * @param  string  $sticker  File identifier of the sticker
      * @param  array  $emoji_list  A list of 1-20 emoji associated with the sticker
      */

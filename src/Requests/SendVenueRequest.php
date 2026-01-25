@@ -19,6 +19,14 @@ use Telegram\Bot\Objects\SuggestedPostParameters;
  */
 class SendVenueRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'suggested_post_parameters',
+        'reply_markup',
+    ];
+
     protected array $params = [];
 
     /**

@@ -14,6 +14,13 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class SetPassportDataErrorsRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'errors',
+    ];
+
+    /**
      * @param  int  $user_id  User identifier
      * @param  array  $errors  A JSON-serialized array describing the errors
      */
@@ -41,7 +48,7 @@ class SetPassportDataErrorsRequest extends TelegramApiRequest
     {
         return [
             'user_id' => $this->user_id,
-            'errors' => json_encode($this->errors),
+            'errors' => $this->errors,
         ];
     }
 }

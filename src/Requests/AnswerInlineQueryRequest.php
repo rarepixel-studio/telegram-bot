@@ -14,6 +14,14 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class AnswerInlineQueryRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'results',
+        'button',
+    ];
+
+    /**
      * @param  string  $inline_query_id  Unique identifier for the answered query
      * @param  array  $results  A JSON-serialized array of results for the inline query
      */
@@ -71,7 +79,7 @@ class AnswerInlineQueryRequest extends TelegramApiRequest
     {
         return [
             'inline_query_id' => $this->inline_query_id,
-            'results' => json_encode($this->results),
+            'results' => $this->results,
         ] + $this->params;
     }
 }

@@ -13,6 +13,14 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
  */
 class SetMyCommandsRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'commands',
+        'scope',
+    ];
+
     protected array $params = [];
 
     /**

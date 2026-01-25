@@ -7,6 +7,13 @@ namespace Telegram\Bot\Requests;
  */
 class SetMyDefaultAdministratorRightsRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'rights',
+    ];
+
     protected array $params = [];
 
     public function __construct() {}

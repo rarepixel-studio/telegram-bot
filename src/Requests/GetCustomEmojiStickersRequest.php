@@ -14,6 +14,13 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class GetCustomEmojiStickersRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'custom_emoji_ids',
+    ];
+
+    /**
      * @param  array  $custom_emoji_ids  List of custom emoji identifiers
      */
     public function __construct(

@@ -19,6 +19,14 @@ use Telegram\Bot\Objects\ReplyParameters;
  */
 class SendAudioRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'caption_entities',
+        'reply_markup',
+    ];
+
     protected array $params = [];
 
     /**

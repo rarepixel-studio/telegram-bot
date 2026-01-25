@@ -7,6 +7,13 @@ namespace Telegram\Bot\Requests;
  */
 class SetChatMenuButtonRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'menu_button',
+    ];
+
     protected array $params = [];
 
     public function __construct() {}

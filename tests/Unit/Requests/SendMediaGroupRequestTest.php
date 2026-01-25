@@ -20,10 +20,11 @@ class SendMediaGroupRequestTest extends TestCase
 
         $request = new SendMediaGroupRequest(123456, $media);
 
-        $this->assertEquals(123456, $request->toArray()['chat_id']);
-        $this->assertCount(2, $request->toArray()['media']);
-        $this->assertInstanceOf(InputMediaPhoto::class, $request->toArray()['media'][0]);
-        $this->assertInstanceOf(InputMediaVideo::class, $request->toArray()['media'][1]);
+        $params = $request->toArray();
+        $this->assertEquals(123456, $params['chat_id']);
+        $this->assertCount(2, $params['media']);
+        $this->assertInstanceOf(InputMediaPhoto::class, $params['media'][0]);
+        $this->assertInstanceOf(InputMediaVideo::class, $params['media'][1]);
     }
 
     /** @test */

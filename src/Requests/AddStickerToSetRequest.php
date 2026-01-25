@@ -15,6 +15,13 @@ use Telegram\Bot\Objects\InputSticker;
 class AddStickerToSetRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'sticker',
+    ];
+
+    /**
      * @param  int  $user_id  User identifier of sticker set owner
      * @param  string  $name  Sticker set name
      * @param  InputSticker  $sticker  Sticker object

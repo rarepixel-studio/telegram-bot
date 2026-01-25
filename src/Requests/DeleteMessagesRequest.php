@@ -14,6 +14,13 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class DeleteMessagesRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'message_ids',
+    ];
+
+    /**
      * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel
      * @param  array  $message_ids  List of 1-100 identifiers of messages to delete
      */

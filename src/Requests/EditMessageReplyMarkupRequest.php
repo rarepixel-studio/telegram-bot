@@ -11,6 +11,13 @@ namespace Telegram\Bot\Requests;
  */
 class EditMessageReplyMarkupRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'reply_markup',
+    ];
+
     protected array $params = [];
 
     public function __construct() {}

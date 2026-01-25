@@ -14,6 +14,13 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class SendGameRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'reply_markup',
+    ];
+
+    /**
      * @param  int  $chat_id  Unique identifier for the target chat
      * @param  string  $game_short_name  Short name of the game, serves as the unique identifier for the game
      */

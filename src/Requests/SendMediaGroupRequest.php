@@ -21,6 +21,13 @@ use Telegram\Bot\Objects\ReplyParameters;
  */
 class SendMediaGroupRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'media',
+    ];
+
     protected array $params = [];
 
     /**

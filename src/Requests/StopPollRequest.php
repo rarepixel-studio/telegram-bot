@@ -12,6 +12,13 @@ namespace Telegram\Bot\Requests;
 class StopPollRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'reply_markup',
+    ];
+
+    /**
      * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel
      * @param  int  $message_id  Identifier of the original message with the poll
      */

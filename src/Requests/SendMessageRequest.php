@@ -21,6 +21,15 @@ use Telegram\Bot\Objects\SuggestedPostParameters;
  */
 class SendMessageRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'entities',
+        'suggested_post_parameters',
+        'reply_markup',
+    ];
+
     /** @var int|string Unique identifier for the target chat or username */
     protected int|string $chatId;
 

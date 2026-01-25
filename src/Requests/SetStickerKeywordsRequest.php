@@ -14,6 +14,13 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class SetStickerKeywordsRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'keywords',
+    ];
+
+    /**
      * @param  string  $sticker  File identifier of the sticker
      */
     public function __construct(

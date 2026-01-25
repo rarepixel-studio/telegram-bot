@@ -15,6 +15,13 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class AnswerWebAppQueryRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'result',
+    ];
+
+    /**
      * @param  string  $web_app_query_id  Unique identifier for the query to be answered
      * @param  array  $result  A JSON-serialized object describing the message to be sent
      */
@@ -42,7 +49,7 @@ class AnswerWebAppQueryRequest extends TelegramApiRequest
     {
         return [
             'web_app_query_id' => $this->web_app_query_id,
-            'result' => json_encode($this->result),
+            'result' => $this->result,
         ];
     }
 }

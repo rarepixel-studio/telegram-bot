@@ -21,6 +21,13 @@ use Telegram\Bot\Objects\SuggestedPostParameters;
 abstract class TelegramApiRequest implements ApiRequestInterface
 {
     /**
+     * Fields that must be JSON-serialized for outbound requests.
+     *
+     * @var array<int, string>
+     */
+    protected array $jsonSerializedFields = [];
+
+    /**
      * {@inheritDoc}
      *
      * @throws TelegramValidationException
@@ -31,7 +38,7 @@ abstract class TelegramApiRequest implements ApiRequestInterface
 
         return array_merge(
             ['method' => $this->getMethod()],
-            $this->toArray()
+            $this->toRawArray()
         );
     }
 
@@ -90,6 +97,18 @@ abstract class TelegramApiRequest implements ApiRequestInterface
      */
     public function toArray(): array
     {
+        $params = $this->toRawArray();
+
+        return $this->encodeJsonFields($params);
+    }
+
+    /**
+     * Convert the request to raw params without JSON encoding.
+     *
+     * @return array<string, mixed>
+     */
+    protected function toRawArray(): array
+    {
         $params = $this->buildParams();
 
         // Normalize nested objects
@@ -97,14 +116,44 @@ abstract class TelegramApiRequest implements ApiRequestInterface
             $params[$key] = $this->normalizeValue($value);
         }
 
-        // JSON-encode nested arrays for Telegram API
-        foreach ($params as $key => $value) {
-            if (is_array($value)) {
-                $params[$key] = json_encode($value);
+        return $this->filterNullValues($params);
+    }
+
+    /**
+     * Convert the request to params suitable for outbound API calls.
+     *
+     * @return array<string, mixed>
+     */
+    public function toRequestParams(): array
+    {
+        return $this->toArray();
+    }
+
+    /**
+     * JSON-encode fields that require serialized payloads.
+     *
+     * @param  array<string, mixed>  $params
+     * @return array<string, mixed>
+     */
+    protected function encodeJsonFields(array $params): array
+    {
+        foreach ($this->jsonSerializedFields() as $field) {
+            if (array_key_exists($field, $params) && is_array($params[$field])) {
+                $params[$field] = json_encode($params[$field]);
             }
         }
 
-        return $this->filterNullValues($params);
+        return $params;
+    }
+
+    /**
+     * List of fields that must be JSON-serialized for outbound requests.
+     *
+     * @return array<int, string>
+     */
+    protected function jsonSerializedFields(): array
+    {
+        return $this->jsonSerializedFields;
     }
 
     /**

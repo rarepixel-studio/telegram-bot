@@ -15,6 +15,13 @@ use Telegram\Bot\Objects\InputMedia;
 class EditStoryRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'content',
+    ];
+
+    /**
      * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel
      * @param  int  $story_id  Identifier of the story to edit
      */

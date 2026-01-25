@@ -15,6 +15,13 @@ use Telegram\Bot\Objects\MaskPosition;
 class SetStickerMaskPositionRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'mask_position',
+    ];
+
+    /**
      * @param  string  $sticker  File identifier of the sticker
      */
     public function __construct(

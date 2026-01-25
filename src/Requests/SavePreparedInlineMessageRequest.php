@@ -14,6 +14,13 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class SavePreparedInlineMessageRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'result',
+    ];
+
+    /**
      * @param  int  $user_id  Unique identifier of the target user that can use the prepared message
      * @param  array  $result  A JSON-serialized object describing the message to be sent
      */
@@ -71,7 +78,7 @@ class SavePreparedInlineMessageRequest extends TelegramApiRequest
     {
         return [
             'user_id' => $this->user_id,
-            'result' => json_encode($this->result),
+            'result' => $this->result,
         ] + $this->params;
     }
 }

@@ -14,6 +14,13 @@ use Telegram\Bot\Objects\InputMedia;
 class PostStoryRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'content',
+    ];
+
+    /**
      * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel
      * @param  InputMedia  $content  The content of the story
      */

@@ -14,6 +14,15 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class SendInvoiceRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'prices',
+        'suggested_tip_amounts',
+        'reply_markup',
+    ];
+
+    /**
      * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel
      * @param  string  $title  Product name, 1-32 characters
      * @param  string  $description  Product description, 1-255 characters
@@ -209,7 +218,7 @@ class SendInvoiceRequest extends TelegramApiRequest
             'description' => $this->description,
             'payload' => $this->payload,
             'currency' => $this->currency,
-            'prices' => json_encode($this->prices),
+            'prices' => $this->prices,
         ] + $this->params;
     }
 }

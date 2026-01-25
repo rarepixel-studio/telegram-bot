@@ -87,4 +87,27 @@ class SendMessageRequestTest extends TestCase
 
         $request->validate();
     }
+
+    public function test_it_keeps_reply_markup_array_in_webhook_payload(): void
+    {
+        $request = new SendMessageRequest(123, 'hello');
+        $button = InlineKeyboardButton::make('Visit')->withUrl('https://example.com');
+        $markup = InlineKeyboardMarkup::make([[$button]]);
+
+        $request->setReplyMarkup($markup);
+
+        $payload = $request->toWebhookPayload();
+
+        $this->assertIsArray($payload['reply_markup']);
+        $this->assertSame([
+            'inline_keyboard' => [
+                [
+                    [
+                        'text' => 'Visit',
+                        'url' => 'https://example.com',
+                    ],
+                ],
+            ],
+        ], $payload['reply_markup']);
+    }
 }

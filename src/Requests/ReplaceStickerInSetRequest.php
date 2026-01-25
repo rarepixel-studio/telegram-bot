@@ -15,6 +15,13 @@ use Telegram\Bot\Objects\InputSticker;
 class ReplaceStickerInSetRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'sticker',
+    ];
+
+    /**
      * @param  int  $user_id  User identifier of the sticker set owner
      * @param  string  $name  Sticker set name
      * @param  string  $old_sticker  File identifier of the replaced sticker

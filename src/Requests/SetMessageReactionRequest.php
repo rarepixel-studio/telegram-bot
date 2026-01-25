@@ -14,6 +14,13 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
  */
 class SetMessageReactionRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'reaction',
+    ];
+
     protected array $params = [];
 
     /**

@@ -20,6 +20,14 @@ use Telegram\Bot\Objects\SuggestedPostParameters;
 class SendVideoNoteRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'suggested_post_parameters',
+        'reply_markup',
+    ];
+
+    /**
      * @var array<string, mixed>
      */
     protected array $params = [];

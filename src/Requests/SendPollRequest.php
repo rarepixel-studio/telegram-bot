@@ -19,6 +19,16 @@ use Telegram\Bot\Objects\ReplyParameters;
  */
 class SendPollRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'options',
+        'question_entities',
+        'explanation_entities',
+        'reply_markup',
+    ];
+
     protected array $params = [];
 
     /**

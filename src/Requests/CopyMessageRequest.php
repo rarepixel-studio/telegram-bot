@@ -18,6 +18,14 @@ use Telegram\Bot\Objects\ReplyParameters;
  */
 class CopyMessageRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'caption_entities',
+        'reply_markup',
+    ];
+
     protected array $params = [];
 
     /**

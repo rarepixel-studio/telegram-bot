@@ -14,6 +14,13 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class CreateNewStickerSetRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'stickers',
+    ];
+
+    /**
      * @param  int  $user_id  User identifier of created sticker set owner
      * @param  string  $name  Short name of sticker set
      * @param  string  $title  Sticker set title

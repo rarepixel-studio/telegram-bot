@@ -21,6 +21,15 @@ use Telegram\Bot\Objects\SuggestedPostParameters;
 class SendVoiceRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'caption_entities',
+        'suggested_post_parameters',
+        'reply_markup',
+    ];
+
+    /**
      * @var array<string, mixed>
      */
     protected array $params = [];

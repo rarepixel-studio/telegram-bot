@@ -11,6 +11,13 @@ namespace Telegram\Bot\Requests;
  */
 class DeleteMyCommandsRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'scope',
+    ];
+
     protected array $params = [];
 
     public function __construct()

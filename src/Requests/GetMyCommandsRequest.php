@@ -7,6 +7,13 @@ namespace Telegram\Bot\Requests;
  */
 class GetMyCommandsRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'scope',
+    ];
+
     protected array $params = [];
 
     public function __construct() {}

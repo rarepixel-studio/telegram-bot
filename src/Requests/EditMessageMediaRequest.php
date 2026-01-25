@@ -13,6 +13,14 @@ use Telegram\Bot\Objects\InputMedia;
  */
 class EditMessageMediaRequest extends TelegramApiRequest
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'media',
+        'reply_markup',
+    ];
+
     protected array $params = [];
 
     public function __construct() {}

@@ -21,6 +21,15 @@ use Telegram\Bot\Objects\SuggestedPostParameters;
 class SendPaidMediaRequest extends TelegramApiRequest
 {
     /**
+     * {@inheritdoc}
+     */
+    protected array $jsonSerializedFields = [
+        'caption_entities',
+        'suggested_post_parameters',
+        'reply_markup',
+    ];
+
+    /**
      * @var array<string, mixed>
      */
     protected array $params = [];
@@ -297,7 +306,9 @@ class SendPaidMediaRequest extends TelegramApiRequest
             $params[$key] = $this->normalizeValue($value);
         }
 
-        return $this->filterNullValues($params);
+        $params = $this->filterNullValues($params);
+
+        return $this->encodeJsonFields($params);
     }
 
     /**
