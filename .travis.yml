@@ -1,0 +1,27 @@
+language: php
+
+sudo: false
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 7.3
+      env: ILLUMINATE_VERSION=8.*
+    - php: 7.3
+      env: ILLUMINATE_VERSION=8.*
+    - php: 7.4
+      env: ILLUMINATE_VERSION=8.*
+    - php: 7.4
+      env: ILLUMINATE_VERSION=8.*
+    - php: 7.4
+      env: ILLUMINATE_VERSION=8.*
+    - php: 8.0
+      env: ILLUMINATE_VERSION=8.*
+
+before_script:
+  - travis_retry composer self-update
+  - travis_retry composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update
+  - travis_retry composer update --no-interaction --prefer-source
+
+script:
+  - vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml

@@ -1,0 +1,46 @@
+<?php
+
+namespace Telegram\Bot\Objects;
+
+/**
+ * Class EncryptedCredentials.
+ *
+ * Contains data required for decrypting and authenticating EncryptedPassportElement.
+ * See the Telegram Passport Documentation for a complete description of the data decryption and authentication processes.
+ *
+ * @link https://core.telegram.org/bots/api#encryptedcredentials
+ */
+class EncryptedCredentials extends BaseObject
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function relations(): array
+    {
+        return [];
+    }
+
+    /**
+     * Base64-encoded encrypted JSON-serialized data with unique user's payload, data hashes and secrets required for EncryptedPassportElement decryption and authentication.
+     */
+    public function getData(): string
+    {
+        return $this->items['data'];
+    }
+
+    /**
+     * Base64-encoded data hash for data authentication.
+     */
+    public function getHash(): string
+    {
+        return $this->items['hash'];
+    }
+
+    /**
+     * Base64-encoded secret, encrypted with the bot's public RSA key, required for data decryption.
+     */
+    public function getSecret(): string
+    {
+        return $this->items['secret'];
+    }
+}
