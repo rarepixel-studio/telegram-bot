@@ -208,6 +208,29 @@ trait ApiMethodWrappers
         $request->validate();
 
         $method = $request->getMethod();
+
+        if ($request instanceof SendMediaGroupRequest) {
+            $params = $request->toArray();
+            $attachments = $this->extractInputMedia($params);
+            $response = $this->post($method, $params, [], $attachments);
+
+            return $this->prepareResponse(function (TelegramResponse $response) {
+                return collect($response->getResult())->map(function ($message) {
+                    return new Message($message);
+                });
+            }, $response);
+        }
+
+        if ($request instanceof SendPaidMediaRequest) {
+            $params = $request->toArray();
+            $attachments = $this->extractInputMedia($params);
+            $response = $this->post($method, $params, [], $attachments);
+
+            return $this->prepareResponse(function (TelegramResponse $response) {
+                return new Message($response->getDecodedBody());
+            }, $response);
+        }
+
         $params = $request->toArray();
 
         if (in_array($method, ['logOut', 'close', 'removeWebhook'], true)) {
