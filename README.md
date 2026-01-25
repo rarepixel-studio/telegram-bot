@@ -204,6 +204,50 @@ $api->sendMessage([
 ]);
 ```
 
+### Request objects and JSON encoding
+When you use request objects, the SDK JSON-encodes only the fields that Telegram documents as "JSON-serialized".
+This prevents missing keyboards, entities, or media options in form-encoded requests.
+
+```php
+use Telegram\Bot\Requests\SendMessageRequest;
+use Telegram\Bot\Objects\InlineKeyboardButton;
+use Telegram\Bot\Objects\InlineKeyboardMarkup;
+
+$button = InlineKeyboardButton::make('Open')->withUrl('https://example.com');
+$markup = InlineKeyboardMarkup::make([[$button]]);
+
+$request = new SendMessageRequest(123456789, 'Hello');
+$request->setReplyMarkup($markup);
+
+// Request objects handle JSON encoding for reply_markup and other JSON fields.
+$api->sendMessage($request);
+```
+
+If you pass a plain array to an API method, you must JSON-encode fields that Telegram marks
+as "JSON-serialized" in the official docs (for example: `reply_markup`, `options`, `entities`).
+
+```php
+$api->sendMessage([
+    'chat_id' => 123456789,
+    'text' => 'Hello',
+    'reply_markup' => json_encode([
+        'inline_keyboard' => [
+            [[
+                'text' => 'Open',
+                'url' => 'https://example.com',
+            ]],
+        ],
+    ]),
+]);
+```
+
+For webhook responses, use `toWebhookPayload()` to keep nested fields as arrays for an
+`application/json` response. Do not pre-encode those fields.
+
+```php
+return response()->json($request->toWebhookPayload());
+```
+
 ### Mini App initData validation
 Validate `Telegram.WebApp.initData` on your backend before trusting the payload.
 
