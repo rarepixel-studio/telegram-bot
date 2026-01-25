@@ -23,7 +23,10 @@ class EditMessageMediaRequest extends TelegramApiRequest
 
     protected array $params = [];
 
-    public function __construct() {}
+    public function __construct(\Telegram\Bot\Objects\InputMedia $media)
+    {
+        $this->params['media'] = $media;
+    }
 
     public function businessConnectionId(string $business_connection_id): self
     {

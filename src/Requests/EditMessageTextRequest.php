@@ -21,7 +21,10 @@ class EditMessageTextRequest extends TelegramApiRequest
 
     protected array $params = [];
 
-    public function __construct() {}
+    public function __construct(string $text)
+    {
+        $this->params['text'] = $text;
+    }
 
     public function businessConnectionId(string $business_connection_id): self
     {

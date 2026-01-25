@@ -20,7 +20,11 @@ class EditMessageLiveLocationRequest extends TelegramApiRequest
 
     protected array $params = [];
 
-    public function __construct() {}
+    public function __construct(float $latitude, float $longitude)
+    {
+        $this->params['latitude'] = $latitude;
+        $this->params['longitude'] = $longitude;
+    }
 
     public function businessConnectionId(string $business_connection_id): self
     {
