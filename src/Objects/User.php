@@ -120,4 +120,22 @@ class User extends BaseObject
     {
         return $this->items['has_main_web_app'] ?? null;
     }
+
+    /**
+     * (Optional). True, if the bot has forum topic mode enabled in private chats.
+     * Returned only in getMe.
+     */
+    public function getHasTopicsEnabled(): ?bool
+    {
+        return $this->items['has_topics_enabled'] ?? null;
+    }
+
+    /**
+     * (Optional). True, if users are allowed to create and delete topics in private
+     * chats with this bot. Returned only in getMe.
+     */
+    public function getAllowsUsersToCreateTopics(): ?bool
+    {
+        return $this->items['allows_users_to_create_topics'] ?? null;
+    }
 }

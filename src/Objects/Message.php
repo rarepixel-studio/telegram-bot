@@ -99,6 +99,8 @@ class Message extends BaseObject
             'video_chat_participants_invited' => VideoChatParticipantsInvited::class,
             'web_app_data' => WebAppData::class,
             'reply_markup' => InlineKeyboardMarkup::class,
+            'chat_owner_left' => ChatOwnerLeft::class,
+            'chat_owner_changed' => ChatOwnerChanged::class,
         ];
     }
 
@@ -328,6 +330,8 @@ class Message extends BaseObject
             'new_chat_title',
             'new_chat_photo',
             'delete_chat_photo',
+            'chat_owner_left',
+            'chat_owner_changed',
             'group_chat_created',
             'supergroup_chat_created',
             'channel_chat_created',
@@ -808,6 +812,22 @@ class Message extends BaseObject
     public function getDeleteChatPhoto(): ?bool
     {
         return $this->items['delete_chat_photo'] ?? null;
+    }
+
+    /**
+     * (Optional). Service message: the owner of the chat has left.
+     */
+    public function getChatOwnerLeft(): ?ChatOwnerLeft
+    {
+        return $this->items['chat_owner_left'] ?? null;
+    }
+
+    /**
+     * (Optional). Service message: the owner of the chat has changed.
+     */
+    public function getChatOwnerChanged(): ?ChatOwnerChanged
+    {
+        return $this->items['chat_owner_changed'] ?? null;
     }
 
     /**

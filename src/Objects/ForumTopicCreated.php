@@ -40,4 +40,12 @@ class ForumTopicCreated extends BaseObject
     {
         return $this->items['icon_custom_emoji_id'] ?? null;
     }
+
+    /**
+     * (Optional). True, if the topic name was set implicitly based on the user's name.
+     */
+    public function getIsNameImplicit(): ?bool
+    {
+        return $this->items['is_name_implicit'] ?? null;
+    }
 }

@@ -173,6 +173,8 @@ as request parameters (dual-use).
 - VideoChatStarted
 - VideoChatEnded
 - VideoChatParticipantsInvited
+- ChatOwnerLeft
+- ChatOwnerChanged
 - PaidMessagePriceChanged
 - DirectMessagePriceChanged
 - SuggestedPostApproved
@@ -190,6 +192,8 @@ as request parameters (dual-use).
 - SuggestedPostParameters
 - DirectMessagesTopic
 - UserProfilePhotos
+- UserProfileAudios
+- VideoQuality
 - File
 - WebAppInfo
 - InlineKeyboardMarkup

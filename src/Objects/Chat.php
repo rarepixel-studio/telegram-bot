@@ -16,6 +16,7 @@ class Chat extends BaseObject
             'photo' => ChatPhoto::class,
             'pinned_message' => Message::class,
             'background' => ChatBackground::class,
+            'first_profile_audio' => Audio::class,
         ];
     }
 
@@ -155,5 +156,13 @@ class Chat extends BaseObject
     public function getBackground(): ?ChatBackground
     {
         return $this->items['background'] ?? null;
+    }
+
+    /**
+     * (Optional). The first profile audio set for the chat. Returned only in getChat.
+     */
+    public function getFirstProfileAudio(): ?Audio
+    {
+        return $this->items['first_profile_audio'] ?? null;
     }
 }

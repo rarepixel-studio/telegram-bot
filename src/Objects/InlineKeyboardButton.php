@@ -314,4 +314,40 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
     {
         return $this->items['pay'] ?? null;
     }
+
+    /**
+     * (Optional). Custom emoji identifier to be shown on the button.
+     */
+    public function getIconCustomEmojiId(): ?string
+    {
+        return $this->items['icon_custom_emoji_id'] ?? null;
+    }
+
+    /**
+     * Set the custom emoji identifier to be shown on the button.
+     */
+    public function withIconCustomEmojiId(?string $iconCustomEmojiId): self
+    {
+        $this->items['icon_custom_emoji_id'] = $iconCustomEmojiId;
+
+        return $this;
+    }
+
+    /**
+     * (Optional). The color style of the button.
+     */
+    public function getStyle(): ?string
+    {
+        return $this->items['style'] ?? null;
+    }
+
+    /**
+     * Set the color style of the button.
+     */
+    public function withStyle(?string $style): self
+    {
+        $this->items['style'] = $style;
+
+        return $this;
+    }
 }

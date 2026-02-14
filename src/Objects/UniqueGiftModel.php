@@ -42,4 +42,12 @@ class UniqueGiftModel extends BaseObject
     {
         return $this->items['rarity_per_mille'];
     }
+
+    /**
+     * (Optional). The rarity of the model as a textual description (e.g., "common", "rare").
+     */
+    public function getRarity(): ?string
+    {
+        return $this->items['rarity'] ?? null;
+    }
 }

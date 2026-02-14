@@ -32,6 +32,9 @@ sendDice
 sendChatAction
 setMessageReaction
 getUserProfilePhotos
+getUserProfileAudios
+setMyProfilePhoto
+removeMyProfilePhoto
 setUserEmojiStatus
 getFile
 banChatMember

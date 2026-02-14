@@ -77,4 +77,12 @@ class UniqueGift extends BaseObject
     {
         return $this->items['publisher_chat'] ?? null;
     }
+
+    /**
+     * (Optional). True, if the gift has been burned.
+     */
+    public function getIsBurned(): ?bool
+    {
+        return $this->items['is_burned'] ?? null;
+    }
 }

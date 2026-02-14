@@ -28,6 +28,7 @@ use Telegram\Bot\Objects\Sticker;
 use Telegram\Bot\Objects\Update;
 use Telegram\Bot\Objects\User;
 use Telegram\Bot\Objects\UserChatBoosts;
+use Telegram\Bot\Objects\UserProfileAudios;
 use Telegram\Bot\Objects\UserProfilePhotos;
 use Telegram\Bot\Objects\WebhookInfo;
 use Telegram\Bot\Requests\AddStickerToSetRequest;
@@ -102,6 +103,7 @@ use Telegram\Bot\Requests\GetStarTransactionsRequest;
 use Telegram\Bot\Requests\GetStickerSetRequest;
 use Telegram\Bot\Requests\GetUpdatesRequest;
 use Telegram\Bot\Requests\GetUserChatBoostsRequest;
+use Telegram\Bot\Requests\GetUserProfileAudiosRequest;
 use Telegram\Bot\Requests\GetUserProfilePhotosRequest;
 use Telegram\Bot\Requests\GetWebhookInfoRequest;
 use Telegram\Bot\Requests\GiftPremiumSubscriptionRequest;
@@ -115,6 +117,7 @@ use Telegram\Bot\Requests\ReadBusinessMessageRequest;
 use Telegram\Bot\Requests\RefundStarPaymentRequest;
 use Telegram\Bot\Requests\RemoveBusinessAccountProfilePhotoRequest;
 use Telegram\Bot\Requests\RemoveChatVerificationRequest;
+use Telegram\Bot\Requests\RemoveMyProfilePhotoRequest;
 use Telegram\Bot\Requests\RemoveUserVerificationRequest;
 use Telegram\Bot\Requests\ReopenForumTopicRequest;
 use Telegram\Bot\Requests\ReopenGeneralForumTopicRequest;
@@ -162,6 +165,7 @@ use Telegram\Bot\Requests\SetMyCommandsRequest;
 use Telegram\Bot\Requests\SetMyDefaultAdministratorRightsRequest;
 use Telegram\Bot\Requests\SetMyDescriptionRequest;
 use Telegram\Bot\Requests\SetMyNameRequest;
+use Telegram\Bot\Requests\SetMyProfilePhotoRequest;
 use Telegram\Bot\Requests\SetMyShortDescriptionRequest;
 use Telegram\Bot\Requests\SetPassportDataErrorsRequest;
 use Telegram\Bot\Requests\SetStickerEmojiListRequest;
@@ -879,6 +883,69 @@ trait ApiMethodWrappers
 
         return $this->prepareResponse(function (TelegramResponse $response) {
             return new UserProfilePhotos($response->getDecodedBody());
+        }, $response);
+    }
+
+    /**
+     * Get a list of profile audios for a user.
+     *
+     * @link https://core.telegram.org/bots/api#getuserprofileaudios
+     *
+     * @throws TelegramValidationException|TelegramSDKException
+     */
+    public function getUserProfileAudios(array|GetUserProfileAudiosRequest $params): UserProfileAudios|Closure
+    {
+        if ($params instanceof GetUserProfileAudiosRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('getUserProfileAudios', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return new UserProfileAudios($response->getDecodedBody());
+        }, $response);
+    }
+
+    /**
+     * Set the bot's profile photo. Returns True on success.
+     *
+     * @link https://core.telegram.org/bots/api#setmyprofilephoto
+     *
+     * @throws TelegramValidationException|TelegramSDKException
+     */
+    public function setMyProfilePhoto(array|SetMyProfilePhotoRequest $params): bool|Closure
+    {
+        if ($params instanceof SetMyProfilePhotoRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('setMyProfilePhoto', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * Remove the bot's profile photo. Returns True on success.
+     *
+     * @link https://core.telegram.org/bots/api#removemyprofilephoto
+     *
+     * @throws TelegramValidationException|TelegramSDKException
+     */
+    public function removeMyProfilePhoto(array|RemoveMyProfilePhotoRequest $params = []): bool|Closure
+    {
+        if ($params instanceof RemoveMyProfilePhotoRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('removeMyProfilePhoto', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return $response->getResult();
         }, $response);
     }
 

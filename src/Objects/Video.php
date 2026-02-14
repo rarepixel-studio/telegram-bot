@@ -2,6 +2,8 @@
 
 namespace Telegram\Bot\Objects;
 
+use Illuminate\Support\Collection;
+
 /**
  * Class Video. *
  */
@@ -14,6 +16,9 @@ class Video extends BaseObject
     {
         return [
             'thumb' => PhotoSize::class,
+            'thumbnail' => PhotoSize::class,
+            'cover' => PhotoSize::class,
+            'qualities' => VideoQuality::class,
         ];
     }
 
@@ -23,6 +28,15 @@ class Video extends BaseObject
     public function getFileId(): string
     {
         return $this->items['file_id'];
+    }
+
+    /**
+     * Unique identifier for this file, which is supposed to be the same over time
+     * and for different bots. Can't be used to download or reuse the file.
+     */
+    public function getFileUniqueId(): string
+    {
+        return $this->items['file_unique_id'];
     }
 
     /**
@@ -51,10 +65,38 @@ class Video extends BaseObject
 
     /**
      * (Optional). Video thumbnail.
+     *
+     * @deprecated Use getThumbnail() instead
      */
     public function getThumb(): ?PhotoSize
     {
         return $this->items['thumb'] ?? null;
+    }
+
+    /**
+     * (Optional). Video thumbnail.
+     */
+    public function getThumbnail(): ?PhotoSize
+    {
+        return $this->items['thumbnail'] ?? null;
+    }
+
+    /**
+     * (Optional). Available sizes of the video cover (preview of the video in the message).
+     *
+     * @return Collection<int, PhotoSize>|null
+     */
+    public function getCover(): ?Collection
+    {
+        return $this->items['cover'] ?? null;
+    }
+
+    /**
+     * (Optional). Timestamp in seconds from which the video will play in the message.
+     */
+    public function getStartTimestamp(): ?int
+    {
+        return $this->items['start_timestamp'] ?? null;
     }
 
     /**
@@ -71,5 +113,15 @@ class Video extends BaseObject
     public function getFileSize(): ?int
     {
         return $this->items['file_size'] ?? null;
+    }
+
+    /**
+     * (Optional). Available qualities of the video.
+     *
+     * @return Collection<int, VideoQuality>|null
+     */
+    public function getQualities(): ?Collection
+    {
+        return $this->items['qualities'] ?? null;
     }
 }
