@@ -10,10 +10,10 @@ class EditMessageMediaRequestTest extends TestCase
 {
     public function test_it_serializes_to_array_correctly()
     {
-        $request = new EditMessageMediaRequest;
+        $media = new InputMedia(['type' => 'photo', 'media' => 'file_id']);
+        $request = new EditMessageMediaRequest($media);
         $request->chatId(123);
         $request->messageId(456);
-        $media = new InputMedia(['type' => 'photo', 'media' => 'file_id']);
         $request->media($media);
 
         $array = $request->toArray();
@@ -25,7 +25,8 @@ class EditMessageMediaRequestTest extends TestCase
 
     public function test_it_returns_correct_method_name()
     {
-        $request = new EditMessageMediaRequest;
+        $media = new InputMedia(['type' => 'photo', 'media' => 'file_id']);
+        $request = new EditMessageMediaRequest($media);
         $this->assertEquals('editMessageMedia', $request->getMethod());
     }
 }

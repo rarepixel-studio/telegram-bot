@@ -14,12 +14,10 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 class DeleteStoryRequest extends TelegramApiRequest
 {
     /**
-     * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel
      * @param  int  $story_id  Identifier of the story to delete
      */
     public function __construct(
         protected string $business_connection_id,
-        protected int|string $chat_id,
         protected int $story_id,
     ) {}
 
@@ -42,7 +40,6 @@ class DeleteStoryRequest extends TelegramApiRequest
     {
         return [
             'business_connection_id' => $this->business_connection_id,
-            'chat_id' => $this->chat_id,
             'story_id' => $this->story_id,
         ];
     }

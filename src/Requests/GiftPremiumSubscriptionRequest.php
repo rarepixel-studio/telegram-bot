@@ -15,7 +15,7 @@ class GiftPremiumSubscriptionRequest extends TelegramApiRequest
 {
     /**
      * @param  int  $user_id  Unique identifier of the target user
-     * @param  int  $month_count  Duration of the premium subscription in months (1, 3, 6, or 12)
+     * @param  int  $month_count  Duration of the premium subscription in months (3, 6, or 12)
      */
     public function __construct(
         protected int $user_id,
@@ -34,11 +34,24 @@ class GiftPremiumSubscriptionRequest extends TelegramApiRequest
             throw new TelegramValidationException('user_id must be greater than 0');
         }
 
-        if (! in_array($this->month_count, [1, 3, 6, 12])) {
-            throw new TelegramValidationException('month_count must be one of: 1, 3, 6, 12');
+        $starCountByMonth = [
+            3 => 1000,
+            6 => 1500,
+            12 => 2500,
+        ];
+
+        if (! array_key_exists($this->month_count, $starCountByMonth)) {
+            throw new TelegramValidationException('month_count must be one of: 3, 6, 12');
         }
-        if ($this->star_count <= 0) {
-            throw new TelegramValidationException('star_count must be greater than 0');
+
+        if ($this->star_count !== $starCountByMonth[$this->month_count]) {
+            throw new TelegramValidationException(
+                sprintf(
+                    'star_count must be %d when month_count is %d',
+                    $starCountByMonth[$this->month_count],
+                    $this->month_count
+                )
+            );
         }
     }
 

@@ -27,11 +27,9 @@ class InputFile implements InputFileInterface
     /**
      * Creates a new InputFile entity.
      *
-     * @param string $filePath
-     * @param string|null $uri
-     *
+     * @param  string|resource  $filePath
      */
-    public function __construct(string $filePath, string $uri = null)
+    public function __construct($filePath, ?string $uri = null)
     {
         $this->path = $filePath;
         $this->uri = $uri;
@@ -79,8 +77,6 @@ class InputFile implements InputFileInterface
 
     /**
      * Returns true if the path to the file is remote.
-     *
-     * @return bool
      */
     protected function isRemoteFile(): bool
     {

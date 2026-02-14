@@ -20,7 +20,7 @@ class SendChecklistRequestTest extends TestCase
             ],
         ];
 
-        $request = new SendChecklistRequest(12345, $checklist);
+        $request = new SendChecklistRequest('conn_123', 12345, $checklist);
         $request->validate();
     }
 
@@ -36,7 +36,7 @@ class SendChecklistRequestTest extends TestCase
             ],
         ];
 
-        $request = new SendChecklistRequest(12345, $checklist);
+        $request = new SendChecklistRequest('conn_123', 12345, $checklist);
         $request->validate();
     }
 
@@ -50,7 +50,7 @@ class SendChecklistRequestTest extends TestCase
             'tasks' => [],
         ];
 
-        $request = new SendChecklistRequest(12345, $checklist);
+        $request = new SendChecklistRequest('conn_123', 12345, $checklist);
         $request->validate();
     }
 
@@ -69,7 +69,7 @@ class SendChecklistRequestTest extends TestCase
             'tasks' => $tasks,
         ];
 
-        $request = new SendChecklistRequest(12345, $checklist);
+        $request = new SendChecklistRequest('conn_123', 12345, $checklist);
         $request->validate();
     }
 
@@ -84,11 +84,12 @@ class SendChecklistRequestTest extends TestCase
             'others_can_add_tasks' => true,
         ];
 
-        $request = new SendChecklistRequest(12345, $checklist);
+        $request = new SendChecklistRequest('conn_123', 12345, $checklist);
         $request->disableNotification(true);
 
         $array = $request->toArray();
 
+        $this->assertEquals('conn_123', $array['business_connection_id']);
         $this->assertEquals(12345, $array['chat_id']);
         $this->assertIsString($array['checklist']);
         $this->assertSame(json_encode($checklist), $array['checklist']);
@@ -104,7 +105,7 @@ class SendChecklistRequestTest extends TestCase
             ],
         ];
 
-        $request = new SendChecklistRequest(12345, $checklist);
+        $request = new SendChecklistRequest('conn_123', 12345, $checklist);
         $request->messageThreadId(10)->protectContent(true);
 
         $array = $request->toArray();
@@ -122,7 +123,7 @@ class SendChecklistRequestTest extends TestCase
             ],
         ];
 
-        $request = new SendChecklistRequest(12345, $checklist);
+        $request = new SendChecklistRequest('conn_123', 12345, $checklist);
         $this->assertEquals('sendChecklist', $request->getMethod());
     }
 }

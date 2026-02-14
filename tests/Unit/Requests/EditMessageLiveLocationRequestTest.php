@@ -9,7 +9,7 @@ class EditMessageLiveLocationRequestTest extends TestCase
 {
     public function test_it_serializes_to_array_correctly()
     {
-        $request = new EditMessageLiveLocationRequest();
+        $request = new EditMessageLiveLocationRequest(40.7128, -74.0060);
         $request->chatId(123);
         $request->messageId(456);
         $request->latitude(40.7128);
@@ -25,7 +25,7 @@ class EditMessageLiveLocationRequestTest extends TestCase
 
     public function test_it_returns_correct_method_name()
     {
-        $request = new EditMessageLiveLocationRequest();
+        $request = new EditMessageLiveLocationRequest(40.7128, -74.0060);
         $this->assertEquals('editMessageLiveLocation', $request->getMethod());
     }
 }

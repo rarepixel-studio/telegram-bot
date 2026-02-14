@@ -14,20 +14,20 @@ class EditStoryRequestTest extends TestCase
         $this->expectException(TelegramValidationException::class);
         $this->expectExceptionMessage('story_id must be greater than 0');
 
-        $request = new EditStoryRequest(123, 0);
+        $media = new InputMedia(['type' => 'photo', 'media' => 'file_id']);
+        $request = new EditStoryRequest('conn_123', 0, $media);
         $request->validate();
     }
 
     public function test_it_serializes_to_array_correctly()
     {
-        $request = new EditStoryRequest(123, 55);
         $media = new InputMedia(['type' => 'photo', 'media' => 'file_id']);
-        $request->content($media);
+        $request = new EditStoryRequest('conn_123', 55, $media);
         $request->caption('Edited story');
 
         $array = $request->toArray();
 
-        $this->assertEquals(123, $array['chat_id']);
+        $this->assertEquals('conn_123', $array['business_connection_id']);
         $this->assertEquals(55, $array['story_id']);
         $this->assertSame(json_encode($media->toArray()), $array['content']);
         $this->assertEquals('Edited story', $array['caption']);
@@ -35,7 +35,8 @@ class EditStoryRequestTest extends TestCase
 
     public function test_it_returns_correct_method_name()
     {
-        $request = new EditStoryRequest(123, 55);
+        $media = new InputMedia(['type' => 'photo', 'media' => 'file_id']);
+        $request = new EditStoryRequest('conn_123', 55, $media);
         $this->assertEquals('editStory', $request->getMethod());
     }
 }

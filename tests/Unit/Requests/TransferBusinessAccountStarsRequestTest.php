@@ -20,7 +20,7 @@ class TransferBusinessAccountStarsRequestTest extends TestCase
     public function test_it_validates_invalid_amount()
     {
         $this->expectException(TelegramValidationException::class);
-        $this->expectExceptionMessage('amount must be greater than 0');
+        $this->expectExceptionMessage('star_count must be greater than 0');
 
         $request = new TransferBusinessAccountStarsRequest('conn_1', 0, 'trans_1', 123);
         $request->validate();
@@ -43,7 +43,7 @@ class TransferBusinessAccountStarsRequestTest extends TestCase
         $array = $request->toArray();
 
         $this->assertEquals('conn_123', $array['business_connection_id']);
-        $this->assertEquals(100, $array['amount']);
+        $this->assertEquals(100, $array['star_count']);
         $this->assertEquals('trans_1', $array['transfer_id']);
         $this->assertEquals(123, $array['recipient']);
         $this->assertTrue($array['allowed_for_payment']);

@@ -22,14 +22,12 @@ class EditStoryRequest extends TelegramApiRequest
     ];
 
     /**
-     * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel
      * @param  int  $story_id  Identifier of the story to edit
      */
     public function __construct(
         protected string $business_connection_id,
-        protected int|string $chat_id,
         protected int $story_id,
-        protected InputMedia $content, // Required param
+        protected InputMedia $content,
     ) {
         $this->params['content'] = $content;
     }
@@ -76,7 +74,6 @@ class EditStoryRequest extends TelegramApiRequest
     {
         return [
             'business_connection_id' => $this->business_connection_id,
-            'chat_id' => $this->chat_id,
             'story_id' => $this->story_id,
             'content' => $this->params['content'] ?? null,
         ] + $this->params;

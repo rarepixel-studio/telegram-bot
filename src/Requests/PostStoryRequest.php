@@ -2,6 +2,7 @@
 
 namespace Telegram\Bot\Requests;
 
+use Telegram\Bot\Exceptions\TelegramValidationException;
 use Telegram\Bot\Objects\InputMedia;
 
 /**
@@ -21,12 +22,10 @@ class PostStoryRequest extends TelegramApiRequest
     ];
 
     /**
-     * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel
      * @param  InputMedia  $content  The content of the story
      */
     public function __construct(
         protected string $business_connection_id,
-        protected int|string $chat_id,
         protected InputMedia $content,
         protected int $active_period,
     ) {}
@@ -66,7 +65,6 @@ class PostStoryRequest extends TelegramApiRequest
     {
         return [
             'business_connection_id' => $this->business_connection_id,
-            'chat_id' => $this->chat_id,
             'content' => $this->content,
             'active_period' => $this->active_period,
         ] + $this->params;

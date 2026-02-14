@@ -9,7 +9,7 @@ class EditMessageTextRequestTest extends TestCase
 {
     public function test_it_serializes_to_array_correctly()
     {
-        $request = new EditMessageTextRequest();
+        $request = new EditMessageTextRequest('Updated text');
         $request->chatId(123);
         $request->messageId(456);
         $request->text('Updated text');
@@ -23,7 +23,7 @@ class EditMessageTextRequestTest extends TestCase
 
     public function test_it_returns_correct_method_name()
     {
-        $request = new EditMessageTextRequest();
+        $request = new EditMessageTextRequest('Updated text');
         $this->assertEquals('editMessageText', $request->getMethod());
     }
 }

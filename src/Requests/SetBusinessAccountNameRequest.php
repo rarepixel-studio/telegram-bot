@@ -23,9 +23,12 @@ class SetBusinessAccountNameRequest extends TelegramApiRequest
 
     protected array $params = [];
 
-    public function name(string $name): self
+    /**
+     * @param  string|null  $last_name  The new value of the last name for the business account
+     */
+    public function lastName(?string $last_name): self
     {
-        $this->params['name'] = $name;
+        $this->params['last_name'] = $last_name;
 
         return $this;
     }
@@ -43,13 +46,19 @@ class SetBusinessAccountNameRequest extends TelegramApiRequest
         if (empty($this->first_name)) {
             throw new TelegramValidationException('first_name cannot be empty');
         }
+        if (mb_strlen($this->first_name) > 64) {
+            throw new TelegramValidationException('first_name must not exceed 64 characters');
+        }
+        if (isset($this->params['last_name']) && ! is_null($this->params['last_name']) && mb_strlen($this->params['last_name']) > 64) {
+            throw new TelegramValidationException('last_name must not exceed 64 characters');
+        }
     }
 
     public function buildParams(): array
     {
         return [
             'business_connection_id' => $this->business_connection_id,
-            'name' => $this->first_name, // The method is setBusinessAccountName but param can be 'name'? Wait. Verify script said 'first_name'.
+            'first_name' => $this->first_name,
         ] + $this->params;
     }
 }
