@@ -54,12 +54,37 @@ class TelegramResponseException extends TelegramSDKException
         $code = isset($data['error_code']) ? $data['error_code'] : -1;
         $message = isset($data['description']) ? $data['description'] : 'Unknown error from API.';
 
+        $exceptionClass = match ($code) {
+            404 => TelegramNotFoundException::class,
+            401 => TelegramUnauthorizedException::class,
+            400 => static::resolveBadRequestException($message),
+            default => static::class,
+        };
+
         if ($response->getRequestException()) {
-            return new static($response, $message, $code, $response->getRequestException());
+            return new $exceptionClass($response, $message, $code, $response->getRequestException());
         }
 
-        return new static($response, $message, $code);
+        return new $exceptionClass($response, $message, $code);
 
+    }
+
+    /**
+     * Resolve the appropriate exception class for a 400 Bad Request response.
+     *
+     * @return class-string<TelegramResponseException>
+     */
+    protected static function resolveBadRequestException(string $message): string
+    {
+        if (str_contains($message, 'chat not found')) {
+            return TelegramChatNotFoundException::class;
+        }
+
+        if (str_contains($message, 'PARTICIPANT_ID_INVALID') || str_contains($message, 'user not found')) {
+            return TelegramInvalidUserIdException::class;
+        }
+
+        return static::class;
     }
 
     /**
