@@ -175,6 +175,16 @@ class PromoteChatMemberRequest extends TelegramApiRequest
         return $this;
     }
 
+    /**
+     * Pass True if the administrator can manage member tags in the chat.
+     */
+    public function canManageTags(bool $can_manage_tags): self
+    {
+        $this->params['can_manage_tags'] = $can_manage_tags;
+
+        return $this;
+    }
+
     public function getMethod(): string
     {
         return 'promoteChatMember';

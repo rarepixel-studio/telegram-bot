@@ -583,6 +583,14 @@ class Message extends BaseObject
     }
 
     /**
+     * (Optional). The tag of the sender in the chat.
+     */
+    public function getSenderTag(): ?string
+    {
+        return $this->items['sender_tag'] ?? null;
+    }
+
+    /**
      * @return Collection<int, MessageEntity>|null
      */
     public function getEntities(): ?Collection

@@ -241,6 +241,7 @@ is_paid_post	True	Optional. True, if the message is a paid post. Note that such 
 media_group_id	String	Optional. The unique identifier of a media message group this message belongs to
 author_signature	String	Optional. Signature of the post author for messages in channels, or the custom title of an anonymous group administrator
 paid_star_count	Integer	Optional. The number of Telegram Stars that were paid by the sender of the message to send it
+sender_tag	String	Optional. The tag of the sender in the chat
 text	String	Optional. For text messages, the actual UTF-8 text of the message
 entities	Array of MessageEntity	Optional. For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text
 link_preview_options	LinkPreviewOptions	Optional. Options used for link preview generation for the message, if it is a text message and link preview options were changed
@@ -338,7 +339,7 @@ MessageEntity
 This object represents one special entity in a text message. For example, hashtags, usernames, URLs, etc.
 
 Field	Type	Description
-type	String	Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag or #hashtag@chatusername), “cashtag” ($USD or $USD@chatusername), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “expandable_blockquote” (collapsed-by-default block quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames), “custom_emoji” (for inline custom emoji stickers)
+type	String	Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag or #hashtag@chatusername), “cashtag” ($USD or $USD@chatusername), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “expandable_blockquote” (collapsed-by-default block quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames), “custom_emoji” (for inline custom emoji stickers), “date_time” (for formatted date and time)
 offset	Integer	Offset in UTF-16 code units to the start of the entity
 length	Integer	Length of the entity in UTF-16 code units
 url	String	Optional. For “text_link” only, URL that will be opened after user taps on the text
@@ -1170,6 +1171,7 @@ can_edit_messages	Boolean	Optional. True, if the administrator can edit messages
 can_pin_messages	Boolean	Optional. True, if the user is allowed to pin messages; for groups and supergroups only
 can_manage_topics	Boolean	Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only
 can_manage_direct_messages	Boolean	Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only
+can_manage_tags	Boolean	Optional. True, if the administrator can manage member tags in the chat
 ChatMemberUpdated
 This object represents changes in the status of a chat member.
 
@@ -1222,6 +1224,7 @@ can_edit_messages	Boolean	Optional. True, if the administrator can edit messages
 can_pin_messages	Boolean	Optional. True, if the user is allowed to pin messages; for groups and supergroups only
 can_manage_topics	Boolean	Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only
 can_manage_direct_messages	Boolean	Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only
+can_manage_tags	Boolean	Optional. True, if the administrator can manage member tags in the chat
 custom_title	String	Optional. Custom title for this user
 ChatMemberMember
 Represents a chat member that has no additional privileges or restrictions.
@@ -1230,6 +1233,7 @@ Field	Type	Description
 status	String	The member's status in the chat, always “member”
 user	User	Information about the user
 until_date	Integer	Optional. Date when the user's subscription will expire; Unix time
+tag	String	Optional. Custom tag assigned to the chat member; for regular members only
 ChatMemberRestricted
 Represents a chat member that is under certain restrictions in the chat. Supergroups only.
 
@@ -1251,6 +1255,8 @@ can_change_info	Boolean	True, if the user is allowed to change the chat title, p
 can_invite_users	Boolean	True, if the user is allowed to invite new users to the chat
 can_pin_messages	Boolean	True, if the user is allowed to pin messages
 can_manage_topics	Boolean	True, if the user is allowed to create forum topics
+can_edit_tag	Boolean	Optional. True, if the user is allowed to edit their tag in the chat
+tag	String	Optional. Custom tag assigned to the chat member
 until_date	Integer	Date when restrictions will be lifted for this user; Unix time. If 0, then the user is restricted forever
 ChatMemberLeft
 Represents a chat member that isn't currently a member of the chat, but may join it themselves.
@@ -1293,6 +1299,7 @@ can_change_info	Boolean	Optional. True, if the user is allowed to change the cha
 can_invite_users	Boolean	Optional. True, if the user is allowed to invite new users to the chat
 can_pin_messages	Boolean	Optional. True, if the user is allowed to pin messages. Ignored in public supergroups
 can_manage_topics	Boolean	Optional. True, if the user is allowed to create forum topics. If omitted defaults to the value of can_pin_messages
+can_edit_tag	Boolean	Optional. True, if the user is allowed to edit their tag in the chat
 Birthdate
 Describes the birthdate of a user.
 
@@ -2037,6 +2044,16 @@ message_effect_id	String	Optional	Unique identifier of the message effect to be 
 suggested_post_parameters	SuggestedPostParameters	Optional	A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
 reply_parameters	ReplyParameters	Optional	Description of the message to reply to
 reply_markup	InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply	Optional	Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+sendMessageDraft
+Use this method to change the current draft message in a private chat. The draft message is displayed to the user and can conveniently be sent by the user via one tap. Returns True on success.
+
+Parameter	Type	Required	Description
+chat_id	Integer	Yes	Unique identifier for the target private chat
+message_thread_id	Integer	Optional	Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
+draft_id	Integer	Yes	Unique identifier of the message draft
+text	String	Yes	Text of the message to be sent, 1-4096 characters after entities parsing
+parse_mode	String	Optional	Mode for parsing entities in the message text. See formatting options for more details.
+entities	Array of MessageEntity	Optional	A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
 Formatting options
 The Bot API supports basic formatting for messages. You can use bold, italic, underlined, strikethrough, spoiler text, block quotations as well as inline links and pre-formatted code in your bots' messages. Telegram clients will render them accordingly. You can specify text entities directly, or use markdown-style or HTML-style formatting.
 
@@ -2602,6 +2619,14 @@ can_edit_messages	Boolean	Optional	Pass True if the administrator can edit messa
 can_pin_messages	Boolean	Optional	Pass True if the administrator can pin messages; for supergroups only
 can_manage_topics	Boolean	Optional	Pass True if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only
 can_manage_direct_messages	Boolean	Optional	Pass True if the administrator can manage direct messages within the channel and decline suggested posts; for channels only
+can_manage_tags	Boolean	Optional	Pass True if the administrator can manage member tags in the chat
+setChatMemberTag
+Use this method to change the tag of a regular member of a group or a supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_tags administrator right. Returns True on success.
+
+Parameter	Type	Required	Description
+chat_id	Integer or String	Yes	Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+user_id	Integer	Yes	Unique identifier of the target user
+tag	String	Optional	New tag for the member; 0-128 characters. Pass an empty string or omit to remove the tag.
 setChatAdministratorCustomTitle
 Use this method to set a custom title for an administrator in a supergroup promoted by the bot. Returns True on success.
 

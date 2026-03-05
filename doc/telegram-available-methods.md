@@ -10,6 +10,7 @@ getMe
 logOut
 close
 sendMessage
+sendMessageDraft
 forwardMessage
 forwardMessages
 copyMessage
@@ -41,6 +42,7 @@ banChatMember
 unbanChatMember
 restrictChatMember
 promoteChatMember
+setChatMemberTag
 setChatAdministratorCustomTitle
 banChatSenderChat
 unbanChatSenderChat

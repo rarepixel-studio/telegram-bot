@@ -144,4 +144,12 @@ class ChatAdministratorRights extends BaseObject
     {
         return $this->items['can_manage_direct_messages'] ?? null;
     }
+
+    /**
+     * (Optional). True, if the administrator can manage member tags in the chat.
+     */
+    public function getCanManageTags(): ?bool
+    {
+        return $this->items['can_manage_tags'] ?? null;
+    }
 }

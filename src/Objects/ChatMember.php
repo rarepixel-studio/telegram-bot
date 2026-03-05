@@ -154,4 +154,28 @@ class ChatMember extends BaseObject
     {
         return $this->items['can_add_web_page_previews'] ?? null;
     }
+
+    /**
+     * (Optional). Custom tag assigned to the chat member.
+     */
+    public function getTag(): ?string
+    {
+        return $this->items['tag'] ?? null;
+    }
+
+    /**
+     * (Optional). True, if the user is allowed to edit their tag in the chat.
+     */
+    public function getCanEditTag(): ?bool
+    {
+        return $this->items['can_edit_tag'] ?? null;
+    }
+
+    /**
+     * (Optional). Administrators only. True, if the administrator can manage member tags in the chat.
+     */
+    public function getCanManageTags(): ?bool
+    {
+        return $this->items['can_manage_tags'] ?? null;
+    }
 }

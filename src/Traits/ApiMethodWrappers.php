@@ -137,6 +137,7 @@ use Telegram\Bot\Requests\SendGiftRequest;
 use Telegram\Bot\Requests\SendInvoiceRequest;
 use Telegram\Bot\Requests\SendLocationRequest;
 use Telegram\Bot\Requests\SendMediaGroupRequest;
+use Telegram\Bot\Requests\SendMessageDraftRequest;
 use Telegram\Bot\Requests\SendMessageRequest;
 use Telegram\Bot\Requests\SendPaidMediaRequest;
 use Telegram\Bot\Requests\SendPhotoRequest;
@@ -153,6 +154,7 @@ use Telegram\Bot\Requests\SetBusinessAccountProfilePhotoRequest;
 use Telegram\Bot\Requests\SetBusinessAccountUsernameRequest;
 use Telegram\Bot\Requests\SetChatAdministratorCustomTitleRequest;
 use Telegram\Bot\Requests\SetChatDescriptionRequest;
+use Telegram\Bot\Requests\SetChatMemberTagRequest;
 use Telegram\Bot\Requests\SetChatMenuButtonRequest;
 use Telegram\Bot\Requests\SetChatPermissionsRequest;
 use Telegram\Bot\Requests\SetChatPhotoRequest;
@@ -443,6 +445,27 @@ trait ApiMethodWrappers
 
         return $this->prepareResponse(function (TelegramResponse $response) {
             return new Message($response->getDecodedBody());
+        }, $response);
+    }
+
+    /**
+     * Change the current draft message in a private chat.
+     *
+     * @link https://core.telegram.org/bots/api#sendmessagedraft
+     *
+     * @throws TelegramValidationException|TelegramSDKException
+     */
+    public function sendMessageDraft(array|SendMessageDraftRequest $params): bool|Closure
+    {
+        if ($params instanceof SendMessageDraftRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('sendMessageDraft', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return $response->getResult();
         }, $response);
     }
 
@@ -1085,6 +1108,27 @@ trait ApiMethodWrappers
         }
 
         $response = $this->post('promoteChatMember', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * Change the tag of a regular member of a group or a supergroup chat.
+     *
+     * @link https://core.telegram.org/bots/api#setchatmembertag
+     *
+     * @throws TelegramValidationException|TelegramSDKException
+     */
+    public function setChatMemberTag(array|SetChatMemberTagRequest $params): bool|Closure
+    {
+        if ($params instanceof SetChatMemberTagRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('setChatMemberTag', $params);
 
         return $this->prepareResponse(function (TelegramResponse $response) {
             return $response->getResult();
