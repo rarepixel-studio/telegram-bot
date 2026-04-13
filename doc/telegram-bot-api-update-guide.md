@@ -43,6 +43,8 @@ Add the following where applicable:
 
 ## Implementation Steps
 
+- If you are updating a Telegram type (Object) or method, check that method or object's property and methods with the official docs. fix any previous mistakes (Missing fields, or fields not available in official doc, missing methods ect)
+
 1. **Update the local spec**: Align `doc/telegram-bot-api.md` with the official update notes.
 2. **Update method list**: Add any new methods to `doc/telegram-available-methods.md`.
 3. **Add request object(s)**:

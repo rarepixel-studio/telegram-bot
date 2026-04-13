@@ -97,7 +97,7 @@ class SendPollRequestTest extends TestCase
     public function test_it_serializes_to_array_correctly()
     {
         $request = new SendPollRequest(12345, 'What is your favorite color?', ['Red', 'Blue', 'Green']);
-        $request->type('quiz')->correctOptionId(0)->explanation('Red is correct!');
+        $request->type('quiz')->correctOptionIds([0])->explanation('Red is correct!');
 
         $array = $request->toArray();
 
@@ -105,7 +105,7 @@ class SendPollRequestTest extends TestCase
         $this->assertEquals('What is your favorite color?', $array['question']);
         $this->assertSame(json_encode(['Red', 'Blue', 'Green']), $array['options']);
         $this->assertEquals('quiz', $array['type']);
-        $this->assertEquals(0, $array['correct_option_id']);
+        $this->assertEquals([0], $array['correct_option_ids']);
         $this->assertEquals('Red is correct!', $array['explanation']);
     }
 

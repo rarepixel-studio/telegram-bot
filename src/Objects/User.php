@@ -138,4 +138,12 @@ class User extends BaseObject
     {
         return $this->items['allows_users_to_create_topics'] ?? null;
     }
+
+    /**
+     * (Optional). True, if the bot can manage other bots.
+     */
+    public function getCanManageBots(): ?bool
+    {
+        return $this->items['can_manage_bots'] ?? null;
+    }
 }

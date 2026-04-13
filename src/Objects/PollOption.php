@@ -44,4 +44,12 @@ class PollOption extends BaseObject
     {
         return $this->items['text_entities'] ?? null;
     }
+
+    /**
+     * Unique identifier for the poll option.
+     */
+    public function getPersistentId(): string
+    {
+        return $this->items['persistent_id'];
+    }
 }

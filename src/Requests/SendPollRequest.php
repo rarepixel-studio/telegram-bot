@@ -26,6 +26,7 @@ class SendPollRequest extends TelegramApiRequest
         'options',
         'question_entities',
         'explanation_entities',
+        'description_entities',
         'reply_markup',
     ];
 
@@ -125,11 +126,11 @@ class SendPollRequest extends TelegramApiRequest
     }
 
     /**
-     * 0-based identifier of the correct answer option, required for polls in quiz mode.
+     * 0-based identifiers of the correct answer options, required for polls in quiz mode.
      */
-    public function correctOptionId(int $correct_option_id): self
+    public function correctOptionIds(array $correct_option_ids): self
     {
-        $this->params['correct_option_id'] = $correct_option_id;
+        $this->params['correct_option_ids'] = $correct_option_ids;
 
         return $this;
     }
@@ -162,6 +163,78 @@ class SendPollRequest extends TelegramApiRequest
     public function explanationEntities(array $explanation_entities): self
     {
         $this->params['explanation_entities'] = $explanation_entities;
+
+        return $this;
+    }
+
+    /**
+     * True, if the poll allows revoting.
+     */
+    public function allowsRevoting(bool $allows_revoting): self
+    {
+        $this->params['allows_revoting'] = $allows_revoting;
+
+        return $this;
+    }
+
+    /**
+     * True, if the options should be shuffled.
+     */
+    public function shuffleOptions(bool $shuffle_options): self
+    {
+        $this->params['shuffle_options'] = $shuffle_options;
+
+        return $this;
+    }
+
+    /**
+     * True, if new options can be added to the poll.
+     */
+    public function allowAddingOptions(bool $allow_adding_options): self
+    {
+        $this->params['allow_adding_options'] = $allow_adding_options;
+
+        return $this;
+    }
+
+    /**
+     * True, if the poll results should be hidden until the poll closes.
+     */
+    public function hideResultsUntilCloses(bool $hide_results_until_closes): self
+    {
+        $this->params['hide_results_until_closes'] = $hide_results_until_closes;
+
+        return $this;
+    }
+
+    /**
+     * Text that is shown to the user when the poll is closed or closed by the user, 0-200 characters.
+     */
+    public function description(string $description): self
+    {
+        $this->params['description'] = $description;
+
+        return $this;
+    }
+
+    /**
+     * Mode for parsing entities in the description.
+     */
+    public function descriptionParseMode(string $description_parse_mode): self
+    {
+        $this->params['description_parse_mode'] = $description_parse_mode;
+
+        return $this;
+    }
+
+    /**
+     * A JSON-serialized list of special entities that appear in the poll description.
+     *
+     * @param  array<MessageEntity>  $description_entities
+     */
+    public function descriptionEntities(array $description_entities): self
+    {
+        $this->params['description_entities'] = $description_entities;
 
         return $this;
     }
@@ -289,6 +362,10 @@ class SendPollRequest extends TelegramApiRequest
 
         if (isset($this->params['explanation']) && mb_strlen($this->params['explanation']) > 200) {
             throw new TelegramValidationException('Poll explanation must not exceed 200 characters');
+        }
+
+        if (isset($this->params['description']) && mb_strlen($this->params['description']) > 200) {
+            throw new TelegramValidationException('Poll description must not exceed 200 characters');
         }
 
         if (isset($this->params['open_period'])) {

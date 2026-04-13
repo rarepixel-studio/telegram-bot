@@ -20,6 +20,7 @@ class Poll extends BaseObject
             'options' => PollOption::class,
             'explanation_entities' => MessageEntity::class,
             'question_entities' => MessageEntity::class,
+            'description_entities' => MessageEntity::class,
         ];
     }
 
@@ -91,11 +92,11 @@ class Poll extends BaseObject
     }
 
     /**
-     * (Optional). 0-based identifier of the correct answer option.
+     * (Optional). 0-based identifiers of the correct answer options.
      */
-    public function getCorrectOptionId(): ?int
+    public function getCorrectOptionIds(): ?array
     {
-        return $this->items['correct_option_id'] ?? null;
+        return $this->items['correct_option_ids'] ?? null;
     }
 
     /**
@@ -136,5 +137,29 @@ class Poll extends BaseObject
     public function getQuestionEntities(): ?Collection
     {
         return $this->items['question_entities'] ?? null;
+    }
+
+    /**
+     * (Optional). True, if the poll allows revoting.
+     */
+    public function getAllowsRevoting(): ?bool
+    {
+        return $this->items['allows_revoting'] ?? null;
+    }
+
+    /**
+     * (Optional). Text that is shown to the user when the poll is closed or closed by the user, 0-200 characters.
+     */
+    public function getDescription(): ?string
+    {
+        return $this->items['description'] ?? null;
+    }
+
+    /**
+     * @return Collection<int, MessageEntity>|null
+     */
+    public function getDescriptionEntities(): ?Collection
+    {
+        return $this->items['description_entities'] ?? null;
     }
 }

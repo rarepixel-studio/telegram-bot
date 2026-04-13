@@ -51,4 +51,12 @@ class PollAnswer extends BaseObject
     {
         return $this->items['option_ids'];
     }
+
+    /**
+     * Identifiers of the chosen answer options (persistent IDs).
+     */
+    public function getOptionPersistentIds(): array
+    {
+        return $this->items['option_persistent_ids'];
+    }
 }

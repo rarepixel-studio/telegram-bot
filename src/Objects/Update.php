@@ -38,12 +38,12 @@ class Update extends BaseObject
             'chat_join_request' => ChatJoinRequest::class,
             'chat_boost' => ChatBoostUpdated::class,
             'removed_chat_boost' => ChatBoostRemoved::class,
+            'managed_bot' => ManagedBotUpdated::class,
         ];
     }
 
     /**
      * Determine if the update is of given type
-     *
      */
     public function isType(string $type): bool
     {
@@ -83,6 +83,7 @@ class Update extends BaseObject
             'chat_join_request',
             'chat_boost',
             'removed_chat_boost',
+            'managed_bot',
         ];
 
         return $this->keys()
@@ -348,5 +349,13 @@ class Update extends BaseObject
     public function getRemovedChatBoost(): ?ChatBoostRemoved
     {
         return $this->items['removed_chat_boost'] ?? null;
+    }
+
+    /**
+     * (Optional). A bot was created or its token changed (ManagedBotUpdated).
+     */
+    public function getManagedBot(): ?ManagedBotUpdated
+    {
+        return $this->items['managed_bot'] ?? null;
     }
 }

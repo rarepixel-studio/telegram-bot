@@ -23,6 +23,7 @@ class KeyboardButton extends BaseObject implements ClientConstructibleObjectInte
         return [
             'request_users' => KeyboardButtonRequestUsers::class,
             'request_chat' => KeyboardButtonRequestChat::class,
+            'request_managed_bot' => KeyboardButtonRequestManagedBot::class,
             'request_poll' => KeyboardButtonPollType::class,
             'web_app' => WebAppInfo::class,
         ];
@@ -91,6 +92,18 @@ class KeyboardButton extends BaseObject implements ClientConstructibleObjectInte
     }
 
     /**
+     * Set request managed bot criteria.
+     *
+     * @param  KeyboardButtonRequestManagedBot|array<string, mixed>|null  $requestManagedBot
+     */
+    public function withRequestManagedBot(KeyboardButtonRequestManagedBot|array|null $requestManagedBot): self
+    {
+        $this->items['request_managed_bot'] = $requestManagedBot;
+
+        return $this;
+    }
+
+    /**
      * Request the user's contact.
      */
     public function withRequestContact(?bool $requestContact): self
@@ -151,6 +164,9 @@ class KeyboardButton extends BaseObject implements ClientConstructibleObjectInte
         if (array_key_exists('request_chat', $this->items) && $this->items['request_chat'] !== null) {
             $count++;
         }
+        if (array_key_exists('request_managed_bot', $this->items) && $this->items['request_managed_bot'] !== null) {
+            $count++;
+        }
         if (($this->items['request_contact'] ?? null) === true) {
             $count++;
         }
@@ -170,6 +186,7 @@ class KeyboardButton extends BaseObject implements ClientConstructibleObjectInte
 
         $this->validateNested('request_users', KeyboardButtonRequestUsers::class);
         $this->validateNested('request_chat', KeyboardButtonRequestChat::class);
+        $this->validateNested('request_managed_bot', KeyboardButtonRequestManagedBot::class);
         $this->validateNested('request_poll', KeyboardButtonPollType::class);
         $this->validateNested('web_app', WebAppInfo::class);
     }
@@ -196,6 +213,14 @@ class KeyboardButton extends BaseObject implements ClientConstructibleObjectInte
     public function getRequestChat(): ?KeyboardButtonRequestChat
     {
         return $this->items['request_chat'] ?? null;
+    }
+
+    /**
+     * Request managed bot criteria.
+     */
+    public function getRequestManagedBot(): ?KeyboardButtonRequestManagedBot
+    {
+        return $this->items['request_managed_bot'] ?? null;
     }
 
     /**

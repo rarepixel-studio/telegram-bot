@@ -72,6 +72,7 @@ Note: `InputFile` is not a JSON object. It represents a file uploaded via `multi
 - KeyboardButton
 - KeyboardButtonRequestUsers
 - KeyboardButtonRequestChat
+- KeyboardButtonRequestManagedBot
 - KeyboardButtonPollType
 
 ### Bot command scope objects (request-only)
@@ -247,6 +248,9 @@ as request parameters (dual-use).
 - UniqueGift
 - GiftInfo
 - UniqueGiftInfo
+- PreparedKeyboardButton
+- ManagedBotCreated
+- ManagedBotUpdated
 - OwnedGift
 - OwnedGiftRegular
 - OwnedGiftUnique

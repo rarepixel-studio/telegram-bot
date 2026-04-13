@@ -101,6 +101,7 @@ class Message extends BaseObject
             'reply_markup' => InlineKeyboardMarkup::class,
             'chat_owner_left' => ChatOwnerLeft::class,
             'chat_owner_changed' => ChatOwnerChanged::class,
+            'managed_bot_created' => ManagedBotCreated::class,
         ];
     }
 
@@ -375,6 +376,7 @@ class Message extends BaseObject
             'video_chat_ended',
             'video_chat_participants_invited',
             'web_app_data',
+            'managed_bot_created',
         ];
 
         return $this->keys()
@@ -796,6 +798,14 @@ class Message extends BaseObject
     public function getLeftChatMember(): ?User
     {
         return $this->items['left_chat_member'] ?? null;
+    }
+
+    /**
+     * (Optional). Information about the created managed bot.
+     */
+    public function getManagedBotCreated(): ?ManagedBotCreated
+    {
+        return $this->items['managed_bot_created'] ?? null;
     }
 
     /**

@@ -165,3 +165,6 @@ setPassportDataErrors
 sendGame
 setGameScore
 getGameHighScores
+getManagedBotToken
+replaceManagedBotToken
+savePreparedKeyboardButton

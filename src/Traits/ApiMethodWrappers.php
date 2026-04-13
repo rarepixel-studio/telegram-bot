@@ -24,6 +24,7 @@ use Telegram\Bot\Objects\InputSticker;
 use Telegram\Bot\Objects\MenuButton;
 use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\MessageId;
+use Telegram\Bot\Objects\PreparedKeyboardButton;
 use Telegram\Bot\Objects\Sticker;
 use Telegram\Bot\Objects\Update;
 use Telegram\Bot\Objects\User;
@@ -92,6 +93,7 @@ use Telegram\Bot\Requests\GetCustomEmojiStickersRequest;
 use Telegram\Bot\Requests\GetFileRequest;
 use Telegram\Bot\Requests\GetForumTopicIconStickersRequest;
 use Telegram\Bot\Requests\GetGameHighScoresRequest;
+use Telegram\Bot\Requests\GetManagedBotTokenRequest;
 use Telegram\Bot\Requests\GetMeRequest;
 use Telegram\Bot\Requests\GetMyCommandsRequest;
 use Telegram\Bot\Requests\GetMyDefaultAdministratorRightsRequest;
@@ -121,10 +123,12 @@ use Telegram\Bot\Requests\RemoveMyProfilePhotoRequest;
 use Telegram\Bot\Requests\RemoveUserVerificationRequest;
 use Telegram\Bot\Requests\ReopenForumTopicRequest;
 use Telegram\Bot\Requests\ReopenGeneralForumTopicRequest;
+use Telegram\Bot\Requests\ReplaceManagedBotTokenRequest;
 use Telegram\Bot\Requests\ReplaceStickerInSetRequest;
 use Telegram\Bot\Requests\RestrictChatMemberRequest;
 use Telegram\Bot\Requests\RevokeChatInviteLinkRequest;
 use Telegram\Bot\Requests\SavePreparedInlineMessageRequest;
+use Telegram\Bot\Requests\SavePreparedKeyboardButtonRequest;
 use Telegram\Bot\Requests\SendAnimationRequest;
 use Telegram\Bot\Requests\SendAudioRequest;
 use Telegram\Bot\Requests\SendChatActionRequest;
@@ -3464,6 +3468,60 @@ trait ApiMethodWrappers
         return $this->prepareResponse(function (TelegramResponse $response) {
             return new User($response->getResult());
         }, $this->post('getMe', $params));
+    }
+
+    /**
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function getManagedBotToken(array|GetManagedBotTokenRequest $params): string|Closure
+    {
+        if ($params instanceof GetManagedBotTokenRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('getManagedBotToken', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function replaceManagedBotToken(array|ReplaceManagedBotTokenRequest $params): string|Closure
+    {
+        if ($params instanceof ReplaceManagedBotTokenRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('replaceManagedBotToken', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function savePreparedKeyboardButton(array|SavePreparedKeyboardButtonRequest $params): PreparedKeyboardButton|Closure
+    {
+        if ($params instanceof SavePreparedKeyboardButtonRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('savePreparedKeyboardButton', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return new PreparedKeyboardButton($response->getResult());
+        }, $response);
     }
 
     /**
