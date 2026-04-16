@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 
 class Cause
 {
-    public static function userBlocked(?\Exception $e = null)
+    public static function userBlocked(?\Exception $e = null): bool|\Closure
     {
         $closure = function (\Exception $e) {
             return $e instanceof TelegramResponseException &&
@@ -16,7 +16,7 @@ class Cause
         return is_null($e) ? $closure : $closure($e);
     }
 
-    public static function botWasKicked(?\Exception $e = null)
+    public static function botWasKicked(?\Exception $e = null): bool|\Closure
     {
         $closure = function (\Exception $e) {
             return $e instanceof TelegramResponseException &&
@@ -26,7 +26,7 @@ class Cause
         return is_null($e) ? $closure : $closure($e);
     }
 
-    public static function botWasBlockedOrKicked(?\Exception $e = null)
+    public static function botWasBlockedOrKicked(?\Exception $e = null): bool|\Closure
     {
         $closure = function (\Exception $e) {
             return self::userBlocked($e) or self::botWasKicked($e);
@@ -35,7 +35,7 @@ class Cause
         return is_null($e) ? $closure : $closure($e);
     }
 
-    public static function invalidChat(?\Exception $e = null)
+    public static function invalidChat(?\Exception $e = null): bool|\Closure
     {
         $closure = function (\Exception $e) {
             return $e instanceof TelegramResponseException &&
@@ -45,7 +45,7 @@ class Cause
         return is_null($e) ? $closure : $closure($e);
     }
 
-    public static function invalidFileId(?\Exception $e = null)
+    public static function invalidFileId(?\Exception $e = null): bool|\Closure
     {
         $closure = function (\Exception $e) {
             return $e instanceof TelegramResponseException &&
@@ -55,7 +55,7 @@ class Cause
         return is_null($e) ? $closure : $closure($e);
     }
 
-    public static function messageNotModified(?\Exception $e = null)
+    public static function messageNotModified(?\Exception $e = null): bool|\Closure
     {
         $closure = function (\Exception $e) {
             return $e instanceof TelegramResponseException &&
@@ -65,7 +65,7 @@ class Cause
         return is_null($e) ? $closure : $closure($e);
     }
 
-    public static function messageNotFound(?\Exception $e = null)
+    public static function messageNotFound(?\Exception $e = null): bool|\Closure
     {
         $closure = function (\Exception $e) {
             return $e instanceof TelegramSDKException &&
@@ -75,7 +75,7 @@ class Cause
         return is_null($e) ? $closure : $closure($e);
     }
 
-    public static function tooManyRequests(?\Exception $e = null)
+    public static function tooManyRequests(?\Exception $e = null): bool|\Closure
     {
         $closure = function (\Exception $e) {
             return $e instanceof TelegramResponseException &&
@@ -85,7 +85,7 @@ class Cause
         return is_null($e) ? $closure : $closure($e);
     }
 
-    public static function fileIsTooBig(?\Exception $e = null)
+    public static function fileIsTooBig(?\Exception $e = null): bool|\Closure
     {
         $closure = function (\Exception $e) {
             return
@@ -96,7 +96,7 @@ class Cause
         return is_null($e) ? $closure : $closure($e);
     }
 
-    public static function invalidQueryId(?\Exception $e = null)
+    public static function invalidQueryId(?\Exception $e = null): bool|\Closure
     {
         $closure = function (\Exception $e) {
             return
@@ -107,7 +107,7 @@ class Cause
         return is_null($e) ? $closure : $closure($e);
     }
 
-    public static function queryIsOld(?\Exception $e = null)
+    public static function queryIsOld(?\Exception $e = null): bool|\Closure
     {
         $closure = function (\Exception $e) {
             return
@@ -118,7 +118,7 @@ class Cause
         return is_null($e) ? $closure : $closure($e);
     }
 
-    public static function emptyFile(?\Exception $e = null)
+    public static function emptyFile(?\Exception $e = null): bool|\Closure
     {
         $closure = function (\Exception $e) {
             return
