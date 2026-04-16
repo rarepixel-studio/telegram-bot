@@ -10,6 +10,7 @@ use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramMalformedResponseException;
 use Telegram\Bot\Exceptions\TelegramResponseException;
 use Telegram\Bot\Exceptions\TelegramSDKException;
+use Telegram\Bot\Exceptions\TelegramUserDeactivatedException;
 use Telegram\Bot\FileUpload\HttpUrl;
 use Telegram\Bot\HttpClients\GuzzleHttpClient;
 use Telegram\Bot\Objects\ChatMember;
@@ -651,6 +652,27 @@ class ApiTest extends TestCase
             $this->assertEquals(1000, $e->getResponseParameters()->getRetryAfter());
             $error = true;
         }
+        $this->assertTrue($error);
+    }
+
+    public function test_forbidden_user_deactivated_exception_is_thrown_on_403()
+    {
+        $api = Mocker::setTelegramResponse([
+            'ok' => false,
+            'error_code' => 403,
+            'description' => 'Forbidden: user is deactivated',
+        ]);
+
+        $error = false;
+        try {
+            $api->sendMessage(['chat_id' => 1234, 'text' => 'text']);
+        } catch (TelegramUserDeactivatedException $e) {
+            $this->assertEquals(403, $e->getCode());
+            $error = true;
+        } catch (\Exception $e) {
+            $this->fail('Expected TelegramUserDeactivatedException, got '.get_class($e));
+        }
+
         $this->assertTrue($error);
     }
 

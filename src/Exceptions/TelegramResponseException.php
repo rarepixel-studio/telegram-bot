@@ -51,11 +51,12 @@ class TelegramResponseException extends TelegramSDKException
             return new TelegramMalformedResponseException($response, $response->getBody(), $response->getHttpStatusCode());
         }
 
-        $code = isset($data['error_code']) ? $data['error_code'] : -1;
-        $message = isset($data['description']) ? $data['description'] : 'Unknown error from API.';
+        $code = $data['error_code'] ?? -1;
+        $message = $data['description'] ?? 'Unknown error from API.';
 
         $exceptionClass = match ($code) {
             404 => TelegramNotFoundException::class,
+            403 => static::resolveForbiddenException($message),
             401 => TelegramUnauthorizedException::class,
             400 => static::resolveBadRequestException($message),
             default => static::class,
@@ -82,6 +83,20 @@ class TelegramResponseException extends TelegramSDKException
 
         if (str_contains($message, 'PARTICIPANT_ID_INVALID') || str_contains($message, 'user not found')) {
             return TelegramInvalidUserIdException::class;
+        }
+
+        return static::class;
+    }
+
+    /**
+     * Resolve the appropriate exception class for a 403 Forbidden response.
+     *
+     * @return class-string<TelegramResponseException>
+     */
+    protected static function resolveForbiddenException(string $message): string
+    {
+        if (str_contains(mb_strtolower($message), 'forbidden: user is deactivated')) {
+            return TelegramUserDeactivatedException::class;
         }
 
         return static::class;
