@@ -54,19 +54,33 @@ class TelegramResponseException extends TelegramSDKException
         $code = $data['error_code'] ?? -1;
         $message = $data['description'] ?? 'Unknown error from API.';
 
+        $exception = $response->getRequestException()
+            ? new static($response, $message, $code, $response->getRequestException())
+            : new static($response, $message, $code);
+
+        if (Cause::botWasBlockedOrKicked($exception)) {
+            $exceptionClass = TelegramUserUnreachableException::class;
+
+            return $response->getRequestException()
+                ? new $exceptionClass($response, $message, $code, $response->getRequestException())
+                : new $exceptionClass($response, $message, $code);
+        }
+
         $exceptionClass = match ($code) {
             404 => TelegramNotFoundException::class,
-            403 => static::resolveForbiddenException($message),
+            403 => static::class,
             401 => TelegramUnauthorizedException::class,
             400 => static::resolveBadRequestException($message),
             default => static::class,
         };
 
-        if ($response->getRequestException()) {
-            return new $exceptionClass($response, $message, $code, $response->getRequestException());
+        if ($exceptionClass === static::class) {
+            return $exception;
         }
 
-        return new $exceptionClass($response, $message, $code);
+        return $response->getRequestException()
+            ? new $exceptionClass($response, $message, $code, $response->getRequestException())
+            : new $exceptionClass($response, $message, $code);
 
     }
 
@@ -83,20 +97,6 @@ class TelegramResponseException extends TelegramSDKException
 
         if (str_contains($message, 'PARTICIPANT_ID_INVALID') || str_contains($message, 'user not found')) {
             return TelegramInvalidUserIdException::class;
-        }
-
-        return static::class;
-    }
-
-    /**
-     * Resolve the appropriate exception class for a 403 Forbidden response.
-     *
-     * @return class-string<TelegramResponseException>
-     */
-    protected static function resolveForbiddenException(string $message): string
-    {
-        if (str_contains(mb_strtolower($message), 'forbidden: user is deactivated')) {
-            return TelegramUserDeactivatedException::class;
         }
 
         return static::class;

@@ -10,7 +10,7 @@ use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramMalformedResponseException;
 use Telegram\Bot\Exceptions\TelegramResponseException;
 use Telegram\Bot\Exceptions\TelegramSDKException;
-use Telegram\Bot\Exceptions\TelegramUserDeactivatedException;
+use Telegram\Bot\Exceptions\TelegramUserUnreachableException;
 use Telegram\Bot\FileUpload\HttpUrl;
 use Telegram\Bot\HttpClients\GuzzleHttpClient;
 use Telegram\Bot\Objects\ChatMember;
@@ -666,11 +666,11 @@ class ApiTest extends TestCase
         $error = false;
         try {
             $api->sendMessage(['chat_id' => 1234, 'text' => 'text']);
-        } catch (TelegramUserDeactivatedException $e) {
+        } catch (TelegramUserUnreachableException $e) {
             $this->assertEquals(403, $e->getCode());
             $error = true;
         } catch (\Exception $e) {
-            $this->fail('Expected TelegramUserDeactivatedException, got '.get_class($e));
+            $this->fail('Expected TelegramUserUnreachableException, got '.get_class($e));
         }
 
         $this->assertTrue($error);
