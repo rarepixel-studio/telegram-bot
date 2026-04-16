@@ -7,6 +7,4 @@ namespace Telegram\Bot\Exceptions;
  *
  * This typically indicates the provided chat ID does not exist or the bot has no access to it.
  */
-class TelegramChatNotFoundException extends TelegramResponseException
-{
-}
+class TelegramChatNotFoundException extends TelegramUserUnreachableException {}
