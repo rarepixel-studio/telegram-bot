@@ -34,8 +34,9 @@ class KeyboardButtonRequestUsers extends BaseObject implements ClientConstructib
      * Create a KeyboardButtonRequestUsers instance.
      *
      * @param  array<string, mixed>|int  $items
+     * @param  mixed  ...$args
      */
-    public static function make($items = []): self
+    public static function make($items = [], ...$args): self
     {
         if (is_int($items)) {
             return new self(['request_id' => $items]);

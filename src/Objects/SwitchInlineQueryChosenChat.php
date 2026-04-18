@@ -33,8 +33,9 @@ class SwitchInlineQueryChosenChat extends BaseObject implements ClientConstructi
      * Create a SwitchInlineQueryChosenChat instance.
      *
      * @param  array<string, mixed>  $items
+     * @param  mixed  ...$args
      */
-    public static function make($items = []): self
+    public static function make($items = [], ...$args): self
     {
         if (is_array($items)) {
             return new self($items);

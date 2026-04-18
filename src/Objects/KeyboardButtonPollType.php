@@ -35,10 +35,11 @@ class KeyboardButtonPollType extends BaseObject implements ClientConstructibleOb
      * Create a KeyboardButtonPollType instance.
      *
      * @param  array<string, mixed>|PollType|string|null  $items
+     * @param  mixed  ...$args
      *
      * @throws TelegramValidationException
      */
-    public static function make($items = []): self
+    public static function make($items = [], ...$args): self
     {
         if (is_array($items)) {
             return new self($items);

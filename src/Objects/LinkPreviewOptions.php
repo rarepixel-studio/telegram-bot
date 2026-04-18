@@ -33,8 +33,9 @@ class LinkPreviewOptions extends BaseObject implements ClientConstructibleObject
      * Create a LinkPreviewOptions instance.
      *
      * @param  array<string, mixed>  $items
+     * @param  mixed  ...$args
      */
-    public static function make($items = []): self
+    public static function make($items = [], ...$args): self
     {
         if (is_array($items)) {
             return new self($items);

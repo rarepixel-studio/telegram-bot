@@ -45,8 +45,9 @@ class MessageEntity extends BaseObject implements ClientConstructibleObjectInter
      * Create a MessageEntity instance.
      *
      * @param  array<string, mixed>  $items
+     * @param  mixed  ...$args
      */
-    public static function make($items = []): self
+    public static function make($items = [], ...$args): self
     {
         if (is_array($items)) {
             return new self($items);

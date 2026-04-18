@@ -37,8 +37,9 @@ class InlineKeyboardMarkup extends BaseObject implements ClientConstructibleObje
      * Create an InlineKeyboardMarkup instance.
      *
      * @param  array<string, mixed>|array<int, array<int, InlineKeyboardButton|array<string, mixed>>>  $items
+     * @param  mixed  ...$args
      */
-    public static function make($items = []): self
+    public static function make($items = [], ...$args): self
     {
         if (is_array($items) && array_key_exists('inline_keyboard', $items)) {
             return new self($items);

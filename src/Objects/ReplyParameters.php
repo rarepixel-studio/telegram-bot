@@ -37,8 +37,9 @@ class ReplyParameters extends BaseObject implements ClientConstructibleObjectInt
      * Create a ReplyParameters instance.
      *
      * @param  array<string, mixed>|int  $items
+     * @param  mixed  ...$args
      */
-    public static function make($items = []): self
+    public static function make($items = [], ...$args): self
     {
         if (is_int($items)) {
             return new self(['message_id' => $items]);

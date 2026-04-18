@@ -37,8 +37,9 @@ class ReplyKeyboardMarkup extends BaseObject implements ClientConstructibleObjec
      * Create a ReplyKeyboardMarkup instance.
      *
      * @param  array<string, mixed>|array<int, array<int, KeyboardButton|array<string, mixed>>>  $items
+     * @param  mixed  ...$args
      */
-    public static function make($items = []): self
+    public static function make($items = [], ...$args): self
     {
         if (is_array($items) && array_key_exists('keyboard', $items)) {
             return new self($items);

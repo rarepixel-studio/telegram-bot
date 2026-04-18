@@ -34,8 +34,9 @@ class ReplyKeyboardRemove extends BaseObject implements ClientConstructibleObjec
      * Create a ReplyKeyboardRemove instance.
      *
      * @param  array<string, mixed>|bool  $items
+     * @param  mixed  ...$args
      */
-    public static function make($items = []): self
+    public static function make($items = [], ...$args): self
     {
         if (is_bool($items)) {
             return new self(['remove_keyboard' => $items]);

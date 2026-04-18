@@ -34,8 +34,9 @@ class WebAppInfo extends BaseObject implements ClientConstructibleObjectInterfac
      * Create a WebAppInfo instance.
      *
      * @param  array<string, mixed>|string  $items
+     * @param  mixed  ...$args
      */
-    public static function make($items = []): self
+    public static function make($items = [], ...$args): self
     {
         if (is_string($items)) {
             return new self(['url' => $items]);

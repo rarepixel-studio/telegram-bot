@@ -34,8 +34,9 @@ class ForceReply extends BaseObject implements ClientConstructibleObjectInterfac
      * Create a ForceReply instance.
      *
      * @param  array<string, mixed>|bool  $items
+     * @param  mixed  ...$args
      */
-    public static function make($items = []): self
+    public static function make($items = [], ...$args): self
     {
         if (is_bool($items)) {
             return new self(['force_reply' => $items]);
