@@ -18,6 +18,7 @@ class InputPollOption extends BaseObject
     {
         return [
             'text_entities' => MessageEntity::class,
+            'media' => InputPollOptionMedia::class,
         ];
     }
 
@@ -43,5 +44,13 @@ class InputPollOption extends BaseObject
     public function getTextEntities(): ?Collection
     {
         return $this->items['text_entities'] ?? null;
+    }
+
+    /**
+     * (Optional). Media added to the poll option.
+     */
+    public function getMedia(): ?InputPollOptionMedia
+    {
+        return $this->items['media'] ?? null;
     }
 }

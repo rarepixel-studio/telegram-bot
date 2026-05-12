@@ -7,7 +7,7 @@ namespace Telegram\Bot\Objects;
  *
  * The paid media is a video.
  */
-class PaidMediaVideo extends BaseObject
+class PaidMediaVideo extends PaidMedia
 {
     /**
      * {@inheritdoc}

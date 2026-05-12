@@ -23,6 +23,7 @@ class ExternalReplyInfo extends BaseObject
             'animation' => Animation::class,
             'audio' => Audio::class,
             'document' => Document::class,
+            'live_photo' => LivePhoto::class,
             'paid_media' => PaidMediaInfo::class,
             'photo' => PhotoSize::class,
             'sticker' => Sticker::class,
@@ -97,6 +98,14 @@ class ExternalReplyInfo extends BaseObject
     public function getDocument(): ?Document
     {
         return $this->items['document'] ?? null;
+    }
+
+    /**
+     * (Optional). Message is a live photo, information about the live photo.
+     */
+    public function getLivePhoto(): ?LivePhoto
+    {
+        return $this->items['live_photo'] ?? null;
     }
 
     /**

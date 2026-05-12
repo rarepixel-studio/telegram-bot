@@ -28,7 +28,7 @@ class SendMessageDraftRequest extends TelegramApiRequest
     /** @var int Unique identifier of the message draft */
     protected int $draftId;
 
-    /** @var string Text of the message to be sent, 1-4096 characters */
+    /** @var string Text of the message to be sent, 0-4096 characters */
     protected string $text;
 
     /** @var int|null Unique identifier for the target message thread */
@@ -43,7 +43,7 @@ class SendMessageDraftRequest extends TelegramApiRequest
     /**
      * SendMessageDraftRequest constructor.
      */
-    public function __construct(int $chatId, int $draftId, string $text)
+    public function __construct(int $chatId, int $draftId, string $text = '')
     {
         $this->chatId = $chatId;
         $this->draftId = $draftId;
@@ -112,10 +112,6 @@ class SendMessageDraftRequest extends TelegramApiRequest
     public function validate(): void
     {
         $textLength = mb_strlen($this->text);
-
-        if ($textLength < 1) {
-            throw new TelegramValidationException('Text cannot be empty');
-        }
 
         if ($textLength > 4096) {
             throw new TelegramValidationException('Text must not exceed 4096 characters');

@@ -178,4 +178,12 @@ class ChatMember extends BaseObject
     {
         return $this->items['can_manage_tags'] ?? null;
     }
+
+    /**
+     * (Optional). True, if the user is allowed to react to messages.
+     */
+    public function getCanReactToMessages(): ?bool
+    {
+        return $this->items['can_react_to_messages'] ?? null;
+    }
 }

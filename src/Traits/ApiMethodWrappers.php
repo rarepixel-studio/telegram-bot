@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Telegram\Bot\Contracts\ApiRequestInterface;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\Exceptions\TelegramValidationException;
+use Telegram\Bot\Objects\BotAccessSettings;
 use Telegram\Bot\Objects\BotCommand;
 use Telegram\Bot\Objects\BotDescription;
 use Telegram\Bot\Objects\BotName;
@@ -25,6 +26,7 @@ use Telegram\Bot\Objects\MenuButton;
 use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\MessageId;
 use Telegram\Bot\Objects\PreparedKeyboardButton;
+use Telegram\Bot\Objects\SentGuestMessage;
 use Telegram\Bot\Objects\Sticker;
 use Telegram\Bot\Objects\Update;
 use Telegram\Bot\Objects\User;
@@ -34,6 +36,7 @@ use Telegram\Bot\Objects\UserProfilePhotos;
 use Telegram\Bot\Objects\WebhookInfo;
 use Telegram\Bot\Requests\AddStickerToSetRequest;
 use Telegram\Bot\Requests\AnswerCallbackQueryRequest;
+use Telegram\Bot\Requests\AnswerGuestQueryRequest;
 use Telegram\Bot\Requests\AnswerInlineQueryRequest;
 use Telegram\Bot\Requests\AnswerPreCheckoutQueryRequest;
 use Telegram\Bot\Requests\AnswerShippingQueryRequest;
@@ -55,10 +58,12 @@ use Telegram\Bot\Requests\CreateInvoiceLinkRequest;
 use Telegram\Bot\Requests\CreateNewStickerSetRequest;
 use Telegram\Bot\Requests\DeclineChatJoinRequestRequest;
 use Telegram\Bot\Requests\DeclineSuggestedPostRequest;
+use Telegram\Bot\Requests\DeleteAllMessageReactionsRequest;
 use Telegram\Bot\Requests\DeleteBusinessMessagesRequest;
 use Telegram\Bot\Requests\DeleteChatPhotoRequest;
 use Telegram\Bot\Requests\DeleteChatStickerSetRequest;
 use Telegram\Bot\Requests\DeleteForumTopicRequest;
+use Telegram\Bot\Requests\DeleteMessageReactionRequest;
 use Telegram\Bot\Requests\DeleteMessageRequest;
 use Telegram\Bot\Requests\DeleteMessagesRequest;
 use Telegram\Bot\Requests\DeleteMyCommandsRequest;
@@ -93,6 +98,7 @@ use Telegram\Bot\Requests\GetCustomEmojiStickersRequest;
 use Telegram\Bot\Requests\GetFileRequest;
 use Telegram\Bot\Requests\GetForumTopicIconStickersRequest;
 use Telegram\Bot\Requests\GetGameHighScoresRequest;
+use Telegram\Bot\Requests\GetManagedBotAccessSettingsRequest;
 use Telegram\Bot\Requests\GetManagedBotTokenRequest;
 use Telegram\Bot\Requests\GetMeRequest;
 use Telegram\Bot\Requests\GetMyCommandsRequest;
@@ -105,6 +111,7 @@ use Telegram\Bot\Requests\GetStarTransactionsRequest;
 use Telegram\Bot\Requests\GetStickerSetRequest;
 use Telegram\Bot\Requests\GetUpdatesRequest;
 use Telegram\Bot\Requests\GetUserChatBoostsRequest;
+use Telegram\Bot\Requests\GetUserPersonalChatMessagesRequest;
 use Telegram\Bot\Requests\GetUserProfileAudiosRequest;
 use Telegram\Bot\Requests\GetUserProfilePhotosRequest;
 use Telegram\Bot\Requests\GetWebhookInfoRequest;
@@ -139,6 +146,7 @@ use Telegram\Bot\Requests\SendDocumentRequest;
 use Telegram\Bot\Requests\SendGameRequest;
 use Telegram\Bot\Requests\SendGiftRequest;
 use Telegram\Bot\Requests\SendInvoiceRequest;
+use Telegram\Bot\Requests\SendLivePhotoRequest;
 use Telegram\Bot\Requests\SendLocationRequest;
 use Telegram\Bot\Requests\SendMediaGroupRequest;
 use Telegram\Bot\Requests\SendMessageDraftRequest;
@@ -166,6 +174,7 @@ use Telegram\Bot\Requests\SetChatStickerSetRequest;
 use Telegram\Bot\Requests\SetChatTitleRequest;
 use Telegram\Bot\Requests\SetCustomEmojiStickerSetThumbnailRequest;
 use Telegram\Bot\Requests\SetGameScoreRequest;
+use Telegram\Bot\Requests\SetManagedBotAccessSettingsRequest;
 use Telegram\Bot\Requests\SetMessageReactionRequest;
 use Telegram\Bot\Requests\SetMyCommandsRequest;
 use Telegram\Bot\Requests\SetMyDefaultAdministratorRightsRequest;
@@ -576,6 +585,23 @@ trait ApiMethodWrappers
         }
 
         return $this->uploadFile('sendPhoto', $params, ['photo']);
+    }
+
+    /**
+     * Send live photos.
+     *
+     * @link https://core.telegram.org/bots/api#sendlivephoto
+     *
+     * @throws TelegramValidationException|TelegramSDKException
+     */
+    public function sendLivePhoto(array|SendLivePhotoRequest $params): Message|Closure
+    {
+        if ($params instanceof SendLivePhotoRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        return $this->uploadFile('sendLivePhoto', $params, ['live_photo', 'photo']);
     }
 
     /**
@@ -1666,6 +1692,29 @@ trait ApiMethodWrappers
     }
 
     /**
+     * Get messages from a user's personal chat.
+     *
+     * @link https://core.telegram.org/bots/api#getuserpersonalchatmessages
+     *
+     * @throws TelegramValidationException|TelegramSDKException
+     */
+    public function getUserPersonalChatMessages(array|GetUserPersonalChatMessagesRequest $params): Collection|Closure
+    {
+        if ($params instanceof GetUserPersonalChatMessagesRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('getUserPersonalChatMessages', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return collect($response->getResult())->map(function ($message) {
+                return new Message($message);
+            });
+        }, $response);
+    }
+
+    /**
      * Set a new group sticker set for a supergroup.
      *
      * @link https://core.telegram.org/bots/api#setchatstickerset
@@ -1959,6 +2008,28 @@ trait ApiMethodWrappers
 
         return $this->prepareResponse(function (TelegramResponse $response) {
             return $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * Reply to a received guest message.
+     *
+     * @link https://core.telegram.org/bots/api#answerguestquery
+     *
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function answerGuestQuery(array|AnswerGuestQueryRequest $params): SentGuestMessage|Closure
+    {
+        if ($params instanceof AnswerGuestQueryRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('answerGuestQuery', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return new SentGuestMessage($response->getResult());
         }, $response);
     }
 
@@ -2847,6 +2918,50 @@ trait ApiMethodWrappers
     }
 
     /**
+     * Remove a reaction from a message.
+     *
+     * @link https://core.telegram.org/bots/api#deletemessagereaction
+     *
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function deleteMessageReaction(array|DeleteMessageReactionRequest $params): bool|Closure
+    {
+        if ($params instanceof DeleteMessageReactionRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('deleteMessageReaction', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * Remove recent reactions added by a given user or chat.
+     *
+     * @link https://core.telegram.org/bots/api#deleteallmessagereactions
+     *
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function deleteAllMessageReactions(array|DeleteAllMessageReactionsRequest $params): bool|Closure
+    {
+        if ($params instanceof DeleteAllMessageReactionsRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('deleteAllMessageReactions', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return $response->getResult();
+        }, $response);
+    }
+
+    /**
      * @throws TelegramSDKException
      * @throws TelegramValidationException
      */
@@ -3500,6 +3615,42 @@ trait ApiMethodWrappers
         }
 
         $response = $this->post('replaceManagedBotToken', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function getManagedBotAccessSettings(array|GetManagedBotAccessSettingsRequest $params): BotAccessSettings|Closure
+    {
+        if ($params instanceof GetManagedBotAccessSettingsRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('getManagedBotAccessSettings', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return new BotAccessSettings($response->getResult());
+        }, $response);
+    }
+
+    /**
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function setManagedBotAccessSettings(array|SetManagedBotAccessSettingsRequest $params): bool|Closure
+    {
+        if ($params instanceof SetManagedBotAccessSettingsRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('setManagedBotAccessSettings', $params);
 
         return $this->prepareResponse(function (TelegramResponse $response) {
             return $response->getResult();

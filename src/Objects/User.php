@@ -146,4 +146,12 @@ class User extends BaseObject
     {
         return $this->items['can_manage_bots'] ?? null;
     }
+
+    /**
+     * (Optional). True, if the bot supports guest queries from chats it is not a member of. Returned only in getMe.
+     */
+    public function getSupportsGuestQueries(): ?bool
+    {
+        return $this->items['supports_guest_queries'] ?? null;
+    }
 }

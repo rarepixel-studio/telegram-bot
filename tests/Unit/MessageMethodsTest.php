@@ -14,6 +14,7 @@ use Telegram\Bot\Requests\ForwardMessagesRequest;
 use Telegram\Bot\Requests\SendAnimationRequest;
 use Telegram\Bot\Requests\SendAudioRequest;
 use Telegram\Bot\Requests\SendDocumentRequest;
+use Telegram\Bot\Requests\SendLivePhotoRequest;
 use Telegram\Bot\Requests\SendMessageRequest;
 use Telegram\Bot\Requests\SendPaidMediaRequest;
 use Telegram\Bot\Requests\SendPhotoRequest;
@@ -598,6 +599,29 @@ class MessageMethodsTest extends TestCase
 
         $this->assertInstanceOf(Message::class, $response);
         $this->assertEquals(134, $response->getMessageId());
+    }
+
+    /** @test */
+    public function it_sends_live_photo_when_request_object_is_provided(): void
+    {
+        $api = Mocker::createApiResponse([
+            'message_id' => 135,
+            'date' => 1234567890,
+            'chat' => ['id' => 789, 'type' => 'private'],
+            'live_photo' => [
+                'file_id' => 'live-photo-file-id',
+                'file_unique_id' => 'unique-live-photo-file-id',
+                'width' => 640,
+                'height' => 480,
+                'duration' => 4,
+            ],
+        ]);
+
+        $request = new SendLivePhotoRequest(789, 'live-photo-file-id', 'photo-file-id');
+        $response = $api->sendLivePhoto($request);
+
+        $this->assertInstanceOf(Message::class, $response);
+        $this->assertEquals(135, $response->getMessageId());
     }
 
     /** @test */

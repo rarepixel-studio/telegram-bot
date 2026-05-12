@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
  *
  * The paid media is a photo.
  */
-class PaidMediaPhoto extends BaseObject
+class PaidMediaPhoto extends PaidMedia
 {
     /**
      * {@inheritdoc}

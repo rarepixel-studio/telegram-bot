@@ -19,10 +19,17 @@ not returned by Telegram.
 - InputMediaAudio
 - InputMediaPhoto
 - InputMediaVideo
+- InputMediaLivePhoto
+- InputMediaSticker
+- InputMediaLocation
+- InputMediaVenue
 - InputFile
+- InputPollMedia
+- InputPollOptionMedia
 - InputPaidMedia
 - InputPaidMediaPhoto
 - InputPaidMediaVideo
+- InputPaidMediaLivePhoto
 - InputProfilePhoto
 - InputProfilePhotoStatic
 - InputProfilePhotoAnimated
@@ -111,6 +118,7 @@ as request parameters (dual-use).
 - ChatFullInfo
 - Message
 - MessageId
+- SentGuestMessage
 - InaccessibleMessage
 - MaybeInaccessibleMessage
 - MessageEntity
@@ -126,6 +134,7 @@ as request parameters (dual-use).
 - Animation
 - Audio
 - Document
+- LivePhoto
 - Story
 - Video
 - VideoNote
@@ -135,8 +144,10 @@ as request parameters (dual-use).
 - PaidMediaPreview
 - PaidMediaPhoto
 - PaidMediaVideo
+- PaidMediaLivePhoto
 - Contact
 - Dice
+- PollMedia
 - PollOption
 - PollAnswer
 - Poll
@@ -178,6 +189,8 @@ as request parameters (dual-use).
 - ChatOwnerChanged
 - PaidMessagePriceChanged
 - DirectMessagePriceChanged
+- PollOptionAdded
+- PollOptionDeleted
 - SuggestedPostApproved
 - SuggestedPostApprovalFailed
 - SuggestedPostDeclined
@@ -251,6 +264,7 @@ as request parameters (dual-use).
 - PreparedKeyboardButton
 - ManagedBotCreated
 - ManagedBotUpdated
+- BotAccessSettings
 - OwnedGift
 - OwnedGiftRegular
 - OwnedGiftUnique

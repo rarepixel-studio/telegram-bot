@@ -29,18 +29,18 @@ class SendPollRequestTest extends TestCase
     public function test_it_validates_too_few_options()
     {
         $this->expectException(TelegramValidationException::class);
-        $this->expectExceptionMessage('Poll must have between 2 and 10 options');
+        $this->expectExceptionMessage('Poll must have between 1 and 12 options');
 
-        $request = new SendPollRequest(12345, 'Question?', ['Option 1']);
+        $request = new SendPollRequest(12345, 'Question?', []);
         $request->validate();
     }
 
     public function test_it_validates_too_many_options()
     {
         $this->expectException(TelegramValidationException::class);
-        $this->expectExceptionMessage('Poll must have between 2 and 10 options');
+        $this->expectExceptionMessage('Poll must have between 1 and 12 options');
 
-        $options = array_fill(0, 11, 'Option');
+        $options = array_fill(0, 13, 'Option');
         $request = new SendPollRequest(12345, 'Question?', $options);
         $request->validate();
     }
@@ -77,7 +77,7 @@ class SendPollRequestTest extends TestCase
     public function test_it_validates_open_period_too_short()
     {
         $this->expectException(TelegramValidationException::class);
-        $this->expectExceptionMessage('Poll open period must be between 5 and 600 seconds');
+        $this->expectExceptionMessage('Poll open period must be between 5 and 2628000 seconds');
 
         $request = new SendPollRequest(12345, 'Question?', ['Option 1', 'Option 2']);
         $request->openPeriod(4);
@@ -87,10 +87,39 @@ class SendPollRequestTest extends TestCase
     public function test_it_validates_open_period_too_long()
     {
         $this->expectException(TelegramValidationException::class);
-        $this->expectExceptionMessage('Poll open period must be between 5 and 600 seconds');
+        $this->expectExceptionMessage('Poll open period must be between 5 and 2628000 seconds');
 
         $request = new SendPollRequest(12345, 'Question?', ['Option 1', 'Option 2']);
-        $request->openPeriod(601);
+        $request->openPeriod(2628001);
+        $request->validate();
+    }
+
+    public function test_it_allows_single_option_polls()
+    {
+        $request = new SendPollRequest(12345, 'Question?', ['Option 1']);
+
+        $request->validate();
+
+        $this->assertSame(json_encode(['Option 1']), $request->toArray()['options']);
+    }
+
+    public function test_it_requires_correct_option_ids_for_quiz_polls()
+    {
+        $this->expectException(TelegramValidationException::class);
+        $this->expectExceptionMessage('correct_option_ids is required for quiz polls');
+
+        $request = new SendPollRequest(12345, 'Question?', ['Option 1', 'Option 2']);
+        $request->type('quiz');
+        $request->validate();
+    }
+
+    public function test_it_rejects_open_period_with_close_date()
+    {
+        $this->expectException(TelegramValidationException::class);
+        $this->expectExceptionMessage('open_period cannot be used with close_date');
+
+        $request = new SendPollRequest(12345, 'Question?', ['Option 1', 'Option 2']);
+        $request->openPeriod(60)->closeDate(time() + 60);
         $request->validate();
     }
 

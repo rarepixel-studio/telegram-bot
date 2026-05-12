@@ -35,6 +35,8 @@ class Message extends BaseObject
             'external_reply' => ExternalReplyInfo::class,
             'quote' => TextQuote::class,
             'reply_to_story' => Story::class,
+            'guest_bot_caller_user' => User::class,
+            'guest_bot_caller_chat' => Chat::class,
             'entities' => MessageEntity::class,
             'link_preview_options' => LinkPreviewOptions::class,
             'suggested_post_info' => SuggestedPostInfo::class,
@@ -42,6 +44,7 @@ class Message extends BaseObject
             'animation' => Animation::class,
             'audio' => Audio::class,
             'document' => Document::class,
+            'live_photo' => LivePhoto::class,
             'paid_media' => PaidMediaInfo::class,
             'photo' => PhotoSize::class,
             'sticker' => Sticker::class,
@@ -449,6 +452,30 @@ class Message extends BaseObject
     }
 
     /**
+     * (Optional). The unique identifier for the guest query.
+     */
+    public function getGuestQueryId(): ?string
+    {
+        return $this->items['guest_query_id'] ?? null;
+    }
+
+    /**
+     * (Optional). For a message sent by a guest bot, this is the user whose original message triggered the bot's response.
+     */
+    public function getGuestBotCallerUser(): ?User
+    {
+        return $this->items['guest_bot_caller_user'] ?? null;
+    }
+
+    /**
+     * (Optional). For a message sent by a guest bot, this is the chat whose original message triggered the bot's response.
+     */
+    public function getGuestBotCallerChat(): ?Chat
+    {
+        return $this->items['guest_bot_caller_chat'] ?? null;
+    }
+
+    /**
      * (Optional). Unique identifier of the business connection from which the message was received.
      */
     public function getBusinessConnectionId(): ?string
@@ -646,6 +673,14 @@ class Message extends BaseObject
     public function getDocument(): ?Document
     {
         return $this->items['document'] ?? null;
+    }
+
+    /**
+     * (Optional). Message is a live photo, information about the live photo.
+     */
+    public function getLivePhoto(): ?LivePhoto
+    {
+        return $this->items['live_photo'] ?? null;
     }
 
     /**

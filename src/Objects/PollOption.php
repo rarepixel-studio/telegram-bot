@@ -17,7 +17,10 @@ class PollOption extends BaseObject
     public function relations(): array
     {
         return [
+            'added_by_chat' => Chat::class,
+            'added_by_user' => User::class,
             'text_entities' => MessageEntity::class,
+            'media' => PollMedia::class,
         ];
     }
 
@@ -51,5 +54,37 @@ class PollOption extends BaseObject
     public function getPersistentId(): string
     {
         return $this->items['persistent_id'];
+    }
+
+    /**
+     * (Optional). Media added to the poll option.
+     */
+    public function getMedia(): ?PollMedia
+    {
+        return $this->items['media'] ?? null;
+    }
+
+    /**
+     * (Optional). User who added the option.
+     */
+    public function getAddedByUser(): ?User
+    {
+        return $this->items['added_by_user'] ?? null;
+    }
+
+    /**
+     * (Optional). Chat that added the option.
+     */
+    public function getAddedByChat(): ?Chat
+    {
+        return $this->items['added_by_chat'] ?? null;
+    }
+
+    /**
+     * (Optional). Point in time when the option was added.
+     */
+    public function getAdditionDate(): ?int
+    {
+        return $this->items['addition_date'] ?? null;
     }
 }

@@ -19,8 +19,10 @@ class Poll extends BaseObject
         return [
             'options' => PollOption::class,
             'explanation_entities' => MessageEntity::class,
+            'explanation_media' => PollMedia::class,
             'question_entities' => MessageEntity::class,
             'description_entities' => MessageEntity::class,
+            'media' => PollMedia::class,
         ];
     }
 
@@ -161,5 +163,37 @@ class Poll extends BaseObject
     public function getDescriptionEntities(): ?Collection
     {
         return $this->items['description_entities'] ?? null;
+    }
+
+    /**
+     * (Optional). Media added to the poll description; for polls inside the Message object only.
+     */
+    public function getMedia(): ?PollMedia
+    {
+        return $this->items['media'] ?? null;
+    }
+
+    /**
+     * (Optional). Media added to the quiz explanation.
+     */
+    public function getExplanationMedia(): ?PollMedia
+    {
+        return $this->items['explanation_media'] ?? null;
+    }
+
+    /**
+     * True if voting is limited to users who have been members of the chat where the poll was originally sent for more than 24 hours.
+     */
+    public function getMembersOnly(): ?bool
+    {
+        return $this->items['members_only'] ?? null;
+    }
+
+    /**
+     * (Optional). A list of two-letter ISO 3166-1 alpha-2 country codes indicating the countries from which users can vote in the poll.
+     */
+    public function getCountryCodes(): ?array
+    {
+        return $this->items['country_codes'] ?? null;
     }
 }

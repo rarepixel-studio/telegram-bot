@@ -11,15 +11,23 @@ use Illuminate\Support\Collection;
  */
 class PaidMediaInfo extends BaseObject
 {
+    public function __construct(mixed $data)
+    {
+        parent::__construct($data);
+
+        if ($this->has('paid_media') && is_array($this->items['paid_media'])) {
+            $this->items['paid_media'] = collect($this->items['paid_media'])->map(
+                fn (array $media): PaidMedia|UnknownObject => $this->resolvePaidMedia($media)
+            );
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
     public function relations(): array
     {
-        return [
-            // PaidMedia is polymorphic, will be handled by the base system
-            'paid_media' => UnknownObject::class,
-        ];
+        return [];
     }
 
     /**
@@ -34,10 +42,24 @@ class PaidMediaInfo extends BaseObject
      * Information about the paid media.
      */
     /**
-     * @return Collection<int, UnknownObject>
+     * @return Collection<int, PaidMedia|UnknownObject>
      */
     public function getPaidMedia(): Collection
     {
         return $this->items['paid_media'];
+    }
+
+    /**
+     * @param  array<string, mixed>  $media
+     */
+    private function resolvePaidMedia(array $media): PaidMedia|UnknownObject
+    {
+        return match ($media['type'] ?? null) {
+            'preview' => new PaidMediaPreview($media),
+            'photo' => new PaidMediaPhoto($media),
+            'video' => new PaidMediaVideo($media),
+            'live_photo' => new PaidMediaLivePhoto($media),
+            default => new UnknownObject($media),
+        };
     }
 }

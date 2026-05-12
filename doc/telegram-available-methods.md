@@ -16,6 +16,7 @@ forwardMessages
 copyMessage
 copyMessages
 sendPhoto
+sendLivePhoto
 sendAudio
 sendDocument
 sendVideo
@@ -67,6 +68,7 @@ getChat
 getChatAdministrators
 getChatMemberCount
 getChatMember
+getUserPersonalChatMessages
 setChatStickerSet
 deleteChatStickerSet
 getForumTopicIconStickers
@@ -83,6 +85,7 @@ hideGeneralForumTopic
 unhideGeneralForumTopic
 unpinAllGeneralForumTopicMessages
 answerCallbackQuery
+answerGuestQuery
 getUserChatBoosts
 getBusinessConnection
 setMyCommands
@@ -134,6 +137,8 @@ approveSuggestedPost
 declineSuggestedPost
 deleteMessage
 deleteMessages
+deleteMessageReaction
+deleteAllMessageReactions
 sendSticker
 getStickerSet
 getCustomEmojiStickers
@@ -167,4 +172,6 @@ setGameScore
 getGameHighScores
 getManagedBotToken
 replaceManagedBotToken
+getManagedBotAccessSettings
+setManagedBotAccessSettings
 savePreparedKeyboardButton

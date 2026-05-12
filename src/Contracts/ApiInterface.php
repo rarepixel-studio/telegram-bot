@@ -4,6 +4,7 @@ namespace Telegram\Bot\Contracts;
 
 use Closure;
 use Illuminate\Support\Collection;
+use Telegram\Bot\Objects\BotAccessSettings;
 use Telegram\Bot\Objects\BotDescription;
 use Telegram\Bot\Objects\BotName;
 use Telegram\Bot\Objects\BotShortDescription;
@@ -13,6 +14,7 @@ use Telegram\Bot\Objects\File;
 use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\MessageId;
 use Telegram\Bot\Objects\Poll;
+use Telegram\Bot\Objects\SentGuestMessage;
 use Telegram\Bot\Objects\SentWebAppMessage;
 use Telegram\Bot\Objects\StickerSet;
 use Telegram\Bot\Objects\UnknownObject;
@@ -20,11 +22,18 @@ use Telegram\Bot\Objects\Update;
 use Telegram\Bot\Objects\User;
 use Telegram\Bot\Objects\UserProfilePhotos;
 use Telegram\Bot\Objects\WebhookInfo;
+use Telegram\Bot\Requests\AnswerGuestQueryRequest;
+use Telegram\Bot\Requests\DeleteAllMessageReactionsRequest;
+use Telegram\Bot\Requests\DeleteMessageReactionRequest;
 use Telegram\Bot\Requests\DeleteMyCommandsRequest;
+use Telegram\Bot\Requests\GetManagedBotAccessSettingsRequest;
 use Telegram\Bot\Requests\GetMyCommandsRequest;
 use Telegram\Bot\Requests\GetMyDescriptionRequest;
 use Telegram\Bot\Requests\GetMyNameRequest;
 use Telegram\Bot\Requests\GetMyShortDescriptionRequest;
+use Telegram\Bot\Requests\GetUserPersonalChatMessagesRequest;
+use Telegram\Bot\Requests\SendLivePhotoRequest;
+use Telegram\Bot\Requests\SetManagedBotAccessSettingsRequest;
 use Telegram\Bot\Requests\SetMyCommandsRequest;
 use Telegram\Bot\Requests\SetMyDescriptionRequest;
 use Telegram\Bot\Requests\SetMyNameRequest;
@@ -73,6 +82,8 @@ interface ApiInterface
 
     public function sendPhoto(array $params): Message|Closure;
 
+    public function sendLivePhoto(array|SendLivePhotoRequest $params): Message|Closure;
+
     public function sendAudio(array $params): Message|Closure;
 
     public function sendDocument(array $params): Message|Closure;
@@ -117,6 +128,10 @@ interface ApiInterface
 
     public function deleteMessage(array $params): bool|Closure;
 
+    public function deleteMessageReaction(array|DeleteMessageReactionRequest $params): bool|Closure;
+
+    public function deleteAllMessageReactions(array|DeleteAllMessageReactionsRequest $params): bool|Closure;
+
     public function sendDice(array $params): Message;
 
     public function setMessageReaction(array $params): bool;
@@ -153,6 +168,8 @@ interface ApiInterface
     public function getChatMembersCount(array $params): int|Closure;
 
     public function getChatMember(array $params): ChatMember|Closure;
+
+    public function getUserPersonalChatMessages(array|GetUserPersonalChatMessagesRequest $params): Collection|Closure;
 
     public function setChatStickerSet(array $params): bool|Closure;
 
@@ -194,6 +211,8 @@ interface ApiInterface
     // Inline query methods
     public function answerCallbackQuery(array $params): bool|Closure;
 
+    public function answerGuestQuery(array|AnswerGuestQueryRequest $params): SentGuestMessage|Closure;
+
     public function answerInlineQuery(array $params = []): bool|Closure;
 
     // Game methods
@@ -228,6 +247,10 @@ interface ApiInterface
     public function setMyShortDescription(array|SetMyShortDescriptionRequest $params = []): bool|Closure;
 
     public function getMyShortDescription(array|GetMyShortDescriptionRequest $params = []): BotShortDescription|Closure;
+
+    public function getManagedBotAccessSettings(array|GetManagedBotAccessSettingsRequest $params): BotAccessSettings|Closure;
+
+    public function setManagedBotAccessSettings(array|SetManagedBotAccessSettingsRequest $params): bool|Closure;
 
     public function answerWebAppQuery(array $params): SentWebAppMessage;
 

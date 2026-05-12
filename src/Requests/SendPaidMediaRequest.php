@@ -327,8 +327,8 @@ class SendPaidMediaRequest extends TelegramApiRequest
     private function validateInputPaidMediaObject(InputPaidMedia $media): void
     {
         $type = $media->get('type');
-        if (! in_array($type, ['photo', 'video'], true)) {
-            throw new TelegramValidationException('media.type must be photo or video');
+        if (! in_array($type, ['photo', 'video', 'live_photo'], true)) {
+            throw new TelegramValidationException('media.type must be photo, video, or live_photo');
         }
 
         if (! $media->has('media')) {
@@ -338,6 +338,10 @@ class SendPaidMediaRequest extends TelegramApiRequest
         $value = $media->get('media');
         if ($value === null || $value === '') {
             throw new TelegramValidationException('media.media must not be empty');
+        }
+
+        if ($type === 'live_photo' && (! $media->has('photo') || $media->get('photo') === null || $media->get('photo') === '')) {
+            throw new TelegramValidationException('media.photo is required for live_photo media');
         }
     }
 
@@ -355,8 +359,8 @@ class SendPaidMediaRequest extends TelegramApiRequest
         }
 
         $type = $media['type'];
-        if (! in_array($type, ['photo', 'video'], true)) {
-            throw new TelegramValidationException('media.type must be photo or video');
+        if (! in_array($type, ['photo', 'video', 'live_photo'], true)) {
+            throw new TelegramValidationException('media.type must be photo, video, or live_photo');
         }
 
         if (! array_key_exists('media', $media)) {
@@ -366,6 +370,10 @@ class SendPaidMediaRequest extends TelegramApiRequest
         $value = $media['media'];
         if ($value === null || $value === '') {
             throw new TelegramValidationException('media.media must not be empty');
+        }
+
+        if ($type === 'live_photo' && (! array_key_exists('photo', $media) || $media['photo'] === null || $media['photo'] === '')) {
+            throw new TelegramValidationException('media.photo is required for live_photo media');
         }
     }
 }

@@ -159,6 +159,7 @@ trait HasHttpRequests
                     $thumb = $media->extractAttachment('__ATTACHED_THUMB__'.$key, 'thumb');
                     $thumbnail = $media->extractAttachment('__ATTACHED_THUMBNAIL__'.$key, 'thumbnail');
                     $cover = $media->extractAttachment('__ATTACHED_COVER__'.$key, 'cover');
+                    $photo = $media->extractAttachment('__ATTACHED_PHOTO__'.$key, 'photo');
                     $params['media'][$key] = $media->toArray();
                     if ($part) {
                         $attachments[] = $part;
@@ -171,6 +172,9 @@ trait HasHttpRequests
                     }
                     if ($cover) {
                         $attachments[] = $cover;
+                    }
+                    if ($photo) {
+                        $attachments[] = $photo;
                     }
                 }
             }

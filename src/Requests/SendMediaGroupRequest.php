@@ -6,6 +6,7 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 use Telegram\Bot\Objects\InputMedia;
 use Telegram\Bot\Objects\InputMediaAudio;
 use Telegram\Bot\Objects\InputMediaDocument;
+use Telegram\Bot\Objects\InputMediaLivePhoto;
 use Telegram\Bot\Objects\InputMediaPhoto;
 use Telegram\Bot\Objects\InputMediaVideo;
 use Telegram\Bot\Objects\ReplyParameters;
@@ -13,7 +14,7 @@ use Telegram\Bot\Objects\ReplyParameters;
 /**
  * Request object for the sendMediaGroup method.
  *
- * Use this method to send a group of photos, videos, documents or audios as an album.
+ * Use this method to send a group of photos, videos, live photos, documents or audios as an album.
  * Documents and audio files can be only grouped in an album with messages of the same type.
  * On success, an array of Message objects that were sent is returned.
  *
@@ -32,7 +33,7 @@ class SendMediaGroupRequest extends TelegramApiRequest
 
     /**
      * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param  array<InputMediaPhoto|InputMediaVideo|InputMediaAudio|InputMediaDocument|array>  $media  A JSON-serialized array describing messages to be sent, must include 2-10 items
+     * @param  array<InputMediaPhoto|InputMediaVideo|InputMediaLivePhoto|InputMediaAudio|InputMediaDocument|array>  $media  A JSON-serialized array describing messages to be sent, must include 2-10 items
      */
     public function __construct(
         protected int|string $chat_id,
@@ -140,11 +141,12 @@ class SendMediaGroupRequest extends TelegramApiRequest
         foreach ($this->media as $index => $media) {
             if (! ($media instanceof InputMediaPhoto)
                 && ! ($media instanceof InputMediaVideo)
+                && ! ($media instanceof InputMediaLivePhoto)
                 && ! ($media instanceof InputMediaAudio)
                 && ! ($media instanceof InputMediaDocument)
                 && ! is_array($media)
             ) {
-                throw new TelegramValidationException("Media item at index {$index} must be an InputMediaPhoto, InputMediaVideo, InputMediaAudio, InputMediaDocument, or array");
+                throw new TelegramValidationException("Media item at index {$index} must be an InputMediaPhoto, InputMediaVideo, InputMediaLivePhoto, InputMediaAudio, InputMediaDocument, or array");
             }
 
             // Normalize arrays to InputMedia objects
@@ -153,9 +155,10 @@ class SendMediaGroupRequest extends TelegramApiRequest
                 $this->media[$index] = match ($type) {
                     'photo' => InputMediaPhoto::fromArray($media),
                     'video' => InputMediaVideo::fromArray($media),
+                    'live_photo' => InputMediaLivePhoto::fromArray($media),
                     'audio' => InputMediaAudio::fromArray($media),
                     'document' => InputMediaDocument::fromArray($media),
-                    default => throw new TelegramValidationException("Invalid media type '{$type}' at index {$index}. Must be one of: photo, video, audio, document"),
+                    default => throw new TelegramValidationException("Invalid media type '{$type}' at index {$index}. Must be one of: photo, video, live_photo, audio, document"),
                 };
             }
         }

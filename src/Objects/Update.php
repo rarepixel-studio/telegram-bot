@@ -23,6 +23,7 @@ class Update extends BaseObject
             'business_message' => Message::class,
             'edited_business_message' => Message::class,
             'deleted_business_messages' => BusinessMessagesDeleted::class,
+            'guest_message' => Message::class,
             'message_reaction' => MessageReactionUpdated::class,
             'message_reaction_count' => MessageReactionCountUpdated::class,
             'inline_query' => InlineQuery::class,
@@ -68,6 +69,7 @@ class Update extends BaseObject
             'business_message',
             'edited_business_message',
             'deleted_business_messages',
+            'guest_message',
             'message_reaction',
             'message_reaction_count',
             'inline_query',
@@ -116,6 +118,8 @@ class Update extends BaseObject
             return $this->getChannelPost();
         } elseif ($this->has('edited_channel_post')) {
             return $this->getEditedChannelPost();
+        } elseif ($this->has('guest_message')) {
+            return $this->getGuestMessage();
         }
 
         return null;
@@ -152,6 +156,8 @@ class Update extends BaseObject
             return $this->getChannelPost()->getFrom();
         } elseif ($this->has('edited_channel_post')) {
             return $this->getEditedChannelPost()->getFrom();
+        } elseif ($this->has('guest_message')) {
+            return $this->getGuestMessage()->getFrom();
         } elseif ($this->has('shipping_query')) {
             return $this->getShippingQuery()->getFrom();
         }
@@ -229,6 +235,14 @@ class Update extends BaseObject
     public function getDeletedBusinessMessages(): ?BusinessMessagesDeleted
     {
         return $this->items['deleted_business_messages'] ?? null;
+    }
+
+    /**
+     * (Optional). New guest message.
+     */
+    public function getGuestMessage(): ?Message
+    {
+        return $this->items['guest_message'] ?? null;
     }
 
     /**

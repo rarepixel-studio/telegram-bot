@@ -7,7 +7,7 @@ namespace Telegram\Bot\Objects;
  *
  * The paid media isn't available before the payment.
  */
-class PaidMediaPreview extends BaseObject
+class PaidMediaPreview extends PaidMedia
 {
     /**
      * {@inheritdoc}

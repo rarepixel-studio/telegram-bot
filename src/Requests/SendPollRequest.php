@@ -5,6 +5,8 @@ namespace Telegram\Bot\Requests;
 use Telegram\Bot\Exceptions\TelegramValidationException;
 use Telegram\Bot\Objects\ForceReply;
 use Telegram\Bot\Objects\InlineKeyboardMarkup;
+use Telegram\Bot\Objects\InputPollMedia;
+use Telegram\Bot\Objects\InputPollOption;
 use Telegram\Bot\Objects\MessageEntity;
 use Telegram\Bot\Objects\ReplyKeyboardMarkup;
 use Telegram\Bot\Objects\ReplyKeyboardRemove;
@@ -26,7 +28,10 @@ class SendPollRequest extends TelegramApiRequest
         'options',
         'question_entities',
         'explanation_entities',
+        'explanation_media',
         'description_entities',
+        'media',
+        'country_codes',
         'reply_markup',
     ];
 
@@ -59,16 +64,6 @@ class SendPollRequest extends TelegramApiRequest
     public function messageThreadId(int $message_thread_id): self
     {
         $this->params['message_thread_id'] = $message_thread_id;
-
-        return $this;
-    }
-
-    /**
-     * Identifier of the direct messages topic to which the message will be sent.
-     */
-    public function directMessagesTopicId(int $direct_messages_topic_id): self
-    {
-        $this->params['direct_messages_topic_id'] = $direct_messages_topic_id;
 
         return $this;
     }
@@ -168,6 +163,16 @@ class SendPollRequest extends TelegramApiRequest
     }
 
     /**
+     * Media added to the quiz explanation.
+     */
+    public function explanationMedia(array|InputPollMedia $explanation_media): self
+    {
+        $this->params['explanation_media'] = $explanation_media;
+
+        return $this;
+    }
+
+    /**
      * True, if the poll allows revoting.
      */
     public function allowsRevoting(bool $allows_revoting): self
@@ -240,7 +245,37 @@ class SendPollRequest extends TelegramApiRequest
     }
 
     /**
-     * Amount of time in seconds the poll will be active after creation, 5-600.
+     * Media added to the poll description.
+     */
+    public function media(array|InputPollMedia $media): self
+    {
+        $this->params['media'] = $media;
+
+        return $this;
+    }
+
+    /**
+     * Pass True, if voting is limited to users who have been members of the chat where the poll is being sent for more than 24 hours; for channel chats only.
+     */
+    public function membersOnly(bool $members_only): self
+    {
+        $this->params['members_only'] = $members_only;
+
+        return $this;
+    }
+
+    /**
+     * A JSON-serialized list of 0-12 two-letter ISO 3166-1 alpha-2 country codes indicating the countries from which users can vote in the poll; for channel chats only.
+     */
+    public function countryCodes(array $country_codes): self
+    {
+        $this->params['country_codes'] = $country_codes;
+
+        return $this;
+    }
+
+    /**
+     * Amount of time in seconds the poll will be active after creation, 5-2628000.
      */
     public function openPeriod(int $open_period): self
     {
@@ -342,13 +377,16 @@ class SendPollRequest extends TelegramApiRequest
         }
 
         $optionCount = count($this->options);
-        if ($optionCount < 2 || $optionCount > 10) {
-            throw new TelegramValidationException('Poll must have between 2 and 10 options');
+        if ($optionCount < 1 || $optionCount > 12) {
+            throw new TelegramValidationException('Poll must have between 1 and 12 options');
         }
 
         foreach ($this->options as $index => $option) {
-            // Options can be strings or InputPollOption arrays
-            $text = is_array($option) ? ($option['text'] ?? '') : (string) $option;
+            $text = match (true) {
+                $option instanceof InputPollOption => $option->getText(),
+                is_array($option) => $option['text'] ?? '',
+                default => (string) $option,
+            };
             $textLength = mb_strlen($text);
 
             if ($textLength < 1 || $textLength > 100) {
@@ -360,19 +398,62 @@ class SendPollRequest extends TelegramApiRequest
             throw new TelegramValidationException('Poll type must be either "regular" or "quiz"');
         }
 
+        if (isset($this->params['question_parse_mode'], $this->params['question_entities'])) {
+            throw new TelegramValidationException('question_parse_mode cannot be used with question_entities');
+        }
+
+        if (isset($this->params['explanation_parse_mode'], $this->params['explanation_entities'])) {
+            throw new TelegramValidationException('explanation_parse_mode cannot be used with explanation_entities');
+        }
+
+        if (isset($this->params['description_parse_mode'], $this->params['description_entities'])) {
+            throw new TelegramValidationException('description_parse_mode cannot be used with description_entities');
+        }
+
+        $type = $this->params['type'] ?? 'regular';
+        if ($type === 'quiz' && empty($this->params['correct_option_ids'])) {
+            throw new TelegramValidationException('correct_option_ids is required for quiz polls');
+        }
+
+        if (isset($this->params['correct_option_ids'])) {
+            $previous = -1;
+            foreach ($this->params['correct_option_ids'] as $optionId) {
+                if (! is_int($optionId) || $optionId <= $previous || $optionId < 0 || $optionId >= $optionCount) {
+                    throw new TelegramValidationException('correct_option_ids must contain monotonically increasing valid option identifiers');
+                }
+
+                $previous = $optionId;
+            }
+        }
+
         if (isset($this->params['explanation']) && mb_strlen($this->params['explanation']) > 200) {
             throw new TelegramValidationException('Poll explanation must not exceed 200 characters');
         }
 
-        if (isset($this->params['description']) && mb_strlen($this->params['description']) > 200) {
-            throw new TelegramValidationException('Poll description must not exceed 200 characters');
+        if (isset($this->params['description']) && mb_strlen($this->params['description']) > 1024) {
+            throw new TelegramValidationException('Poll description must not exceed 1024 characters');
         }
 
         if (isset($this->params['open_period'])) {
             $openPeriod = $this->params['open_period'];
-            if ($openPeriod < 5 || $openPeriod > 600) {
-                throw new TelegramValidationException('Poll open period must be between 5 and 600 seconds');
+            if ($openPeriod < 5 || $openPeriod > 2628000) {
+                throw new TelegramValidationException('Poll open period must be between 5 and 2628000 seconds');
             }
+        }
+
+        if (isset($this->params['open_period'], $this->params['close_date'])) {
+            throw new TelegramValidationException('open_period cannot be used with close_date');
+        }
+
+        if (isset($this->params['close_date'])) {
+            $secondsUntilClose = $this->params['close_date'] - time();
+            if ($secondsUntilClose < 5 || $secondsUntilClose > 2628000) {
+                throw new TelegramValidationException('Poll close date must be between 5 and 2628000 seconds in the future');
+            }
+        }
+
+        if (isset($this->params['country_codes']) && count($this->params['country_codes']) > 12) {
+            throw new TelegramValidationException('country_codes must not contain more than 12 countries');
         }
 
         $this->validateReplyParameters($this->params);
