@@ -17,6 +17,7 @@ class Chat extends BaseObject
             'pinned_message' => Message::class,
             'background' => ChatBackground::class,
             'first_profile_audio' => Audio::class,
+            'guard_bot' => User::class,
         ];
     }
 
@@ -164,5 +165,13 @@ class Chat extends BaseObject
     public function getFirstProfileAudio(): ?Audio
     {
         return $this->items['first_profile_audio'] ?? null;
+    }
+
+    /**
+     * (Optional). The bot that processes join request queries in the chat.
+     */
+    public function getGuardBot(): ?User
+    {
+        return $this->items['guard_bot'] ?? null;
     }
 }

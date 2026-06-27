@@ -148,6 +148,14 @@ class User extends BaseObject
     }
 
     /**
+     * (Optional). True, if the bot supports join request queries. Returned only in getMe.
+     */
+    public function getSupportsJoinRequestQueries(): ?bool
+    {
+        return $this->items['supports_join_request_queries'] ?? null;
+    }
+
+    /**
      * (Optional). True, if the bot supports guest queries from chats it is not a member of. Returned only in getMe.
      */
     public function getSupportsGuestQueries(): ?bool

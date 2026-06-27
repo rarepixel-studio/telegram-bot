@@ -11,6 +11,8 @@ logOut
 close
 sendMessage
 sendMessageDraft
+sendRichMessage
+sendRichMessageDraft
 forwardMessage
 forwardMessages
 copyMessage
@@ -56,6 +58,8 @@ editChatSubscriptionInviteLink
 revokeChatInviteLink
 approveChatJoinRequest
 declineChatJoinRequest
+answerChatJoinRequestQuery
+sendChatJoinRequestWebApp
 setChatPhoto
 deleteChatPhoto
 setChatTitle

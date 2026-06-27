@@ -40,6 +40,7 @@ class Message extends BaseObject
             'entities' => MessageEntity::class,
             'link_preview_options' => LinkPreviewOptions::class,
             'suggested_post_info' => SuggestedPostInfo::class,
+            'rich_message' => RichMessage::class,
             'caption_entities' => MessageEntity::class,
             'animation' => Animation::class,
             'audio' => Audio::class,
@@ -315,6 +316,7 @@ class Message extends BaseObject
             'document',
             // 'animation', disable animation type here for backward compatibility.
             'paid_media',
+            'rich_message',
             'photo',
             'sticker',
             'story',
@@ -641,6 +643,14 @@ class Message extends BaseObject
     public function getSuggestedPostInfo(): ?SuggestedPostInfo
     {
         return $this->items['suggested_post_info'] ?? null;
+    }
+
+    /**
+     * (Optional). Message is a rich formatted message.
+     */
+    public function getRichMessage(): ?RichMessage
+    {
+        return $this->items['rich_message'] ?? null;
     }
 
     /**

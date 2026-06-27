@@ -2,6 +2,9 @@
 
 namespace Telegram\Bot\Requests;
 
+use Telegram\Bot\Exceptions\TelegramValidationException;
+use Telegram\Bot\Objects\InputRichMessage;
+
 /**
  * Request object for the editMessageText method.
  *
@@ -16,14 +19,20 @@ class EditMessageTextRequest extends TelegramApiRequest
      */
     protected array $jsonSerializedFields = [
         'entities',
+        'link_preview_options',
+        'rich_message',
         'reply_markup',
     ];
 
     protected array $params = [];
 
-    public function __construct(string $text)
+    public function __construct(string|InputRichMessage|array $text)
     {
-        $this->params['text'] = $text;
+        if (is_string($text)) {
+            $this->params['text'] = $text;
+        } else {
+            $this->params['rich_message'] = $text;
+        }
     }
 
     public function businessConnectionId(string $business_connection_id): self
@@ -82,6 +91,13 @@ class EditMessageTextRequest extends TelegramApiRequest
         return $this;
     }
 
+    public function richMessage(InputRichMessage|array $rich_message): self
+    {
+        $this->params['rich_message'] = $rich_message;
+
+        return $this;
+    }
+
     public function replyMarkup(array $reply_markup): self
     {
         $this->params['reply_markup'] = $reply_markup;
@@ -96,7 +112,20 @@ class EditMessageTextRequest extends TelegramApiRequest
 
     public function validate(): void
     {
-        // Validation logic for chat_id+message_id OR inline_message_id could go here
+        $hasText = array_key_exists('text', $this->params) && $this->params['text'] !== '';
+        $hasRichMessage = array_key_exists('rich_message', $this->params);
+
+        if ($hasText === $hasRichMessage) {
+            throw new TelegramValidationException('Exactly one of text or rich_message must be provided');
+        }
+
+        if (isset($this->params['rich_message'])) {
+            if (is_array($this->params['rich_message'])) {
+                $this->params['rich_message'] = InputRichMessage::fromArray($this->params['rich_message']);
+            }
+
+            $this->params['rich_message']->validate();
+        }
     }
 
     public function buildParams(): array

@@ -20,6 +20,7 @@ class PollMedia extends BaseObject
             'animation' => Animation::class,
             'audio' => Audio::class,
             'document' => Document::class,
+            'link' => Link::class,
             'live_photo' => LivePhoto::class,
             'location' => Location::class,
             'photo' => PhotoSize::class,
@@ -51,6 +52,14 @@ class PollMedia extends BaseObject
     public function getDocument(): ?Document
     {
         return $this->items['document'] ?? null;
+    }
+
+    /**
+     * (Optional). The HTTP link attached to the poll option.
+     */
+    public function getLink(): ?Link
+    {
+        return $this->items['link'] ?? null;
     }
 
     /**

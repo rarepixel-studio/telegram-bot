@@ -8,6 +8,31 @@ The Bot API is an HTTP-based interface created for developers keen on building b
 
 Subscribe to [@BotNews](https://t.me/botnews) to be the first to know about the latest updates and join the discussion in [@BotTalk](https://t.me/bottalk)
 
+#### June 11, 2026
+
+Bot API 10.1
+
+Rich Messages
+
+- Added support for Rich Messages, allowing bots to send highly structured text and stream generated replies with rich formatting.
+- Added rich text, rich block, and rich message classes.
+- Added the field rich_message to the class Message.
+- Added the class InputRichMessage and the class InputRichMessageContent.
+- Added the method sendRichMessage and the method sendRichMessageDraft.
+- Added the parameter rich_message to the method editMessageText.
+
+Join Request Queries
+
+- Added the field supports_join_request_queries to the class User.
+- Added the field guard_bot to the full chat information returned by getChat.
+- Added the field query_id to the class ChatJoinRequest.
+- Added the method answerChatJoinRequestQuery and the method sendChatJoinRequestWebApp.
+
+Polls
+
+- Added the class Link and the field link to the class PollMedia.
+- Added the class InputMediaLink and allowed it to be used as InputPollOptionMedia.
+
 #### May 8, 2026
 
 Bot API 10.0
@@ -3758,6 +3783,36 @@ Use this method to stream a partial message to a user while the message is being
 | parse_mode | String | Optional | Mode for parsing entities in the message text. See formatting options for more details. |
 | entities | Array of MessageEntity | Optional | A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode |
 
+#### sendRichMessage
+
+Use this method to send rich messages. If the message contains a block with a media element, then the bot must have the right to send the media to the chat. On success, the sent Message is returned.
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| business_connection_id | String | Optional | Unique identifier of the business connection on behalf of which the message will be sent. |
+| chat_id | Integer or String | Yes | Unique identifier for the target chat or username of the target bot, supergroup or channel in the format`@username` |
+| message_thread_id | Integer | Optional | Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only |
+| direct_messages_topic_id | Integer | Optional | Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat |
+| rich_message | InputRichMessage | Yes | The message to be sent |
+| disable_notification | Boolean | Optional | Sends the message silently. Users will receive a notification with no sound. |
+| protect_content | Boolean | Optional | Protects the contents of the sent message from forwarding and saving |
+| allow_paid_broadcast | Boolean | Optional | Pass True to allow up to 1000 messages per second, ignoring broadcasting limits. |
+| message_effect_id | String | Optional | Unique identifier of the message effect to be added to the message; for private chats only |
+| suggested_post_parameters | SuggestedPostParameters | Optional | A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. |
+| reply_parameters | ReplyParameters | Optional | Description of the message to reply to |
+| reply_markup | InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply | Optional | Additional interface options. |
+
+#### sendRichMessageDraft
+
+Use this method to stream a partial rich message to a user while the message is being generated. The streamed draft is ephemeral and acts as a temporary 30-second preview. Returns True on success.
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| chat_id | Integer | Yes | Unique identifier for the target private chat |
+| message_thread_id | Integer | Optional | Unique identifier for the target message thread |
+| draft_id | Integer | Yes | Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated. |
+| rich_message | InputRichMessage | Yes | The partial message to be streamed |
+
 #### sendChatAction
 
 Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
@@ -4013,6 +4068,24 @@ Use this method to decline a chat join request. The bot must be an administrator
 | --- | --- | --- | --- |
 | chat_id | Integer or String | Yes | Unique identifier for the target chat or username of the target channel in the format`@username` |
 | user_id | Integer | Yes | Unique identifier of the target user |
+
+#### answerChatJoinRequestQuery
+
+Use this method to process a received chat join request query. Returns True on success.
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| chat_join_request_query_id | String | Yes | Unique identifier of the join request query |
+| result | String | Yes | Result of the query. Must be either "approve", "decline", or "queue". |
+
+#### sendChatJoinRequestWebApp
+
+Use this method to process a received chat join request query by showing a Mini App to the user before deciding the outcome. Call answerChatJoinRequestQuery to resolve the join request query based on the user interaction with the Mini App. Returns True on success.
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| chat_join_request_query_id | String | Yes | Unique identifier of the join request query |
+| web_app_url | String | Yes | The URL of the Mini App to be opened |
 
 #### setChatPhoto
 
@@ -4800,10 +4873,11 @@ Use this method to edit text and game messages. On success, if the edited messag
 | chat_id | Integer or String | Optional | Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format`@username`. |
 | message_id | Integer | Optional | Required if inline_message_id is not specified. Identifier of the message to edit. |
 | inline_message_id | String | Optional | Required if chat_id and message_id are not specified. Identifier of the inline message. |
-| text | String | Yes | New text of the message, 1-4096 characters after entities parsing |
+| text | String | Optional | New text of the message, 1-4096 characters after entities parsing; required if rich_message isn't specified |
 | parse_mode | String | Optional | Mode for parsing entities in the message text. See formatting options for more details. |
 | entities | Array of MessageEntity | Optional | A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode |
 | link_preview_options | LinkPreviewOptions | Optional | Link preview generation options for the message |
+| rich_message | InputRichMessage | Optional | New rich content of the message; required if text isn't specified |
 | reply_markup | InlineKeyboardMarkup | Optional | A JSON-serialized object for an [inline keyboard](https://core.telegram.org/bots/features#inline-keyboards) |
 
 #### editMessageCaption

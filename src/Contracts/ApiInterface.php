@@ -22,17 +22,22 @@ use Telegram\Bot\Objects\Update;
 use Telegram\Bot\Objects\User;
 use Telegram\Bot\Objects\UserProfilePhotos;
 use Telegram\Bot\Objects\WebhookInfo;
+use Telegram\Bot\Requests\AnswerChatJoinRequestQueryRequest;
 use Telegram\Bot\Requests\AnswerGuestQueryRequest;
 use Telegram\Bot\Requests\DeleteAllMessageReactionsRequest;
 use Telegram\Bot\Requests\DeleteMessageReactionRequest;
 use Telegram\Bot\Requests\DeleteMyCommandsRequest;
+use Telegram\Bot\Requests\EditMessageTextRequest;
 use Telegram\Bot\Requests\GetManagedBotAccessSettingsRequest;
 use Telegram\Bot\Requests\GetMyCommandsRequest;
 use Telegram\Bot\Requests\GetMyDescriptionRequest;
 use Telegram\Bot\Requests\GetMyNameRequest;
 use Telegram\Bot\Requests\GetMyShortDescriptionRequest;
 use Telegram\Bot\Requests\GetUserPersonalChatMessagesRequest;
+use Telegram\Bot\Requests\SendChatJoinRequestWebAppRequest;
 use Telegram\Bot\Requests\SendLivePhotoRequest;
+use Telegram\Bot\Requests\SendRichMessageDraftRequest;
+use Telegram\Bot\Requests\SendRichMessageRequest;
 use Telegram\Bot\Requests\SetManagedBotAccessSettingsRequest;
 use Telegram\Bot\Requests\SetMyCommandsRequest;
 use Telegram\Bot\Requests\SetMyDescriptionRequest;
@@ -73,6 +78,10 @@ interface ApiInterface
 
     // Message methods
     public function sendMessage(array $params): Message|Closure;
+
+    public function sendRichMessage(array|SendRichMessageRequest $params): Message|Closure;
+
+    public function sendRichMessageDraft(array|SendRichMessageDraftRequest $params): bool|Closure;
 
     public function forwardMessage(array $params): Message|Closure;
 
@@ -118,7 +127,7 @@ interface ApiInterface
 
     public function sendChatAction(array $params): bool|Closure;
 
-    public function editMessageText(array $params): Message|Closure;
+    public function editMessageText(array|EditMessageTextRequest $params): Message|bool|Closure;
 
     public function editMessageCaption(array $params): Message|Closure;
 
@@ -212,6 +221,10 @@ interface ApiInterface
     public function answerCallbackQuery(array $params): bool|Closure;
 
     public function answerGuestQuery(array|AnswerGuestQueryRequest $params): SentGuestMessage|Closure;
+
+    public function answerChatJoinRequestQuery(array|AnswerChatJoinRequestQueryRequest $params): bool|Closure;
+
+    public function sendChatJoinRequestWebApp(array|SendChatJoinRequestWebAppRequest $params): bool|Closure;
 
     public function answerInlineQuery(array $params = []): bool|Closure;
 

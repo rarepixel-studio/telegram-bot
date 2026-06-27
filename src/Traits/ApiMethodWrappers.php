@@ -36,6 +36,7 @@ use Telegram\Bot\Objects\UserProfilePhotos;
 use Telegram\Bot\Objects\WebhookInfo;
 use Telegram\Bot\Requests\AddStickerToSetRequest;
 use Telegram\Bot\Requests\AnswerCallbackQueryRequest;
+use Telegram\Bot\Requests\AnswerChatJoinRequestQueryRequest;
 use Telegram\Bot\Requests\AnswerGuestQueryRequest;
 use Telegram\Bot\Requests\AnswerInlineQueryRequest;
 use Telegram\Bot\Requests\AnswerPreCheckoutQueryRequest;
@@ -139,6 +140,7 @@ use Telegram\Bot\Requests\SavePreparedKeyboardButtonRequest;
 use Telegram\Bot\Requests\SendAnimationRequest;
 use Telegram\Bot\Requests\SendAudioRequest;
 use Telegram\Bot\Requests\SendChatActionRequest;
+use Telegram\Bot\Requests\SendChatJoinRequestWebAppRequest;
 use Telegram\Bot\Requests\SendChecklistRequest;
 use Telegram\Bot\Requests\SendContactRequest;
 use Telegram\Bot\Requests\SendDiceRequest;
@@ -154,6 +156,8 @@ use Telegram\Bot\Requests\SendMessageRequest;
 use Telegram\Bot\Requests\SendPaidMediaRequest;
 use Telegram\Bot\Requests\SendPhotoRequest;
 use Telegram\Bot\Requests\SendPollRequest;
+use Telegram\Bot\Requests\SendRichMessageDraftRequest;
+use Telegram\Bot\Requests\SendRichMessageRequest;
 use Telegram\Bot\Requests\SendStickerRequest;
 use Telegram\Bot\Requests\SendVenueRequest;
 use Telegram\Bot\Requests\SendVideoNoteRequest;
@@ -476,6 +480,48 @@ trait ApiMethodWrappers
         }
 
         $response = $this->post('sendMessageDraft', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * Send a rich message.
+     *
+     * @link https://core.telegram.org/bots/api#sendrichmessage
+     *
+     * @throws TelegramValidationException|TelegramSDKException
+     */
+    public function sendRichMessage(array|SendRichMessageRequest $params): Message|Closure
+    {
+        if ($params instanceof SendRichMessageRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('sendRichMessage', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return new Message($response->getDecodedBody());
+        }, $response);
+    }
+
+    /**
+     * Stream a partial rich message draft.
+     *
+     * @link https://core.telegram.org/bots/api#sendrichmessagedraft
+     *
+     * @throws TelegramValidationException|TelegramSDKException
+     */
+    public function sendRichMessageDraft(array|SendRichMessageDraftRequest $params): bool|Closure
+    {
+        if ($params instanceof SendRichMessageDraftRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('sendRichMessageDraft', $params);
 
         return $this->prepareResponse(function (TelegramResponse $response) {
             return $response->getResult();
@@ -1390,6 +1436,48 @@ trait ApiMethodWrappers
         }
 
         $response = $this->post('approveChatJoinRequest', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * Process a received chat join request query.
+     *
+     * @link https://core.telegram.org/bots/api#answerchatjoinrequestquery
+     *
+     * @throws TelegramValidationException|TelegramSDKException
+     */
+    public function answerChatJoinRequestQuery(array|AnswerChatJoinRequestQueryRequest $params): bool|Closure
+    {
+        if ($params instanceof AnswerChatJoinRequestQueryRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('answerChatJoinRequestQuery', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * Show a Mini App while processing a chat join request query.
+     *
+     * @link https://core.telegram.org/bots/api#sendchatjoinrequestwebapp
+     *
+     * @throws TelegramValidationException|TelegramSDKException
+     */
+    public function sendChatJoinRequestWebApp(array|SendChatJoinRequestWebAppRequest $params): bool|Closure
+    {
+        if ($params instanceof SendChatJoinRequestWebAppRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('sendChatJoinRequestWebApp', $params);
 
         return $this->prepareResponse(function (TelegramResponse $response) {
             return $response->getResult();
@@ -2743,7 +2831,7 @@ trait ApiMethodWrappers
      * @throws TelegramSDKException
      * @throws TelegramValidationException
      */
-    public function editMessageText(array|EditMessageTextRequest $params = []): Message|Closure
+    public function editMessageText(array|EditMessageTextRequest $params = []): Message|bool|Closure
     {
         if ($params instanceof EditMessageTextRequest) {
             $params->validate();
@@ -2753,6 +2841,12 @@ trait ApiMethodWrappers
         $response = $this->post('editMessageText', $params);
 
         return $this->prepareResponse(function (TelegramResponse $response) {
+            $result = $response->getResult();
+
+            if (is_bool($result)) {
+                return $result;
+            }
+
             return new Message($response->getDecodedBody());
         }, $response);
     }

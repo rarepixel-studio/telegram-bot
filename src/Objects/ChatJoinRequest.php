@@ -68,4 +68,12 @@ class ChatJoinRequest extends BaseObject
     {
         return $this->items['invite_link'] ?? null;
     }
+
+    /**
+     * (Optional). Identifier of the join request query.
+     */
+    public function getQueryId(): ?string
+    {
+        return $this->items['query_id'] ?? null;
+    }
 }
