@@ -25,8 +25,13 @@ use Telegram\Bot\Objects\WebhookInfo;
 use Telegram\Bot\Requests\AnswerChatJoinRequestQueryRequest;
 use Telegram\Bot\Requests\AnswerGuestQueryRequest;
 use Telegram\Bot\Requests\DeleteAllMessageReactionsRequest;
+use Telegram\Bot\Requests\DeleteEphemeralMessageRequest;
 use Telegram\Bot\Requests\DeleteMessageReactionRequest;
 use Telegram\Bot\Requests\DeleteMyCommandsRequest;
+use Telegram\Bot\Requests\EditEphemeralMessageCaptionRequest;
+use Telegram\Bot\Requests\EditEphemeralMessageMediaRequest;
+use Telegram\Bot\Requests\EditEphemeralMessageReplyMarkupRequest;
+use Telegram\Bot\Requests\EditEphemeralMessageTextRequest;
 use Telegram\Bot\Requests\EditMessageTextRequest;
 use Telegram\Bot\Requests\GetManagedBotAccessSettingsRequest;
 use Telegram\Bot\Requests\GetMyCommandsRequest;
@@ -135,7 +140,17 @@ interface ApiInterface
 
     public function editMessageReplyMarkup(array $params): Message|Closure;
 
+    public function editEphemeralMessageText(array|EditEphemeralMessageTextRequest $params): bool|Closure;
+
+    public function editEphemeralMessageCaption(array|EditEphemeralMessageCaptionRequest $params): bool|Closure;
+
+    public function editEphemeralMessageMedia(array|EditEphemeralMessageMediaRequest $params): bool|Closure;
+
+    public function editEphemeralMessageReplyMarkup(array|EditEphemeralMessageReplyMarkupRequest $params): bool|Closure;
+
     public function deleteMessage(array $params): bool|Closure;
+
+    public function deleteEphemeralMessage(array|DeleteEphemeralMessageRequest $params): bool|Closure;
 
     public function deleteMessageReaction(array|DeleteMessageReactionRequest $params): bool|Closure;
 

@@ -60,7 +60,7 @@ class SendMediaGroupRequestTest extends TestCase
     public function it_validates_media_item_types()
     {
         $this->expectException(TelegramValidationException::class);
-        $this->expectExceptionMessage('Media item at index 0 must be an InputMediaPhoto, InputMediaVideo, InputMediaAudio, InputMediaDocument, or array');
+        $this->expectExceptionMessage('Media item at index 0 must be an InputMediaPhoto, InputMediaVideo, InputMediaLivePhoto, InputMediaAudio, InputMediaDocument, or array');
 
         $request = new SendMediaGroupRequest(123456, [
             'invalid_item',

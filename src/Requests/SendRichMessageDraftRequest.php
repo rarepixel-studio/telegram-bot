@@ -65,4 +65,18 @@ class SendRichMessageDraftRequest extends TelegramApiRequest
             'rich_message' => $this->rich_message,
         ] + $this->params;
     }
+
+    public function receiverUserId(int $receiver_user_id): self
+    {
+        $this->params['receiver_user_id'] = $receiver_user_id;
+
+        return $this;
+    }
+
+    public function callbackQueryId(string $callback_query_id): self
+    {
+        $this->params['callback_query_id'] = $callback_query_id;
+
+        return $this;
+    }
 }

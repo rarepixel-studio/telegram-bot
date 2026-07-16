@@ -40,6 +40,7 @@ class Update extends BaseObject
             'chat_boost' => ChatBoostUpdated::class,
             'removed_chat_boost' => ChatBoostRemoved::class,
             'managed_bot' => ManagedBotUpdated::class,
+            'subscription' => BotSubscriptionUpdated::class,
         ];
     }
 
@@ -86,6 +87,7 @@ class Update extends BaseObject
             'chat_boost',
             'removed_chat_boost',
             'managed_bot',
+            'subscription',
         ];
 
         return $this->keys()
@@ -371,5 +373,13 @@ class Update extends BaseObject
     public function getManagedBot(): ?ManagedBotUpdated
     {
         return $this->items['managed_bot'] ?? null;
+    }
+
+    /**
+     * (Optional). A user changed their payment subscription (BotSubscriptionUpdated).
+     */
+    public function getSubscription(): ?BotSubscriptionUpdated
+    {
+        return $this->items['subscription'] ?? null;
     }
 }

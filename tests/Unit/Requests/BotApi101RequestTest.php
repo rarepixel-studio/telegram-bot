@@ -32,7 +32,7 @@ class BotApi101RequestTest extends TestCase
         $request = new SendRichMessageRequest(123, ['html' => '<b>Hello</b>', 'markdown' => '**Hello**']);
 
         $this->expectException(TelegramValidationException::class);
-        $this->expectExceptionMessage('Exactly one of html or markdown must be provided');
+        $this->expectExceptionMessage('Exactly one of html, markdown, or blocks must be provided');
 
         $request->validate();
     }

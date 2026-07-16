@@ -186,4 +186,18 @@ class SendPhotoRequest extends TelegramApiRequest
     {
         return new Message($response);
     }
+
+    public function receiverUserId(int $receiver_user_id): self
+    {
+        $this->params['receiver_user_id'] = $receiver_user_id;
+
+        return $this;
+    }
+
+    public function callbackQueryId(string $callback_query_id): self
+    {
+        $this->params['callback_query_id'] = $callback_query_id;
+
+        return $this;
+    }
 }

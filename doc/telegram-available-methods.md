@@ -136,11 +136,16 @@ editMessageLiveLocation
 stopMessageLiveLocation
 editMessageChecklist
 editMessageReplyMarkup
+editEphemeralMessageText
+editEphemeralMessageCaption
+editEphemeralMessageMedia
+editEphemeralMessageReplyMarkup
 stopPoll
 approveSuggestedPost
 declineSuggestedPost
 deleteMessage
 deleteMessages
+deleteEphemeralMessage
 deleteMessageReaction
 deleteAllMessageReactions
 sendSticker

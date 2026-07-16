@@ -24,6 +24,8 @@ not returned by Telegram.
 - InputMediaSticker
 - InputMediaLocation
 - InputMediaVenue
+- InputMediaVoiceNote
+- InputRichMessageMedia
 - InputFile
 - InputPollMedia
 - InputPollOptionMedia
@@ -46,6 +48,29 @@ not returned by Telegram.
 - InputContactMessageContent
 - InputInvoiceMessageContent
 - InputRichMessage
+- InputRichBlock
+- InputRichBlockListItem
+- InputRichBlockParagraph
+- InputRichBlockSectionHeading
+- InputRichBlockPreformatted
+- InputRichBlockFooter
+- InputRichBlockDivider
+- InputRichBlockMathematicalExpression
+- InputRichBlockAnchor
+- InputRichBlockList
+- InputRichBlockBlockQuotation
+- InputRichBlockPullQuotation
+- InputRichBlockCollage
+- InputRichBlockSlideshow
+- InputRichBlockTable
+- InputRichBlockDetails
+- InputRichBlockMap
+- InputRichBlockAnimation
+- InputRichBlockAudio
+- InputRichBlockPhoto
+- InputRichBlockVideo
+- InputRichBlockVoiceNote
+- InputRichBlockThinking
 
 Note: `InputFile` is not a JSON object. It represents a file uploaded via `multipart/form-data`.
 
@@ -115,6 +140,7 @@ These are objects you receive in updates or method results. Some of these are al
 as request parameters (dual-use).
 
 - Update
+- BotSubscriptionUpdated
 - WebhookInfo
 - User
 - Chat
@@ -214,6 +240,9 @@ as request parameters (dual-use).
 - RichBlockVoiceNote
 - RichBlockThinking
 - RichMessage
+- Community
+- CommunityChatAdded
+- CommunityChatRemoved
 - ProximityAlertTriggered
 - MessageAutoDeleteTimerChanged
 - ChatBoostAdded

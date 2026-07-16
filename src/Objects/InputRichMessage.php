@@ -18,7 +18,10 @@ class InputRichMessage extends BaseObject
      */
     public function relations(): array
     {
-        return [];
+        return [
+            'media' => InputRichMessageMedia::class,
+            'blocks' => InputRichBlock::class,
+        ];
     }
 
     /**
@@ -32,7 +35,11 @@ class InputRichMessage extends BaseObject
         $hasMarkdown = $this->has('markdown') && $this->get('markdown') !== '';
 
         if ($hasHtml === $hasMarkdown) {
-            throw new TelegramValidationException('Exactly one of html or markdown must be provided');
+            // Both html and markdown are provided, or neither are provided.
+            // But if blocks are provided, it's valid to have neither.
+            if (! $this->has('blocks') || ($hasHtml && $hasMarkdown)) {
+                throw new TelegramValidationException('Exactly one of html, markdown, or blocks must be provided');
+            }
         }
     }
 
@@ -66,5 +73,25 @@ class InputRichMessage extends BaseObject
     public function getSkipEntityDetection(): ?bool
     {
         return $this->items['skip_entity_detection'] ?? null;
+    }
+
+    /**
+     * (Optional). Media used in markdown or html formatting.
+     *
+     * @return \Illuminate\Support\Collection<int, InputRichMessageMedia>|null
+     */
+    public function getMedia(): ?\Illuminate\Support\Collection
+    {
+        return $this->items['media'] ?? null;
+    }
+
+    /**
+     * (Optional). Blocks used in formatting.
+     *
+     * @return \Illuminate\Support\Collection<int, InputRichBlock>|null
+     */
+    public function getBlocks(): ?\Illuminate\Support\Collection
+    {
+        return $this->items['blocks'] ?? null;
     }
 }

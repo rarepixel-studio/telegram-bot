@@ -63,6 +63,7 @@ use Telegram\Bot\Requests\DeleteAllMessageReactionsRequest;
 use Telegram\Bot\Requests\DeleteBusinessMessagesRequest;
 use Telegram\Bot\Requests\DeleteChatPhotoRequest;
 use Telegram\Bot\Requests\DeleteChatStickerSetRequest;
+use Telegram\Bot\Requests\DeleteEphemeralMessageRequest;
 use Telegram\Bot\Requests\DeleteForumTopicRequest;
 use Telegram\Bot\Requests\DeleteMessageReactionRequest;
 use Telegram\Bot\Requests\DeleteMessageRequest;
@@ -74,6 +75,10 @@ use Telegram\Bot\Requests\DeleteStoryRequest;
 use Telegram\Bot\Requests\DeleteWebhookRequest;
 use Telegram\Bot\Requests\EditChatInviteLinkRequest;
 use Telegram\Bot\Requests\EditChatSubscriptionInviteLinkRequest;
+use Telegram\Bot\Requests\EditEphemeralMessageCaptionRequest;
+use Telegram\Bot\Requests\EditEphemeralMessageMediaRequest;
+use Telegram\Bot\Requests\EditEphemeralMessageReplyMarkupRequest;
+use Telegram\Bot\Requests\EditEphemeralMessageTextRequest;
 use Telegram\Bot\Requests\EditForumTopicRequest;
 use Telegram\Bot\Requests\EditGeneralForumTopicRequest;
 use Telegram\Bot\Requests\EditMessageCaptionRequest;
@@ -2956,6 +2961,98 @@ trait ApiMethodWrappers
 
         return $this->prepareResponse(function (TelegramResponse $response) {
             return new Message($response->getDecodedBody());
+        }, $response);
+    }
+
+    /**
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function editEphemeralMessageText(array|EditEphemeralMessageTextRequest $params = []): bool|Closure
+    {
+        if ($params instanceof EditEphemeralMessageTextRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('editEphemeralMessageText', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return (bool) $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function editEphemeralMessageCaption(array|EditEphemeralMessageCaptionRequest $params = []): bool|Closure
+    {
+        if ($params instanceof EditEphemeralMessageCaptionRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('editEphemeralMessageCaption', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return (bool) $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function editEphemeralMessageMedia(array|EditEphemeralMessageMediaRequest $params = []): bool|Closure
+    {
+        if ($params instanceof EditEphemeralMessageMediaRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $attachments = $this->extractInputMedia($params);
+
+        $response = $this->post('editEphemeralMessageMedia', $params, [], $attachments);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return (bool) $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function editEphemeralMessageReplyMarkup(array|EditEphemeralMessageReplyMarkupRequest $params = []): bool|Closure
+    {
+        if ($params instanceof EditEphemeralMessageReplyMarkupRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('editEphemeralMessageReplyMarkup', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return (bool) $response->getResult();
+        }, $response);
+    }
+
+    /**
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function deleteEphemeralMessage(array|DeleteEphemeralMessageRequest $params = []): bool|Closure
+    {
+        if ($params instanceof DeleteEphemeralMessageRequest) {
+            $params->validate();
+            $params = $params->toArray();
+        }
+
+        $response = $this->post('deleteEphemeralMessage', $params);
+
+        return $this->prepareResponse(function (TelegramResponse $response) {
+            return (bool) $response->getResult();
         }, $response);
     }
 

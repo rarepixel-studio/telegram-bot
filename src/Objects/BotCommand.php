@@ -32,4 +32,12 @@ class BotCommand extends BaseObject
     {
         return $this->items['description'];
     }
+
+    /**
+     * (Optional). True if the command is ephemeral.
+     */
+    public function getIsEphemeral(): ?bool
+    {
+        return $this->items['is_ephemeral'] ?? null;
+    }
 }

@@ -8,6 +8,42 @@ The Bot API is an HTTP-based interface created for developers keen on building b
 
 Subscribe to [@BotNews](https://t.me/botnews) to be the first to know about the latest updates and join the discussion in [@BotTalk](https://t.me/bottalk)
 
+#### July 14, 2026
+
+Bot API 10.2
+
+Rich Messages
+
+- Added the class InputRichMessageMedia and the field media to the class InputRichMessage, allowing bots to explicitly specify media used in markdown or html formatting when sending a rich message.
+- Added the class InputMediaVoiceNote, representing a voice message to be sent.
+- Added the class InputRichBlockListItem, which represents an item in a list to be sent.
+- Added the classes InputRichBlockParagraph, InputRichBlockSectionHeading, InputRichBlockPreformatted, InputRichBlockFooter, InputRichBlockDivider, InputRichBlockMathematicalExpression, InputRichBlockAnchor, InputRichBlockList, InputRichBlockBlockQuotation, InputRichBlockPullQuotation, InputRichBlockCollage, InputRichBlockSlideshow, InputRichBlockTable, InputRichBlockDetails, InputRichBlockMap, InputRichBlockAnimation, InputRichBlockAudio, InputRichBlockPhoto, InputRichBlockVideo, InputRichBlockVoiceNote and InputRichBlockThinking, which represent different types of blocks available to format an outgoing rich message.
+- Added the field blocks to the class InputRichMessage, allowing bots to specify rich message formatting via block entities.
+
+Ephemeral Messages
+
+- Introduced support for Ephemeral Messages, allowing bots to send group messages and receive commands that are visible only to a specific user and the bot.
+- Added the field is_ephemeral to the class BotCommand.
+- Added the field receiver_user to the class Message.
+- Added the field ephemeral_message_id to the class Message.
+- Added the parameters receiver_user_id and callback_query_id to the methods sendMessage, sendAnimation, sendAudio, sendDocument, sendPhoto, sendSticker, sendVideo, sendVideoNote, sendVoice, sendContact, sendLocation, sendVenue.
+- Added the field ephemeral_message_id to the class ReplyParameters, allowing bots to reply to ephemeral messages.
+- Marked the field message_id in the class ReplyParameters as optional if the field ephemeral_message_id is present.
+- Added the methods editEphemeralMessageText, editEphemeralMessageMedia, editEphemeralMessageCaption, and editEphemeralMessageReplyMarkup allowing bots to edit ephemeral messages.
+- Added the method deleteEphemeralMessage allowing bots to delete ephemeral messages.
+
+Communities
+
+- Introduced initial support for Communities - several supergroups, channels, and bots linked together around a shared topic or audience.
+- Added the class Community which represents a community.
+- Added the class CommunityChatAdded and the field community_chat_added to the class Message.
+- Added the class CommunityChatRemoved and the field community_chat_removed to the class Message.
+- Added the field community to the class ChatFullInfo.
+
+General
+
+- Added updates about changes to a user payment subscription, represented by the class BotSubscriptionUpdated and the field subscription in the class Update.
+
 #### June 11, 2026
 
 Bot API 10.1

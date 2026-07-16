@@ -18,6 +18,7 @@ class Chat extends BaseObject
             'background' => ChatBackground::class,
             'first_profile_audio' => Audio::class,
             'guard_bot' => User::class,
+            'community' => Community::class,
         ];
     }
 
@@ -173,5 +174,13 @@ class Chat extends BaseObject
     public function getGuardBot(): ?User
     {
         return $this->items['guard_bot'] ?? null;
+    }
+
+    /**
+     * (Optional). Community to which this chat belongs.
+     */
+    public function getCommunity(): ?Community
+    {
+        return $this->items['community'] ?? null;
     }
 }

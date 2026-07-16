@@ -53,6 +53,16 @@ class ReplyParameters extends BaseObject implements ClientConstructibleObjectInt
     }
 
     /**
+     * Set the ephemeral message identifier.
+     */
+    public function withEphemeralMessageId(?string $ephemeralMessageId): self
+    {
+        $this->items['ephemeral_message_id'] = $ephemeralMessageId;
+
+        return $this;
+    }
+
+    /**
      * Set the chat identifier for the replied message.
      */
     public function withChatId(int|string|null $chatId): self
@@ -129,8 +139,8 @@ class ReplyParameters extends BaseObject implements ClientConstructibleObjectInt
      */
     public function validate(): void
     {
-        if (! isset($this->items['message_id'])) {
-            throw new TelegramValidationException('message_id is required');
+        if (! isset($this->items['message_id']) && ! isset($this->items['ephemeral_message_id'])) {
+            throw new TelegramValidationException('Either message_id or ephemeral_message_id is required');
         }
 
         if (isset($this->items['quote_parse_mode'], $this->items['quote_entities'])) {
@@ -139,11 +149,19 @@ class ReplyParameters extends BaseObject implements ClientConstructibleObjectInt
     }
 
     /**
-     * Identifier of the message that will be replied to in the current chat, or in the chat chat_id if it is specified.
+     * (Optional). Identifier of the message that will be replied to in the current chat, or in the chat chat_id if it is specified.
      */
-    public function getMessageId(): int
+    public function getMessageId(): ?int
     {
-        return $this->items['message_id'];
+        return $this->items['message_id'] ?? null;
+    }
+
+    /**
+     * (Optional). Identifier of the ephemeral message that will be replied to in the current chat.
+     */
+    public function getEphemeralMessageId(): ?string
+    {
+        return $this->items['ephemeral_message_id'] ?? null;
     }
 
     /**

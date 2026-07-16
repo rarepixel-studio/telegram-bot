@@ -106,6 +106,9 @@ class Message extends BaseObject
             'chat_owner_left' => ChatOwnerLeft::class,
             'chat_owner_changed' => ChatOwnerChanged::class,
             'managed_bot_created' => ManagedBotCreated::class,
+            'community_chat_added' => CommunityChatAdded::class,
+            'community_chat_removed' => CommunityChatRemoved::class,
+            'receiver_user' => User::class,
         ];
     }
 
@@ -382,6 +385,8 @@ class Message extends BaseObject
             'video_chat_participants_invited',
             'web_app_data',
             'managed_bot_created',
+            'community_chat_added',
+            'community_chat_removed',
         ];
 
         return $this->keys()
@@ -427,6 +432,22 @@ class Message extends BaseObject
     public function getSenderChat(): ?Chat
     {
         return $this->items['sender_chat'] ?? null;
+    }
+
+    /**
+     * (Optional). Receiver of the ephemeral message.
+     */
+    public function getReceiverUser(): ?User
+    {
+        return $this->items['receiver_user'] ?? null;
+    }
+
+    /**
+     * (Optional). Unique identifier of the ephemeral message.
+     */
+    public function getEphemeralMessageId(): ?string
+    {
+        return $this->items['ephemeral_message_id'] ?? null;
     }
 
     /**
@@ -851,6 +872,22 @@ class Message extends BaseObject
     public function getManagedBotCreated(): ?ManagedBotCreated
     {
         return $this->items['managed_bot_created'] ?? null;
+    }
+
+    /**
+     * (Optional). Service message: chat added to a community.
+     */
+    public function getCommunityChatAdded(): ?CommunityChatAdded
+    {
+        return $this->items['community_chat_added'] ?? null;
+    }
+
+    /**
+     * (Optional). Service message: chat removed from a community.
+     */
+    public function getCommunityChatRemoved(): ?CommunityChatRemoved
+    {
+        return $this->items['community_chat_removed'] ?? null;
     }
 
     /**
