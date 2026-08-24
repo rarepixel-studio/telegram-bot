@@ -19,6 +19,7 @@ class RichText extends BaseObject
         return [
             'text' => self::class,
             'user' => User::class,
+            'button' => RichMessageButton::class,
         ];
     }
 
@@ -180,5 +181,13 @@ class RichText extends BaseObject
     public function getTextEntityType(): ?string
     {
         return $this->items['text_entity_type'] ?? null;
+    }
+
+    /**
+     * (Optional). Button for button rich text.
+     */
+    public function getButton(): ?RichMessageButton
+    {
+        return $this->items['button'] ?? null;
     }
 }

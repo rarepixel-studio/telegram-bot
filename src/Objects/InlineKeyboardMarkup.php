@@ -65,6 +65,16 @@ class InlineKeyboardMarkup extends BaseObject implements ClientConstructibleObje
     }
 
     /**
+     * Pass True if the reply interface must be shown to the user.
+     */
+    public function withForceReply(?bool $forceReply): self
+    {
+        $this->items['force_reply'] = $forceReply;
+
+        return $this;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function validate(): void
@@ -118,5 +128,13 @@ class InlineKeyboardMarkup extends BaseObject implements ClientConstructibleObje
         }
 
         return $inlineKeyboard;
+    }
+
+    /**
+     * (Optional). True if the reply interface must be shown to the user.
+     */
+    public function getForceReply(): ?bool
+    {
+        return $this->items['force_reply'] ?? null;
     }
 }

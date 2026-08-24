@@ -9,6 +9,7 @@ use Telegram\Bot\Objects\ReplyKeyboardMarkup;
 use Telegram\Bot\Objects\ReplyKeyboardRemove;
 use Telegram\Bot\Objects\ReplyParameters;
 use Telegram\Bot\Objects\SuggestedPostParameters;
+use Telegram\Bot\Traits\HasEphemeralMessageParameters;
 
 /**
  * Request object for the sendRichMessage method.
@@ -17,10 +18,13 @@ use Telegram\Bot\Objects\SuggestedPostParameters;
  */
 class SendRichMessageRequest extends TelegramApiRequest
 {
+    use HasEphemeralMessageParameters;
+
     /**
      * {@inheritdoc}
      */
     protected array $jsonSerializedFields = [
+        'ephemeral_message_parameters',
         'rich_message',
         'suggested_post_parameters',
         'reply_parameters',
@@ -115,6 +119,8 @@ class SendRichMessageRequest extends TelegramApiRequest
 
     public function validate(): void
     {
+        $this->validateEphemeralMessageParameters($this->params);
+
         if (is_array($this->rich_message)) {
             $this->rich_message = InputRichMessage::fromArray($this->rich_message);
         }
@@ -131,19 +137,5 @@ class SendRichMessageRequest extends TelegramApiRequest
             'chat_id' => $this->chat_id,
             'rich_message' => $this->rich_message,
         ] + $this->params;
-    }
-
-    public function receiverUserId(int $receiver_user_id): self
-    {
-        $this->params['receiver_user_id'] = $receiver_user_id;
-
-        return $this;
-    }
-
-    public function callbackQueryId(string $callback_query_id): self
-    {
-        $this->params['callback_query_id'] = $callback_query_id;
-
-        return $this;
     }
 }

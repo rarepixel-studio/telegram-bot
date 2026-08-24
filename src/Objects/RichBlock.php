@@ -29,9 +29,11 @@ class RichBlock extends BaseObject
             'location' => Location::class,
             'animation' => Animation::class,
             'audio' => Audio::class,
+            'document' => Document::class,
             'photo' => PhotoSize::class,
             'video' => Video::class,
             'voice_note' => Voice::class,
+            'buttons' => RichMessageButton::class,
         ];
     }
 
@@ -161,5 +163,39 @@ class RichBlock extends BaseObject
     public function getVoiceNote(): ?Voice
     {
         return $this->items['voice_note'] ?? null;
+    }
+
+    /**
+     * (Optional). Document for document blocks.
+     */
+    public function getDocument(): ?Document
+    {
+        return $this->items['document'] ?? null;
+    }
+
+    /**
+     * (Optional). Buttons for button-row blocks.
+     *
+     * @return Collection<int, RichMessageButton>|null
+     */
+    public function getButtons(): ?Collection
+    {
+        return $this->items['buttons'] ?? null;
+    }
+
+    /**
+     * (Optional). Horizontal alignment of buttons or table content.
+     */
+    public function getAlign(): ?string
+    {
+        return $this->items['align'] ?? null;
+    }
+
+    /**
+     * (Optional). True if table cells have smaller indents.
+     */
+    public function getIsCompact(): ?bool
+    {
+        return $this->items['is_compact'] ?? null;
     }
 }

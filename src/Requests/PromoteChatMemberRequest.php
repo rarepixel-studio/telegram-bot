@@ -185,6 +185,26 @@ class PromoteChatMemberRequest extends TelegramApiRequest
         return $this;
     }
 
+    /**
+     * Pass True if the administrator can manage direct messages within the channel and decline suggested posts; for channels only.
+     */
+    public function canManageDirectMessages(bool $can_manage_direct_messages): self
+    {
+        $this->params['can_manage_direct_messages'] = $can_manage_direct_messages;
+
+        return $this;
+    }
+
+    /**
+     * Pass True if the administrator can manage chat welcome messages or directly send them in the case of bots.
+     */
+    public function canSendWelcomeMessages(bool $can_send_welcome_messages): self
+    {
+        $this->params['can_send_welcome_messages'] = $can_send_welcome_messages;
+
+        return $this;
+    }
+
     public function getMethod(): string
     {
         return 'promoteChatMember';

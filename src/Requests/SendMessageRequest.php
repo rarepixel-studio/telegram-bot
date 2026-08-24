@@ -4,6 +4,7 @@ namespace Telegram\Bot\Requests;
 
 use Telegram\Bot\Enums\ParseMode;
 use Telegram\Bot\Exceptions\TelegramValidationException;
+use Telegram\Bot\Objects\EphemeralMessageParameters;
 use Telegram\Bot\Objects\ForceReply;
 use Telegram\Bot\Objects\InlineKeyboardMarkup;
 use Telegram\Bot\Objects\LinkPreviewOptions;
@@ -26,6 +27,7 @@ class SendMessageRequest extends TelegramApiRequest
      */
     protected array $jsonSerializedFields = [
         'entities',
+        'ephemeral_message_parameters',
         'suggested_post_parameters',
         'reply_markup',
     ];
@@ -44,6 +46,9 @@ class SendMessageRequest extends TelegramApiRequest
 
     /** @var int|null Identifier of the direct messages topic */
     protected ?int $directMessagesTopicId = null;
+
+    /** @var EphemeralMessageParameters|array|null Parameters of the ephemeral message to send */
+    protected EphemeralMessageParameters|array|null $ephemeralMessageParameters = null;
 
     /** @var ParseMode|null Mode for parsing entities in the message text */
     protected ?ParseMode $parseMode = null;
@@ -127,6 +132,43 @@ class SendMessageRequest extends TelegramApiRequest
     public function setDirectMessagesTopicId(int $directMessagesTopicId): self
     {
         $this->directMessagesTopicId = $directMessagesTopicId;
+
+        return $this;
+    }
+
+    /**
+     * Set the parameters of the ephemeral message to send.
+     *
+     * @param  EphemeralMessageParameters|array<string, mixed>  $ephemeralMessageParameters
+     * @return $this
+     */
+    public function setEphemeralMessageParameters(EphemeralMessageParameters|array $ephemeralMessageParameters): self
+    {
+        $this->ephemeralMessageParameters = $ephemeralMessageParameters;
+
+        return $this;
+    }
+
+    /**
+     * Identifier of the user who will receive the ephemeral message.
+     *
+     * @return $this
+     */
+    public function receiverUserId(int $receiver_user_id): self
+    {
+        $this->mergeEphemeralMessageParameter('receiver_user_id', $receiver_user_id);
+
+        return $this;
+    }
+
+    /**
+     * Identifier of the callback query which triggered the ephemeral message.
+     *
+     * @return $this
+     */
+    public function callbackQueryId(string $callback_query_id): self
+    {
+        $this->mergeEphemeralMessageParameter('callback_query_id', $callback_query_id);
 
         return $this;
     }
@@ -287,6 +329,7 @@ class SendMessageRequest extends TelegramApiRequest
 
         $this->validateLinkPreviewOptions();
         $this->validateSuggestedPostParametersProperty();
+        $this->validateEphemeralMessageParametersProperty($this->ephemeralMessageParameters);
         $this->validateReplyParametersProperty();
 
         if ($this->replyMarkup !== null) {
@@ -364,6 +407,7 @@ class SendMessageRequest extends TelegramApiRequest
             'chat_id' => $this->chatId,
             'message_thread_id' => $this->messageThreadId,
             'direct_messages_topic_id' => $this->directMessagesTopicId,
+            'ephemeral_message_parameters' => $this->ephemeralMessageParameters,
             'text' => $this->text,
             'parse_mode' => $this->parseMode,
             'entities' => $this->entities,
@@ -378,17 +422,22 @@ class SendMessageRequest extends TelegramApiRequest
         ];
     }
 
-    public function receiverUserId(int $receiver_user_id): self
+    /**
+     * Merge a field into ephemeral_message_parameters.
+     */
+    private function mergeEphemeralMessageParameter(string $key, mixed $value): void
     {
-        $this->params['receiver_user_id'] = $receiver_user_id;
+        $params = $this->ephemeralMessageParameters ?? [];
 
-        return $this;
-    }
+        if ($params instanceof EphemeralMessageParameters) {
+            $params = $params->toArray();
+        }
 
-    public function callbackQueryId(string $callback_query_id): self
-    {
-        $this->params['callback_query_id'] = $callback_query_id;
+        if (! is_array($params)) {
+            $params = [];
+        }
 
-        return $this;
+        $params[$key] = $value;
+        $this->ephemeralMessageParameters = $params;
     }
 }

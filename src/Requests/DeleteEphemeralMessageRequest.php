@@ -13,11 +13,13 @@ class DeleteEphemeralMessageRequest extends TelegramApiRequest
 {
     /**
      * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel
-     * @param  string  $ephemeral_message_id  Identifier of the ephemeral message to delete
+     * @param  int  $receiver_user_id  Identifier of the user who received the message
+     * @param  int  $ephemeral_message_id  Identifier of the ephemeral message to delete
      */
     public function __construct(
         protected int|string $chat_id,
-        protected string $ephemeral_message_id,
+        protected int $receiver_user_id,
+        protected int $ephemeral_message_id,
     ) {}
 
     public function getMethod(): string
@@ -34,6 +36,7 @@ class DeleteEphemeralMessageRequest extends TelegramApiRequest
     {
         return [
             'chat_id' => $this->chat_id,
+            'receiver_user_id' => $this->receiver_user_id,
             'ephemeral_message_id' => $this->ephemeral_message_id,
         ];
     }

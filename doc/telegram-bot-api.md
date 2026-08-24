@@ -8,6 +8,43 @@ The Bot API is an HTTP-based interface created for developers keen on building b
 
 Subscribe to [@BotNews](https://t.me/botnews) to be the first to know about the latest updates and join the discussion in [@BotTalk](https://t.me/bottalk)
 
+#### August 24, 2026
+
+Bot API 10.3
+
+Rich Messages
+
+- Added the class RichMessageButton representing a button in a RichMessage.
+- Added the class RichTextButton.
+- Added the classes RichBlockButtons and InputRichBlockButtons.
+- Added the field is_compact to the classes RichBlockTable and InputRichBlockTable.
+- Added the classes RichBlockExpandableBlockQuotation and InputRichBlockExpandableBlockQuotation representing a block quotation, which can be expanded or collapsed back.
+- Added the classes RichBlockDocument and InputRichBlockDocument, containing a file.
+- Added support for links of the form `tg://document?id=` for general file uploads in rich messages.
+
+Ephemeral messages
+
+- Added the class EphemeralMessageParameters and replaced the parameters receiver_user_id and callback_query_id in the methods sendMessage, sendAnimation, sendAudio, sendDocument, sendLivePhoto, sendPhoto, sendSticker, sendVideo, sendVideoNote, sendVoice, sendContact, sendLocation and sendVenue with the parameter ephemeral_message_parameters.
+- Added the parameter ephemeral_message_parameters to the method sendRichMessage.
+- Added the field replace_callback_query_message to the class EphemeralMessageParameters, which allows bots to show an ephemeral message in place of the original message.
+- Supported upload of new files in editEphemeralMessageMedia.
+- Added the parameter show_caption_above_media to the method editEphemeralMessageCaption.
+- Added the parameter rich_message to the method editEphemeralMessageText.
+- Added the field can_send_welcome_messages to the classes ChatAdministratorRights and ChatMemberAdministrator.
+- Added the parameter can_send_welcome_messages to the method promoteChatMember.
+
+Reply markup
+
+- Added the class DisabledButton and the field disabled to the class InlineKeyboardButton.
+- Added the field force_reply to the classes InlineKeyboardMarkup and ReplyKeyboardMarkup.
+
+General
+
+- Added the parameters can_stop and keep_on_stop to the methods sendMessageDraft and sendRichMessageDraft.
+- Added updates about user stopping message generation, represented by the class MessageGenerationStopped and the field stopped_message_generation in the class Update.
+- Added the class CommunityChatJoined and the field community_chat_joined to the class Message for service messages about join of a chat from a community.
+- Added the fields text, entities and is_private to the class UniqueGiftInfo.
+
 #### July 14, 2026
 
 Bot API 10.2
@@ -284,6 +321,8 @@ This object represents an incoming update.At most one of the optional fields can
 | chat_boost | ChatBoostUpdated | Optional. A chat boost was added or changed. The bot must be an administrator in the chat to receive these updates. |
 | removed_chat_boost | ChatBoostRemoved | Optional. A boost was removed from a chat. The bot must be an administrator in the chat to receive these updates. |
 | managed_bot | ManagedBotUpdated | Optional. A new bot was created to be managed by the bot, or token or owner of a managed bot was changed |
+| subscription | BotSubscriptionUpdated | Optional. A user changed their payment subscription toward the bot |
+| stopped_message_generation | MessageGenerationStopped | Optional. A user asked the bot to stop the generation of a message |
 
 #### getUpdates
 
@@ -557,6 +596,9 @@ This object represents a message.
 | giveaway_winners | GiveawayWinners | Optional. A giveaway with public winners was completed |
 | giveaway_completed | GiveawayCompleted | Optional. Service message: a giveaway without public winners was completed |
 | managed_bot_created | ManagedBotCreated | Optional. Service message: user created a bot that will be managed by the current bot |
+| community_chat_added | CommunityChatAdded | Optional. Service message: chat or bot was added to a community |
+| community_chat_removed | CommunityChatRemoved | Optional. Service message: chat or bot was removed from a community |
+| community_chat_joined | CommunityChatJoined | Optional. Service message: chat was joined by a user from a community |
 | paid_message_price_changed | PaidMessagePriceChanged | Optional. Service message: the price for paid messages has changed in the chat |
 | poll_option_added | PollOptionAdded | Optional. Service message: answer option was added to a poll |
 | poll_option_deleted | PollOptionDeleted | Optional. Service message: answer option was deleted from a poll |
@@ -672,6 +714,16 @@ Describes reply parameters for the message that is being sent.
 | quote_position | Integer | Optional. Position of the quote in the original message in UTF-16 code units |
 | checklist_task_id | Integer | Optional. Identifier of the specific checklist task to be replied to |
 | poll_option_id | String | Optional. Persistent identifier of the specific poll option to be replied to |
+
+#### EphemeralMessageParameters
+
+Describes the parameters of an ephemeral message to send.
+
+| Field | Type | Description |
+| --- | --- | --- |
+| receiver_user_id | Integer | Identifier of the user who will receive the message. It is not guaranteed that the user will receive the message, especially if they are offline. |
+| callback_query_id | String | Optional. Identifier of the callback query which triggered the message, if any |
+| replace_callback_query_message | Boolean | Optional. Pass True if the ephemeral message must be shown in place of the original message. Must be False for callback queries from ephemeral messages, which must be edited using regular editEphemeralMessage… methods. |
 
 #### MessageOrigin
 
@@ -1186,6 +1238,24 @@ This object contains information about the creation, token update, or owner upda
 | user | User | User that created the bot |
 | bot | User | Information about the bot. Token of the bot can be fetched using the method getManagedBotToken. |
 
+#### MessageGenerationStopped
+
+This object describes an update about a user stopping message generation.
+
+| Field | Type | Description |
+| --- | --- | --- |
+| chat | Chat | Chat in which the message is generated |
+| message_thread_id | Integer | Optional. Unique identifier of the message thread in which the message is generated |
+| draft_id | Integer | Unique identifier of the message draft which was stopped |
+
+#### CommunityChatJoined
+
+Describes a service message about a chat being joined by a user from a community.
+
+| Field | Type | Description |
+| --- | --- | --- |
+| community | Community | The community from which the chat was joined |
+
 #### PollOptionAdded
 
 Describes a service message about an option added to a poll.
@@ -1640,6 +1710,7 @@ This object represents a [custom keyboard](https://core.telegram.org/bots/featur
 | one_time_keyboard | Boolean | Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false. |
 | input_field_placeholder | String | Optional. The placeholder to be shown in the input field when the keyboard is active; 1-64 characters |
 | selective | Boolean | Optional. Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.Example: A user requests to change the bot's language, bot replies to the request with a keyboard to select the new language. Other users in the group don't see the keyboard. |
+| force_reply | Boolean | Optional. Pass True if the reply interface must be shown to the user, as if they had manually selected the bot's message and tapped 'Reply' |
 
 #### KeyboardButton
 
@@ -1724,6 +1795,7 @@ This object represents an [inline keyboard](https://core.telegram.org/bots/featu
 | Field | Type | Description |
 | --- | --- | --- |
 | inline_keyboard | Array of Array of InlineKeyboardButton | Array of button rows, each represented by an Array of InlineKeyboardButton objects |
+| force_reply | Boolean | Optional. Pass True if the reply interface must be shown to the user, as if they had manually selected the bot's message and tapped 'Reply'. The value of the field can't be changed when the inline keyboard is edited. |
 
 #### InlineKeyboardButton
 
@@ -1744,6 +1816,7 @@ This object represents one button of an inline keyboard. Exactly one of the fiel
 | copy_text | CopyTextButton | Optional. Description of the button that copies the specified text to the clipboard |
 | callback_game | CallbackGame | Optional. Description of the game that will be launched when the user presses the button.NOTE: This type of button must always be the first button in the first row. |
 | pay | Boolean | Optional. Specify True, to send a Pay button. Substrings “” and “XTR” in the buttons's text will be replaced with a Telegram Star icon.NOTE: This type of button must always be the first button in the first row and can only be used in invoice messages. |
+| disabled | DisabledButton | Optional. If set, then the button is disabled and does nothing |
 
 #### LoginUrl
 
@@ -1777,6 +1850,10 @@ This object represents an inline keyboard button that copies specified text to t
 | Field | Type | Description |
 | --- | --- | --- |
 | text | String | The text to be copied to the clipboard; 1-256 characters |
+
+#### DisabledButton
+
+This object represents a disabled button which does nothing. Currently holds no information.
 
 #### CallbackQuery
 
@@ -1863,6 +1940,7 @@ Represents the rights of an administrator in a chat.
 | can_manage_topics | Boolean | Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only |
 | can_manage_direct_messages | Boolean | Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only |
 | can_manage_tags | Boolean | Optional. True, if the administrator can edit the tags of regular members; for groups and supergroups only. If omitted defaults to the value of can_pin_messages. |
+| can_send_welcome_messages | Boolean | True, if the administrator can manage chat welcome messages or directly send them in the case of bots |
 
 #### ChatMemberUpdated
 
@@ -1927,6 +2005,7 @@ Represents a chat member that has some additional privileges.
 | can_manage_topics | Boolean | Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only |
 | can_manage_direct_messages | Boolean | Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only |
 | can_manage_tags | Boolean | Optional. True, if the administrator can edit the tags of regular members; for groups and supergroups only. If omitted defaults to the value of can_pin_messages. |
+| can_send_welcome_messages | Boolean | True, if the administrator can manage chat welcome messages or directly send them in the case of bots |
 | custom_title | String | Optional. Custom title for this user |
 
 #### ChatMemberMember
@@ -2401,6 +2480,9 @@ Describes a service message about a unique gift that was sent or received.
 | --- | --- | --- |
 | gift | UniqueGift | Information about the gift |
 | origin | String | Origin of the gift. Currently, either “upgrade” for gifts upgraded from regular gifts, “transfer” for gifts transferred from other users or channels, “resale” for gifts bought from other users, “gifted_upgrade” for upgrades purchased after the gift was sent, or “offer” for gifts bought or sold through gift purchase offers. |
+| text | String | Optional. Text of the message that was added to the gift |
+| entities | Array of MessageEntity | Optional. Special entities that appear in the text |
+| is_private | True | Optional. True, if the sender and gift text are shown only to the gift receiver; otherwise, everyone will be able to see them |
 | last_resale_currency | String | Optional. For gifts bought from other users, the currency in which the payment for the gift was done. Currently, one of “XTR” for Telegram Stars or “TON” for toncoins. |
 | last_resale_amount | Integer | Optional. For gifts bought from other users, the price paid for the gift in either Telegram Stars or nanotoncoins |
 | owned_gift_id | String | Optional. Unique identifier of the received gift for the bot; only present for gifts received on behalf of business accounts |
@@ -3184,6 +3266,7 @@ Use this method to send text messages. On success, the sent Message is returned.
 | chat_id | Integer or String | Yes | Unique identifier for the target chat or username of the target bot, supergroup or channel in the format`@username` |
 | message_thread_id | Integer | Optional | Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only |
 | direct_messages_topic_id | Integer | Optional | Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat |
+| ephemeral_message_parameters | EphemeralMessageParameters | Optional | A JSON-serialized object containing the parameters of the ephemeral message to send |
 | text | String | Yes | Text of the message to be sent, 1-4096 characters after entities parsing |
 | parse_mode | String | Optional | Mode for parsing entities in the message text. See formatting options for more details. |
 | entities | Array of MessageEntity | Optional | A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode |
@@ -3818,6 +3901,8 @@ Use this method to stream a partial message to a user while the message is being
 | text | String | Optional | Text of the message to be sent, 0-4096 characters after entities parsing. Pass an empty text to show a “Thinking…” placeholder. |
 | parse_mode | String | Optional | Mode for parsing entities in the message text. See formatting options for more details. |
 | entities | Array of MessageEntity | Optional | A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode |
+| can_stop | Boolean | Optional | Pass True to show the user a button to stop further drafts. The bot will receive an Update “stopped_message_generation” if the user presses the button. |
+| keep_on_stop | Boolean | Optional | Pass True to keep the draft in the chat when the button is pressed. The draft will still disappear after a short time or if the bot sends a message. To fully preserve the partial draft, the bot should send it as a new message. |
 
 #### sendRichMessage
 
@@ -3829,6 +3914,7 @@ Use this method to send rich messages. If the message contains a block with a me
 | chat_id | Integer or String | Yes | Unique identifier for the target chat or username of the target bot, supergroup or channel in the format`@username` |
 | message_thread_id | Integer | Optional | Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only |
 | direct_messages_topic_id | Integer | Optional | Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat |
+| ephemeral_message_parameters | EphemeralMessageParameters | Optional | A JSON-serialized object containing the parameters of the ephemeral message to send |
 | rich_message | InputRichMessage | Yes | The message to be sent |
 | disable_notification | Boolean | Optional | Sends the message silently. Users will receive a notification with no sound. |
 | protect_content | Boolean | Optional | Protects the contents of the sent message from forwarding and saving |
@@ -3848,6 +3934,8 @@ Use this method to stream a partial rich message to a user while the message is 
 | message_thread_id | Integer | Optional | Unique identifier for the target message thread |
 | draft_id | Integer | Yes | Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated. |
 | rich_message | InputRichMessage | Yes | The partial message to be streamed |
+| can_stop | Boolean | Optional | Pass True to show the user a button to stop further drafts. The bot will receive an Update “stopped_message_generation” if the user presses the button. |
+| keep_on_stop | Boolean | Optional | Pass True to keep the draft in the chat when the button is pressed. |
 
 #### sendChatAction
 
@@ -3973,6 +4061,7 @@ Use this method to promote or demote a user in a supergroup or a channel. The bo
 | can_manage_topics | Boolean | Optional | Pass True if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only |
 | can_manage_direct_messages | Boolean | Optional | Pass True if the administrator can manage direct messages within the channel and decline suggested posts; for channels only |
 | can_manage_tags | Boolean | Optional | Pass True if the administrator can edit the tags of regular members; for groups and supergroups only |
+| can_send_welcome_messages | Boolean | Optional | Pass True if the administrator can manage chat welcome messages or directly send them in the case of bots |
 
 #### setChatAdministratorCustomTitle
 

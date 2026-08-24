@@ -5,6 +5,7 @@ namespace Telegram\Bot\Requests;
 use Illuminate\Contracts\Support\Arrayable;
 use Telegram\Bot\Contracts\ApiRequestInterface;
 use Telegram\Bot\Exceptions\TelegramValidationException;
+use Telegram\Bot\Objects\EphemeralMessageParameters;
 use Telegram\Bot\Objects\ForceReply;
 use Telegram\Bot\Objects\InlineKeyboardMarkup;
 use Telegram\Bot\Objects\ReplyKeyboardMarkup;
@@ -260,6 +261,58 @@ abstract class TelegramApiRequest implements ApiRequestInterface
             $object = SuggestedPostParameters::fromArray($spp);
             $object->validate();
             $params['suggested_post_parameters'] = $object;
+        }
+    }
+
+    /**
+     * Validate and normalize ephemeral message parameters.
+     *
+     * Call this method from your validate() implementation when
+     * your request supports the ephemeral_message_parameters field.
+     *
+     * @param  array<string, mixed>  $params  Reference to the params array
+     *
+     * @throws TelegramValidationException
+     */
+    protected function validateEphemeralMessageParameters(array &$params): void
+    {
+        if (! array_key_exists('ephemeral_message_parameters', $params)) {
+            return;
+        }
+
+        $value = $params['ephemeral_message_parameters'];
+        if ($value instanceof EphemeralMessageParameters) {
+            $value->validate();
+
+            return;
+        }
+
+        if (is_array($value)) {
+            $object = EphemeralMessageParameters::fromArray($value);
+            $object->validate();
+            $params['ephemeral_message_parameters'] = $object;
+        }
+    }
+
+    /**
+     * Validate and normalize an ephemeral message parameters property.
+     *
+     * @param  mixed  $property  Reference to the property to validate
+     *
+     * @throws TelegramValidationException
+     */
+    protected function validateEphemeralMessageParametersProperty(mixed &$property): void
+    {
+        if ($property instanceof EphemeralMessageParameters) {
+            $property->validate();
+
+            return;
+        }
+
+        if (is_array($property)) {
+            $object = EphemeralMessageParameters::fromArray($property);
+            $object->validate();
+            $property = $object;
         }
     }
 

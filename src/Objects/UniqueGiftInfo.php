@@ -31,6 +31,30 @@ class UniqueGiftInfo extends BaseObject
     }
 
     /**
+     * Origin of the gift.
+     */
+    public function getOrigin(): string
+    {
+        return $this->items['origin'];
+    }
+
+    /**
+     * (Optional). For gifts bought from other users, the currency in which the payment for the gift was done.
+     */
+    public function getLastResaleCurrency(): ?string
+    {
+        return $this->items['last_resale_currency'] ?? null;
+    }
+
+    /**
+     * (Optional). For gifts bought from other users, the price paid for the gift.
+     */
+    public function getLastResaleAmount(): ?int
+    {
+        return $this->items['last_resale_amount'] ?? null;
+    }
+
+    /**
      * (Optional). Unique identifier of the received gift for the bot.
      */
     public function getOwnedGiftId(): ?string
@@ -60,5 +84,21 @@ class UniqueGiftInfo extends BaseObject
     public function getIsPrivate(): ?bool
     {
         return $this->items['is_private'] ?? null;
+    }
+
+    /**
+     * (Optional). Number of Telegram Stars that must be paid to transfer the gift.
+     */
+    public function getTransferStarCount(): ?int
+    {
+        return $this->items['transfer_star_count'] ?? null;
+    }
+
+    /**
+     * (Optional). Point in time (Unix timestamp) when the gift can be transferred.
+     */
+    public function getNextTransferDate(): ?int
+    {
+        return $this->items['next_transfer_date'] ?? null;
     }
 }

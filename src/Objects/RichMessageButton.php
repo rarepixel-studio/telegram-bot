@@ -7,11 +7,13 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
 use Telegram\Bot\Traits\ValidatesNestedObjects;
 
 /**
- * Class InlineKeyboardButton.
+ * Class RichMessageButton.
  *
- * This object represents one button of an inline keyboard.
+ * This object represents a button in a RichMessage.
+ *
+ * @link https://core.telegram.org/bots/api#richmessagebutton
  */
-class InlineKeyboardButton extends BaseObject implements ClientConstructibleObjectInterface
+class RichMessageButton extends BaseObject implements ClientConstructibleObjectInterface
 {
     use ValidatesNestedObjects;
 
@@ -21,11 +23,11 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
     public function relations(): array
     {
         return [
+            'text' => RichText::class,
             'web_app' => WebAppInfo::class,
             'login_url' => LoginUrl::class,
             'switch_inline_query_chosen_chat' => SwitchInlineQueryChosenChat::class,
             'copy_text' => CopyTextButton::class,
-            'callback_game' => CallbackGame::class,
             'disabled' => DisabledButton::class,
         ];
     }
@@ -41,7 +43,7 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
     }
 
     /**
-     * Create an InlineKeyboardButton instance.
+     * Create a RichMessageButton instance.
      *
      * @param  array<string, mixed>|string  $items
      * @param  mixed  ...$args
@@ -61,10 +63,22 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
 
     /**
      * Set the button text.
+     *
+     * @param  RichText|array<string, mixed>|string  $text
      */
-    public function withText(string $text): self
+    public function withText(RichText|array|string $text): self
     {
         $this->items['text'] = $text;
+
+        return $this;
+    }
+
+    /**
+     * Set the color style of the button.
+     */
+    public function withStyle(?string $style): self
+    {
+        $this->items['style'] = $style;
 
         return $this;
     }
@@ -158,28 +172,6 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
     }
 
     /**
-     * Set the callback game.
-     *
-     * @param  CallbackGame|array<string, mixed>|null  $callbackGame
-     */
-    public function withCallbackGame(CallbackGame|array|null $callbackGame): self
-    {
-        $this->items['callback_game'] = $callbackGame;
-
-        return $this;
-    }
-
-    /**
-     * Set whether this is a Pay button.
-     */
-    public function withPay(?bool $pay): self
-    {
-        $this->items['pay'] = $pay;
-
-        return $this;
-    }
-
-    /**
      * Set the disabled button placeholder.
      *
      * @param  DisabledButton|array<string, mixed>|null  $disabled
@@ -209,7 +201,6 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
             'switch_inline_query_current_chat',
             'switch_inline_query_chosen_chat',
             'copy_text',
-            'callback_game',
             'disabled',
         ];
 
@@ -220,12 +211,20 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
             }
         }
 
-        if (($this->items['pay'] ?? null) === true) {
-            $count++;
+        if ($count !== 1) {
+            throw new TelegramValidationException('Exactly one optional field must be set on RichMessageButton');
         }
 
-        if ($count !== 1) {
-            throw new TelegramValidationException('Exactly one optional field must be set on InlineKeyboardButton');
+        if (isset($this->items['style'])) {
+            $style = $this->items['style'];
+            $allowed = ['danger', 'success', 'primary', 'link'];
+            if (! is_string($style) || ! in_array($style, $allowed, true)) {
+                throw new TelegramValidationException('style must be one of danger, success, primary, or link');
+            }
+
+            if ($style === 'link' && ! isset($this->items['callback_data'])) {
+                throw new TelegramValidationException('style "link" is allowed only for callback buttons');
+            }
         }
 
         if (isset($this->items['callback_data'])) {
@@ -239,20 +238,27 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
         $this->validateNested('login_url', LoginUrl::class);
         $this->validateNested('switch_inline_query_chosen_chat', SwitchInlineQueryChosenChat::class);
         $this->validateNested('copy_text', CopyTextButton::class);
-        $this->validateNested('callback_game', CallbackGame::class);
         $this->validateNested('disabled', DisabledButton::class);
     }
 
     /**
-     * Label text on the button.
+     * Text of the button.
      */
-    public function getText(): string
+    public function getText(): mixed
     {
         return $this->items['text'];
     }
 
     /**
-     * URL to be opened.
+     * (Optional). Style of the button.
+     */
+    public function getStyle(): ?string
+    {
+        return $this->items['style'] ?? null;
+    }
+
+    /**
+     * (Optional). URL to be opened.
      */
     public function getUrl(): ?string
     {
@@ -260,7 +266,7 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
     }
 
     /**
-     * Callback data.
+     * (Optional). Callback data.
      */
     public function getCallbackData(): ?string
     {
@@ -268,7 +274,7 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
     }
 
     /**
-     * Web App info.
+     * (Optional). Web App info.
      */
     public function getWebApp(): ?WebAppInfo
     {
@@ -276,7 +282,7 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
     }
 
     /**
-     * Login URL.
+     * (Optional). Login URL.
      */
     public function getLoginUrl(): ?LoginUrl
     {
@@ -284,7 +290,7 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
     }
 
     /**
-     * Inline query to insert.
+     * (Optional). Inline query to insert.
      */
     public function getSwitchInlineQuery(): ?string
     {
@@ -292,7 +298,7 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
     }
 
     /**
-     * Inline query to insert in current chat.
+     * (Optional). Inline query to insert in current chat.
      */
     public function getSwitchInlineQueryCurrentChat(): ?string
     {
@@ -300,7 +306,7 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
     }
 
     /**
-     * Chosen chat switch options.
+     * (Optional). Chosen chat switch options.
      */
     public function getSwitchInlineQueryChosenChat(): ?SwitchInlineQueryChosenChat
     {
@@ -308,27 +314,11 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
     }
 
     /**
-     * Copy text button description.
+     * (Optional). Copy text button description.
      */
     public function getCopyText(): ?CopyTextButton
     {
         return $this->items['copy_text'] ?? null;
-    }
-
-    /**
-     * Callback game description.
-     */
-    public function getCallbackGame(): ?CallbackGame
-    {
-        return $this->items['callback_game'] ?? null;
-    }
-
-    /**
-     * True if this is a Pay button.
-     */
-    public function getPay(): ?bool
-    {
-        return $this->items['pay'] ?? null;
     }
 
     /**
@@ -337,41 +327,5 @@ class InlineKeyboardButton extends BaseObject implements ClientConstructibleObje
     public function getDisabled(): ?DisabledButton
     {
         return $this->items['disabled'] ?? null;
-    }
-
-    /**
-     * (Optional). Custom emoji identifier to be shown on the button.
-     */
-    public function getIconCustomEmojiId(): ?string
-    {
-        return $this->items['icon_custom_emoji_id'] ?? null;
-    }
-
-    /**
-     * Set the custom emoji identifier to be shown on the button.
-     */
-    public function withIconCustomEmojiId(?string $iconCustomEmojiId): self
-    {
-        $this->items['icon_custom_emoji_id'] = $iconCustomEmojiId;
-
-        return $this;
-    }
-
-    /**
-     * (Optional). The color style of the button.
-     */
-    public function getStyle(): ?string
-    {
-        return $this->items['style'] ?? null;
-    }
-
-    /**
-     * Set the color style of the button.
-     */
-    public function withStyle(?string $style): self
-    {
-        $this->items['style'] = $style;
-
-        return $this;
     }
 }

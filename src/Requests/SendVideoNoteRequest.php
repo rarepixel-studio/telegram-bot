@@ -11,6 +11,7 @@ use Telegram\Bot\Objects\ReplyKeyboardMarkup;
 use Telegram\Bot\Objects\ReplyKeyboardRemove;
 use Telegram\Bot\Objects\ReplyParameters;
 use Telegram\Bot\Objects\SuggestedPostParameters;
+use Telegram\Bot\Traits\HasEphemeralMessageParameters;
 
 /**
  * Method to send video note messages.
@@ -19,10 +20,13 @@ use Telegram\Bot\Objects\SuggestedPostParameters;
  */
 class SendVideoNoteRequest extends TelegramApiRequest
 {
+    use HasEphemeralMessageParameters;
+
     /**
      * {@inheritdoc}
      */
     protected array $jsonSerializedFields = [
+        'ephemeral_message_parameters',
         'suggested_post_parameters',
         'reply_markup',
     ];
@@ -213,6 +217,8 @@ class SendVideoNoteRequest extends TelegramApiRequest
      */
     public function validate(): void
     {
+        $this->validateEphemeralMessageParameters($this->params);
+
         $this->validateSuggestedPostParameters($this->params);
         $this->validateReplyParameters($this->params);
         $this->validateReplyMarkup($this->params);
@@ -235,19 +241,5 @@ class SendVideoNoteRequest extends TelegramApiRequest
     public function resolveResponse(mixed $response): Message
     {
         return new Message($response);
-    }
-
-    public function receiverUserId(int $receiver_user_id): self
-    {
-        $this->params['receiver_user_id'] = $receiver_user_id;
-
-        return $this;
-    }
-
-    public function callbackQueryId(string $callback_query_id): self
-    {
-        $this->params['callback_query_id'] = $callback_query_id;
-
-        return $this;
     }
 }

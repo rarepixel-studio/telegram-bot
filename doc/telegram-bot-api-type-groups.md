@@ -59,18 +59,22 @@ not returned by Telegram.
 - InputRichBlockAnchor
 - InputRichBlockList
 - InputRichBlockBlockQuotation
+- InputRichBlockExpandableBlockQuotation
 - InputRichBlockPullQuotation
 - InputRichBlockCollage
 - InputRichBlockSlideshow
 - InputRichBlockTable
 - InputRichBlockDetails
 - InputRichBlockMap
+- InputRichBlockButtons
 - InputRichBlockAnimation
 - InputRichBlockAudio
+- InputRichBlockDocument
 - InputRichBlockPhoto
 - InputRichBlockVideo
 - InputRichBlockVoiceNote
 - InputRichBlockThinking
+- EphemeralMessageParameters
 
 Note: `InputFile` is not a JSON object. It represents a file uploaded via `multipart/form-data`.
 
@@ -141,6 +145,7 @@ as request parameters (dual-use).
 
 - Update
 - BotSubscriptionUpdated
+- MessageGenerationStopped
 - WebhookInfo
 - User
 - Chat
@@ -210,6 +215,7 @@ as request parameters (dual-use).
 - RichTextHashtag
 - RichTextCashtag
 - RichTextBotCommand
+- RichTextButton
 - RichTextAnchor
 - RichTextAnchorLink
 - RichTextReference
@@ -227,22 +233,27 @@ as request parameters (dual-use).
 - RichBlockAnchor
 - RichBlockList
 - RichBlockBlockQuotation
+- RichBlockExpandableBlockQuotation
 - RichBlockPullQuotation
 - RichBlockCollage
 - RichBlockSlideshow
 - RichBlockTable
 - RichBlockDetails
 - RichBlockMap
+- RichBlockButtons
 - RichBlockAnimation
 - RichBlockAudio
+- RichBlockDocument
 - RichBlockPhoto
 - RichBlockVideo
 - RichBlockVoiceNote
 - RichBlockThinking
 - RichMessage
+- RichMessageButton
 - Community
 - CommunityChatAdded
 - CommunityChatRemoved
+- CommunityChatJoined
 - ProximityAlertTriggered
 - MessageAutoDeleteTimerChanged
 - ChatBoostAdded
@@ -300,6 +311,7 @@ as request parameters (dual-use).
 - LoginUrl
 - SwitchInlineQueryChosenChat
 - CopyTextButton
+- DisabledButton
 - CallbackQuery
 - ChatPhoto
 - ChatInviteLink

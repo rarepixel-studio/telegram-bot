@@ -35,6 +35,13 @@ class EditEphemeralMessageCaptionRequest extends TelegramApiRequest
         return $this;
     }
 
+    public function receiverUserId(int $receiver_user_id): self
+    {
+        $this->params['receiver_user_id'] = $receiver_user_id;
+
+        return $this;
+    }
+
     public function ephemeralMessageId(string $ephemeral_message_id): self
     {
         $this->params['ephemeral_message_id'] = $ephemeral_message_id;
@@ -59,6 +66,16 @@ class EditEphemeralMessageCaptionRequest extends TelegramApiRequest
     public function captionEntities(array $caption_entities): self
     {
         $this->params['caption_entities'] = $caption_entities;
+
+        return $this;
+    }
+
+    /**
+     * Pass True if the caption must be shown above the message media.
+     */
+    public function showCaptionAboveMedia(bool $show_caption_above_media): self
+    {
+        $this->params['show_caption_above_media'] = $show_caption_above_media;
 
         return $this;
     }

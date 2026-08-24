@@ -3,7 +3,7 @@
 Unofficial Telegram Bot API SDK for PHP 8.1+.
 
 ## Telegram Bot API Version
-This SDK tracks **Bot API 9.6** (released April 3, 2026).
+This SDK tracks **Bot API 10.3** (released August 24, 2026).
 
 - Changelog: https://core.telegram.org/bots/api-changelog
 - Local API reference: `doc/telegram-bot-api.md`

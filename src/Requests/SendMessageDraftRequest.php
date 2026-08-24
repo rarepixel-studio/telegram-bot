@@ -40,6 +40,12 @@ class SendMessageDraftRequest extends TelegramApiRequest
     /** @var array|null List of MessageEntity objects */
     protected ?array $entities = null;
 
+    /** @var bool|null Pass True to show the user a button to stop further drafts */
+    protected ?bool $canStop = null;
+
+    /** @var bool|null Pass True to keep the draft in the chat when the stop button is pressed */
+    protected ?bool $keepOnStop = null;
+
     /**
      * SendMessageDraftRequest constructor.
      */
@@ -97,6 +103,30 @@ class SendMessageDraftRequest extends TelegramApiRequest
     }
 
     /**
+     * Pass True to show the user a button to stop further drafts.
+     *
+     * @return $this
+     */
+    public function setCanStop(bool $canStop): self
+    {
+        $this->canStop = $canStop;
+
+        return $this;
+    }
+
+    /**
+     * Pass True to keep the draft in the chat when the stop button is pressed.
+     *
+     * @return $this
+     */
+    public function setKeepOnStop(bool $keepOnStop): self
+    {
+        $this->keepOnStop = $keepOnStop;
+
+        return $this;
+    }
+
+    /**
      * Get the method name.
      */
     public function getMethod(): string
@@ -134,6 +164,8 @@ class SendMessageDraftRequest extends TelegramApiRequest
             'text' => $this->text,
             'parse_mode' => $this->parseMode,
             'entities' => $this->entities,
+            'can_stop' => $this->canStop,
+            'keep_on_stop' => $this->keepOnStop,
         ];
     }
 }

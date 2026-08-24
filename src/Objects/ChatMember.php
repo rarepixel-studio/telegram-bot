@@ -186,4 +186,12 @@ class ChatMember extends BaseObject
     {
         return $this->items['can_react_to_messages'] ?? null;
     }
+
+    /**
+     * (Optional). Administrators only. True, if the administrator can manage chat welcome messages.
+     */
+    public function getCanSendWelcomeMessages(): ?bool
+    {
+        return $this->items['can_send_welcome_messages'] ?? null;
+    }
 }

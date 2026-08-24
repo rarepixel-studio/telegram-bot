@@ -152,4 +152,12 @@ class ChatAdministratorRights extends BaseObject
     {
         return $this->items['can_manage_tags'] ?? null;
     }
+
+    /**
+     * True, if the administrator can manage chat welcome messages or directly send them in the case of bots.
+     */
+    public function getCanSendWelcomeMessages(): bool
+    {
+        return $this->items['can_send_welcome_messages'];
+    }
 }

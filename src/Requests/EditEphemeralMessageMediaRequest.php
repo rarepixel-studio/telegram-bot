@@ -40,6 +40,13 @@ class EditEphemeralMessageMediaRequest extends TelegramApiRequest
         return $this;
     }
 
+    public function receiverUserId(int $receiver_user_id): self
+    {
+        $this->params['receiver_user_id'] = $receiver_user_id;
+
+        return $this;
+    }
+
     public function ephemeralMessageId(string $ephemeral_message_id): self
     {
         $this->params['ephemeral_message_id'] = $ephemeral_message_id;

@@ -11,6 +11,7 @@ use Telegram\Bot\Objects\ReplyKeyboardMarkup;
 use Telegram\Bot\Objects\ReplyKeyboardRemove;
 use Telegram\Bot\Objects\ReplyParameters;
 use Telegram\Bot\Objects\SuggestedPostParameters;
+use Telegram\Bot\Traits\HasEphemeralMessageParameters;
 
 /**
  * Request object for the sendLivePhoto method.
@@ -21,10 +22,13 @@ use Telegram\Bot\Objects\SuggestedPostParameters;
  */
 class SendLivePhotoRequest extends TelegramApiRequest
 {
+    use HasEphemeralMessageParameters;
+
     /**
      * {@inheritdoc}
      */
     protected array $jsonSerializedFields = [
+        'ephemeral_message_parameters',
         'caption_entities',
         'suggested_post_parameters',
         'reply_markup',
@@ -163,6 +167,8 @@ class SendLivePhotoRequest extends TelegramApiRequest
 
     public function validate(): void
     {
+        $this->validateEphemeralMessageParameters($this->params);
+
         if (isset($this->params['parse_mode'], $this->params['caption_entities'])) {
             throw new TelegramValidationException('parse_mode cannot be used with caption_entities');
         }

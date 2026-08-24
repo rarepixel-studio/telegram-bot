@@ -39,6 +39,26 @@ class SendRichMessageDraftRequest extends TelegramApiRequest
         return $this;
     }
 
+    /**
+     * Pass True to show the user a button to stop further drafts.
+     */
+    public function canStop(bool $can_stop): self
+    {
+        $this->params['can_stop'] = $can_stop;
+
+        return $this;
+    }
+
+    /**
+     * Pass True to keep the draft in the chat when the stop button is pressed.
+     */
+    public function keepOnStop(bool $keep_on_stop): self
+    {
+        $this->params['keep_on_stop'] = $keep_on_stop;
+
+        return $this;
+    }
+
     public function getMethod(): string
     {
         return 'sendRichMessageDraft';
@@ -64,19 +84,5 @@ class SendRichMessageDraftRequest extends TelegramApiRequest
             'draft_id' => $this->draft_id,
             'rich_message' => $this->rich_message,
         ] + $this->params;
-    }
-
-    public function receiverUserId(int $receiver_user_id): self
-    {
-        $this->params['receiver_user_id'] = $receiver_user_id;
-
-        return $this;
-    }
-
-    public function callbackQueryId(string $callback_query_id): self
-    {
-        $this->params['callback_query_id'] = $callback_query_id;
-
-        return $this;
     }
 }

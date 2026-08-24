@@ -108,6 +108,7 @@ class Message extends BaseObject
             'managed_bot_created' => ManagedBotCreated::class,
             'community_chat_added' => CommunityChatAdded::class,
             'community_chat_removed' => CommunityChatRemoved::class,
+            'community_chat_joined' => CommunityChatJoined::class,
             'receiver_user' => User::class,
         ];
     }
@@ -387,6 +388,7 @@ class Message extends BaseObject
             'managed_bot_created',
             'community_chat_added',
             'community_chat_removed',
+            'community_chat_joined',
         ];
 
         return $this->keys()
@@ -888,6 +890,14 @@ class Message extends BaseObject
     public function getCommunityChatRemoved(): ?CommunityChatRemoved
     {
         return $this->items['community_chat_removed'] ?? null;
+    }
+
+    /**
+     * (Optional). Service message: chat was joined by a user from a community.
+     */
+    public function getCommunityChatJoined(): ?CommunityChatJoined
+    {
+        return $this->items['community_chat_joined'] ?? null;
     }
 
     /**

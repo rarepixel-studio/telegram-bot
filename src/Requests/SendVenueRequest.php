@@ -9,6 +9,7 @@ use Telegram\Bot\Objects\ReplyKeyboardMarkup;
 use Telegram\Bot\Objects\ReplyKeyboardRemove;
 use Telegram\Bot\Objects\ReplyParameters;
 use Telegram\Bot\Objects\SuggestedPostParameters;
+use Telegram\Bot\Traits\HasEphemeralMessageParameters;
 
 /**
  * Request object for the sendVenue method.
@@ -19,10 +20,13 @@ use Telegram\Bot\Objects\SuggestedPostParameters;
  */
 class SendVenueRequest extends TelegramApiRequest
 {
+    use HasEphemeralMessageParameters;
+
     /**
      * {@inheritdoc}
      */
     protected array $jsonSerializedFields = [
+        'ephemeral_message_parameters',
         'suggested_post_parameters',
         'reply_markup',
     ];
@@ -192,6 +196,8 @@ class SendVenueRequest extends TelegramApiRequest
 
     public function validate(): void
     {
+        $this->validateEphemeralMessageParameters($this->params);
+
         if ($this->latitude < -90 || $this->latitude > 90) {
             throw new TelegramValidationException('Latitude must be between -90 and 90');
         }
@@ -233,19 +239,5 @@ class SendVenueRequest extends TelegramApiRequest
             'title' => $this->title,
             'address' => $this->address,
         ] + $this->params;
-    }
-
-    public function receiverUserId(int $receiver_user_id): self
-    {
-        $this->params['receiver_user_id'] = $receiver_user_id;
-
-        return $this;
-    }
-
-    public function callbackQueryId(string $callback_query_id): self
-    {
-        $this->params['callback_query_id'] = $callback_query_id;
-
-        return $this;
     }
 }

@@ -3,6 +3,7 @@
 namespace Telegram\Bot\Requests;
 
 use Telegram\Bot\FileUpload\InputFile;
+use Telegram\Bot\Traits\HasEphemeralMessageParameters;
 
 /**
  * Request object for the sendSticker method.
@@ -13,10 +14,13 @@ use Telegram\Bot\FileUpload\InputFile;
  */
 class SendStickerRequest extends TelegramApiRequest
 {
+    use HasEphemeralMessageParameters;
+
     /**
      * {@inheritdoc}
      */
     protected array $jsonSerializedFields = [
+        'ephemeral_message_parameters',
         'reply_markup',
     ];
 
@@ -101,6 +105,8 @@ class SendStickerRequest extends TelegramApiRequest
 
     public function validate(): void
     {
+        $this->validateEphemeralMessageParameters($this->params);
+
         // Validation needed
     }
 
@@ -110,19 +116,5 @@ class SendStickerRequest extends TelegramApiRequest
             'chat_id' => $this->chat_id,
             'sticker' => $this->sticker,
         ] + $this->params;
-    }
-
-    public function receiverUserId(int $receiver_user_id): self
-    {
-        $this->params['receiver_user_id'] = $receiver_user_id;
-
-        return $this;
-    }
-
-    public function callbackQueryId(string $callback_query_id): self
-    {
-        $this->params['callback_query_id'] = $callback_query_id;
-
-        return $this;
     }
 }

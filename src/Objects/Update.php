@@ -41,6 +41,7 @@ class Update extends BaseObject
             'removed_chat_boost' => ChatBoostRemoved::class,
             'managed_bot' => ManagedBotUpdated::class,
             'subscription' => BotSubscriptionUpdated::class,
+            'stopped_message_generation' => MessageGenerationStopped::class,
         ];
     }
 
@@ -88,6 +89,7 @@ class Update extends BaseObject
             'removed_chat_boost',
             'managed_bot',
             'subscription',
+            'stopped_message_generation',
         ];
 
         return $this->keys()
@@ -381,5 +383,13 @@ class Update extends BaseObject
     public function getSubscription(): ?BotSubscriptionUpdated
     {
         return $this->items['subscription'] ?? null;
+    }
+
+    /**
+     * (Optional). A user asked the bot to stop the generation of a message.
+     */
+    public function getStoppedMessageGeneration(): ?MessageGenerationStopped
+    {
+        return $this->items['stopped_message_generation'] ?? null;
     }
 }
