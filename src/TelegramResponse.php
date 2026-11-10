@@ -2,6 +2,7 @@
 
 namespace Telegram\Bot;
 
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -54,6 +55,8 @@ class TelegramResponse implements TelegramResponseInterface
 
     /**
      * Gets the HTTP status code.
+     *
+     * @throws GuzzleException When the request fails without an HTTP response.
      */
     public function getHttpStatusCode(): int
     {
@@ -72,6 +75,8 @@ class TelegramResponse implements TelegramResponseInterface
 
     /**
      * Return the HTTP headers for this response.
+     *
+     * @throws GuzzleException When the request fails without an HTTP response.
      */
     public function getHeaders(): array
     {
@@ -82,6 +87,8 @@ class TelegramResponse implements TelegramResponseInterface
 
     /**
      * Return the raw body response.
+     *
+     * @throws GuzzleException When the request fails without an HTTP response.
      */
     public function getBody(): string
     {
@@ -96,6 +103,8 @@ class TelegramResponse implements TelegramResponseInterface
 
     /**
      * Return the decoded body response.
+     *
+     * @throws GuzzleException When the request fails without an HTTP response.
      */
     public function getDecodedBody(): array
     {
@@ -108,6 +117,8 @@ class TelegramResponse implements TelegramResponseInterface
 
     /**
      * Return the result.
+     *
+     * @throws GuzzleException When the request fails without an HTTP response.
      */
     public function getResult(): mixed
     {
@@ -121,6 +132,8 @@ class TelegramResponse implements TelegramResponseInterface
 
     /**
      * Checks if response is an error.
+     *
+     * @throws GuzzleException When the request fails without an HTTP response.
      */
     public function isError(): bool
     {
@@ -136,6 +149,7 @@ class TelegramResponse implements TelegramResponseInterface
      * @return $this
      *
      * @throws TelegramSDKException
+     * @throws GuzzleException When the request fails without an HTTP response.
      */
     public function throwException(): self
     {
@@ -148,6 +162,8 @@ class TelegramResponse implements TelegramResponseInterface
 
     /**
      * Converts raw API response to proper decoded response.
+     *
+     * @throws GuzzleException When the request fails without an HTTP response.
      */
     protected function decodeBody(): void
     {
@@ -161,9 +177,11 @@ class TelegramResponse implements TelegramResponseInterface
     }
 
     /**
-     * Wait for the promise
+     * Wait for the promise, preserving transport failures without an HTTP response.
      *
      * @return $this
+     *
+     * @throws GuzzleException When the request fails without an HTTP response.
      */
     public function wait(): self
     {
@@ -172,6 +190,11 @@ class TelegramResponse implements TelegramResponseInterface
                 $this->response = $this->response->wait();
             } catch (RequestException $e) {
                 $this->requestException = $e;
+
+                if (! $e->hasResponse()) {
+                    throw $e;
+                }
+
                 $this->response = $e->getResponse();
             }
         }
