@@ -469,16 +469,13 @@ trait ApiMethodWrappers
      * @return Message|Closure The result, or a closure that resolves it in async mode.
      *
      * @throws TelegramValidationException|TelegramSDKException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function sendMessage(array|SendMessageRequest $params): Message|Closure
     {
-        $params = RequestSerializer::forApi($params);
-
-        $response = $this->post('sendMessage', $params);
-
-        return $this->prepareResponse(function (TelegramResponse $response) {
+        return $this->executeApiPost('sendMessage', $params, function (TelegramResponse $response) {
             return new Message($response->getDecodedBody());
-        }, $response);
+        });
     }
 
     /**
@@ -1803,22 +1800,19 @@ trait ApiMethodWrappers
      *
      * @link https://core.telegram.org/bots/api#getuserpersonalchatmessages
      *
+     * @param  array<string, mixed>|GetUserPersonalChatMessagesRequest  $params  Telegram method parameters.
+     * @return Collection<array-key, Message>|Closure The messages, or a closure that resolves them in async mode.
+     *
      * @throws TelegramValidationException|TelegramSDKException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getUserPersonalChatMessages(array|GetUserPersonalChatMessagesRequest $params): Collection|Closure
     {
-        if ($params instanceof GetUserPersonalChatMessagesRequest) {
-            $params->validate();
-            $params = $params->toArray();
-        }
-
-        $response = $this->post('getUserPersonalChatMessages', $params);
-
-        return $this->prepareResponse(function (TelegramResponse $response) {
+        return $this->executeApiPost('getUserPersonalChatMessages', $params, function (TelegramResponse $response) {
             return collect($response->getResult())->map(function ($message) {
                 return new Message($message);
             });
-        }, $response);
+        });
     }
 
     /**
@@ -3105,21 +3099,21 @@ trait ApiMethodWrappers
     }
 
     /**
-     * @throws TelegramSDKException
-     * @throws TelegramValidationException
+     * Delete multiple messages.
+     *
+     * @link https://core.telegram.org/bots/api#deletemessages
+     *
+     * @param  array<string, mixed>|DeleteMessagesRequest  $params  Telegram method parameters.
+     * @return bool|Closure The result, or a closure that resolves it in async mode.
+     *
+     * @throws TelegramValidationException|TelegramSDKException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteMessages(array|DeleteMessagesRequest $params): bool|Closure
     {
-        if ($params instanceof DeleteMessagesRequest) {
-            $params->validate();
-            $params = $params->toArray();
-        }
-
-        $response = $this->post('deleteMessages', $params);
-
-        return $this->prepareResponse(function (TelegramResponse $response) {
+        return $this->executeApiPost('deleteMessages', $params, function (TelegramResponse $response) {
             return $response->getResult();
-        }, $response);
+        });
     }
 
     /**
@@ -4104,5 +4098,25 @@ trait ApiMethodWrappers
             static fn (TelegramResponse $response): bool => $response->getResult(),
             $response,
         );
+    }
+
+    /**
+     * Serialize input and execute a POST through the wrapper's request and response hooks.
+     *
+     * @param  string  $endpoint  Telegram method name.
+     * @param  array<string, mixed>|ApiRequestInterface  $params  Legacy parameters or a typed request.
+     * @param  Closure(TelegramResponse): mixed  $parser  Method-specific response parser.
+     * @return mixed The parsed result, or the async response resolver.
+     *
+     * @throws TelegramValidationException If typed request validation fails.
+     * @throws TelegramSDKException If dispatch or response preparation fails.
+     * @throws \GuzzleHttp\Exception\GuzzleException If synchronous resolution encounters a transport failure.
+     */
+    private function executeApiPost(string $endpoint, array|ApiRequestInterface $params, Closure $parser): mixed
+    {
+        $params = RequestSerializer::forApi($params);
+        $response = $this->post($endpoint, $params);
+
+        return $this->prepareResponse($parser, $response);
     }
 }
