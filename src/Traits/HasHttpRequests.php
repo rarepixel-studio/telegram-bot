@@ -3,14 +3,10 @@
 namespace Telegram\Bot\Traits;
 
 use Closure;
-use Psr\Http\Message\StreamInterface;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\Exceptions\TelegramValidationException;
-use Telegram\Bot\FileUpload\InputFile;
-use Telegram\Bot\FileUpload\InputFileInterface;
-use Telegram\Bot\Objects\EphemeralMessageParameters;
-use Telegram\Bot\Objects\InputMedia;
 use Telegram\Bot\Objects\Message;
+use Telegram\Bot\Requests\RequestSerializer;
 use Telegram\Bot\TelegramRequest;
 use Telegram\Bot\TelegramResponse;
 
@@ -22,28 +18,17 @@ trait HasHttpRequests
     /**
      * Sends a POST request to Telegram Bot API and returns the result.
      *
+     * @param  string  $endpoint  Telegram method name.
+     * @param  array<string, mixed>  $params  Outbound parameters.
+     * @param  array<int, string>  $files  Multipart file field names.
+     * @param  list<array{name: string, contents: mixed}>  $attachments  Additional multipart parts.
+     * @return TelegramResponse The response for the dispatched request.
+     *
      * @throws TelegramSDKException
      */
     protected function post(string $endpoint, array $params = [], array $files = [], array $attachments = []): TelegramResponse
     {
-        $ephemeralParameters = $params['ephemeral_message_parameters'] ?? null;
-        if (is_array($ephemeralParameters)) {
-            $ephemeralParameters = EphemeralMessageParameters::fromArray($ephemeralParameters);
-        }
-
-        if ($ephemeralParameters instanceof EphemeralMessageParameters) {
-            $params['ephemeral_message_parameters'] = json_encode($ephemeralParameters->toArray());
-        }
-
-        $verificationEntities = $params['custom_description_entities'] ?? null;
-        if (is_array($verificationEntities)) {
-            $params['custom_description_entities'] = json_encode($verificationEntities);
-        }
-
-        $replyParameters = $params['reply_parameters'] ?? null;
-        if ((is_array($replyParameters) || $replyParameters instanceof \ArrayAccess) && isset($replyParameters['quote_rich_texts'])) {
-            $params['reply_parameters'] = json_encode($replyParameters);
-        }
+        $params = RequestSerializer::preparePost($params);
 
         $token = $this->extractAccessToken($params);
 
@@ -54,20 +39,19 @@ trait HasHttpRequests
      * Sends a multipart/form-data request to Telegram Bot API and returns the result.
      * Used primarily for file uploads.
      *
+     * @param  string  $endpoint  Telegram method name.
+     * @param  array<string, mixed>  $params  Outbound parameters.
+     * @param  array<int, string>  $files  Multipart file field names.
+     * @param  Closure|null  $parser  Custom response parser.
+     * @return mixed The parsed response, or a closure that resolves it in async mode.
+     *
      * @throws TelegramValidationException|TelegramSDKException
+     * @throws \RuntimeException If the upload stream cannot be opened.
+     * @throws \TypeError If a raw file value cannot be passed to the filesystem.
      */
     protected function uploadFile(string $endpoint, array $params, array $files, ?Closure $parser = null): mixed
     {
-        foreach ($files as $key) {
-            if (array_key_exists($key, $params) && ! is_resource($params[$key]) && ! $params[$key] instanceof StreamInterface) {
-                if ($params[$key] instanceof InputFileInterface) {
-                    $params[$key] = $params[$key]->open();
-                } else {
-                    $validUrl = filter_var($params[$key], FILTER_VALIDATE_URL);
-                    $params[$key] = (is_file($params[$key]) || $validUrl) ? (new InputFile($params[$key]))->open() : (string) $params[$key];
-                }
-            }
-        }
+        $params = RequestSerializer::prepareFiles($params, $files);
 
         $response = $this->post($endpoint, $params, $files);
 
@@ -168,40 +152,16 @@ trait HasHttpRequests
 
     /**
      * Extracts attachments from InputMedia objects.
+     *
+     * @param  array<string, mixed>  $params  Parameters whose media field will be serialized.
+     * @return list<array{name: string, contents: mixed}>
+     *
+     * @throws TelegramSDKException If an attachment cannot be read.
+     * @throws \RuntimeException If an attachment stream cannot be opened.
      */
     protected function extractInputMedia(array &$params): array
     {
-        $attachments = [];
-        if (isset($params['media']) && is_array($params['media'])) {
-            foreach ($params['media'] as $key => $media) {
-                if ($media instanceof InputMedia) {
-                    $part = $media->extractAttachment('__ATTACHED_FILE__'.$key);
-                    $thumb = $media->extractAttachment('__ATTACHED_THUMB__'.$key, 'thumb');
-                    $thumbnail = $media->extractAttachment('__ATTACHED_THUMBNAIL__'.$key, 'thumbnail');
-                    $cover = $media->extractAttachment('__ATTACHED_COVER__'.$key, 'cover');
-                    $photo = $media->extractAttachment('__ATTACHED_PHOTO__'.$key, 'photo');
-                    $params['media'][$key] = $media->toArray();
-                    if ($part) {
-                        $attachments[] = $part;
-                    }
-                    if ($thumb) {
-                        $attachments[] = $thumb;
-                    }
-                    if ($thumbnail) {
-                        $attachments[] = $thumbnail;
-                    }
-                    if ($cover) {
-                        $attachments[] = $cover;
-                    }
-                    if ($photo) {
-                        $attachments[] = $photo;
-                    }
-                }
-            }
-            $params['media'] = json_encode($params['media']);
-        }
-
-        return $attachments;
+        return RequestSerializer::extractInputMedia($params);
     }
 
     /**

@@ -179,18 +179,7 @@ class SendMediaGroupRequest extends TelegramApiRequest
      */
     public function toArray(): array
     {
-        $params = $this->buildParams();
-
-        // Don't normalize media array - extractInputMedia needs InputMedia objects
-        foreach ($params as $key => $value) {
-            if ($key === 'media') {
-                $params[$key] = $value;
-
-                continue;
-            }
-
-            $params[$key] = $this->normalizeValue($value);
-        }
+        $params = RequestSerializer::normalizeParameters($this->buildParams(), $this->normalizeValue(...), ['media']);
 
         return $this->filterNullValues($params);
     }

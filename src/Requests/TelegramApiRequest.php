@@ -110,12 +110,7 @@ abstract class TelegramApiRequest implements ApiRequestInterface
      */
     protected function toRawArray(): array
     {
-        $params = $this->buildParams();
-
-        // Normalize nested objects
-        foreach ($params as $key => $value) {
-            $params[$key] = $this->normalizeValue($value);
-        }
+        $params = RequestSerializer::normalizeParameters($this->buildParams(), $this->normalizeValue(...));
 
         return $this->filterNullValues($params);
     }
@@ -138,13 +133,7 @@ abstract class TelegramApiRequest implements ApiRequestInterface
      */
     protected function encodeJsonFields(array $params): array
     {
-        foreach ($this->jsonSerializedFields() as $field) {
-            if (array_key_exists($field, $params) && is_array($params[$field])) {
-                $params[$field] = json_encode($params[$field]);
-            }
-        }
-
-        return $params;
+        return RequestSerializer::encodeJsonFields($params, $this->jsonSerializedFields());
     }
 
     /**

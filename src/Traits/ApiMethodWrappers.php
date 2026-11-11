@@ -146,6 +146,7 @@ use Telegram\Bot\Requests\ReopenForumTopicRequest;
 use Telegram\Bot\Requests\ReopenGeneralForumTopicRequest;
 use Telegram\Bot\Requests\ReplaceManagedBotTokenRequest;
 use Telegram\Bot\Requests\ReplaceStickerInSetRequest;
+use Telegram\Bot\Requests\RequestSerializer;
 use Telegram\Bot\Requests\RestrictChatMemberRequest;
 use Telegram\Bot\Requests\RevokeChatInviteLinkRequest;
 use Telegram\Bot\Requests\SavePreparedInlineMessageRequest;
@@ -464,14 +465,14 @@ trait ApiMethodWrappers
      *
      * @link https://core.telegram.org/bots/api#sendmessage
      *
+     * @param  array<string, mixed>|SendMessageRequest  $params  Telegram method parameters.
+     * @return Message|Closure The result, or a closure that resolves it in async mode.
+     *
      * @throws TelegramValidationException|TelegramSDKException
      */
     public function sendMessage(array|SendMessageRequest $params): Message|Closure
     {
-        if ($params instanceof SendMessageRequest) {
-            $params->validate();
-            $params = $params->toArray();
-        }
+        $params = RequestSerializer::forApi($params);
 
         $response = $this->post('sendMessage', $params);
 
@@ -636,14 +637,16 @@ trait ApiMethodWrappers
      *
      * @link https://core.telegram.org/bots/api#sendphoto
      *
+     * @param  array<string, mixed>|SendPhotoRequest  $params  Telegram method parameters.
+     * @return Message|Closure The result, or a closure that resolves it in async mode.
+     *
      * @throws TelegramValidationException|TelegramSDKException
+     * @throws \RuntimeException If the photo stream cannot be opened.
+     * @throws \TypeError If a raw photo value cannot be passed to the filesystem.
      */
     public function sendPhoto(array|SendPhotoRequest $params): Message|Closure
     {
-        if ($params instanceof SendPhotoRequest) {
-            $params->validate();
-            $params = $params->toArray();
-        }
+        $params = RequestSerializer::forApi($params);
 
         return $this->uploadFile('sendPhoto', $params, ['photo']);
     }
@@ -795,14 +798,15 @@ trait ApiMethodWrappers
      *
      * @link https://core.telegram.org/bots/api#sendmediagroup
      *
+     * @param  array<string, mixed>|SendMediaGroupRequest  $params  Telegram method parameters.
+     * @return Collection<int, Message>|Closure The result, or a closure that resolves it in async mode.
+     *
      * @throws TelegramValidationException|TelegramSDKException
+     * @throws \RuntimeException If a media attachment stream cannot be opened.
      */
     public function sendMediaGroup(array|SendMediaGroupRequest $params): Collection|Closure
     {
-        if ($params instanceof SendMediaGroupRequest) {
-            $params->validate();
-            $params = $params->toArray();
-        }
+        $params = RequestSerializer::forApi($params);
 
         $attachments = $this->extractInputMedia($params);
 
