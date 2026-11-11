@@ -34,11 +34,11 @@ class SendRichMessageRequest extends TelegramApiRequest
     protected array $params = [];
 
     /**
-     * @param  int|string  $chat_id  Unique identifier for the target chat or username
+     * @param  int|string|null  $chat_id  Unique identifier for the target chat or username
      * @param  InputRichMessage|array  $rich_message  The rich message to be sent
      */
     public function __construct(
-        protected int|string $chat_id,
+        protected int|string|null $chat_id,
         protected InputRichMessage|array $rich_message,
     ) {}
 
@@ -120,6 +120,7 @@ class SendRichMessageRequest extends TelegramApiRequest
     public function validate(): void
     {
         $this->validateEphemeralMessageParameters($this->params);
+        $this->validateEphemeralTarget($this->chat_id, $this->params['ephemeral_message_parameters'] ?? null);
 
         if (is_array($this->rich_message)) {
             $this->rich_message = InputRichMessage::fromArray($this->rich_message);

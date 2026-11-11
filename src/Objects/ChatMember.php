@@ -140,7 +140,7 @@ class ChatMember extends BaseObject
     }
 
     /**
-     * (Optional). Restricted only. True, if the user can send animations, games, stickers and use inline bots, implies can_send_media_messages.
+     * (Optional). Restricted only. True, if the user can send animations, games, stickers, and widgets and use inline bots, implies can_send_media_messages.
      */
     public function getCanSendOtherMessages(): ?bool
     {

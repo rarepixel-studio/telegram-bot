@@ -3,6 +3,7 @@
 namespace Telegram\Bot\Requests;
 
 use Telegram\Bot\Exceptions\TelegramValidationException;
+use Telegram\Bot\Traits\HasVerificationDescription;
 
 /**
  * Request object for the verifyUser method.
@@ -13,32 +14,47 @@ use Telegram\Bot\Exceptions\TelegramValidationException;
  */
 class VerifyUserRequest extends TelegramApiRequest
 {
+    use HasVerificationDescription;
+
     /**
      * @param  int  $user_id  Unique identifier of the target user
-     * @param  string  $custom_description  Custom description for the verification
+     * @param  string|null  $custom_description  Custom description for the verification
      */
     public function __construct(
         protected int $user_id,
-        protected string $custom_description,
+        protected ?string $custom_description = null,
     ) {}
 
+    /**
+     * {@inheritdoc}
+     */
     public function getMethod(): string
     {
         return 'verifyUser';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @throws TelegramValidationException
+     */
     public function validate(): void
     {
         if ($this->user_id <= 0) {
             throw new TelegramValidationException('user_id must be greater than 0');
         }
+
+        $this->validateVerificationDescription();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildParams(): array
     {
         return [
             'user_id' => $this->user_id,
             'custom_description' => $this->custom_description,
-        ];
+        ] + $this->descriptionParams;
     }
 }

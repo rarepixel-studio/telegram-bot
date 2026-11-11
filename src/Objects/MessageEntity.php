@@ -156,7 +156,7 @@ class MessageEntity extends BaseObject implements ClientConstructibleObjectInter
     }
 
     /**
-     * Type of the entity. Can be “mention” (@username), “hashtag” (#hashtag),
+     * Type of the entity, including ton_address for TON addresses and bank_card_number for card numbers.
      */
     public function getType(): string
     {

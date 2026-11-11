@@ -17,6 +17,7 @@ use Telegram\Bot\Objects\Chat;
 use Telegram\Bot\Objects\ChatAdministratorRights;
 use Telegram\Bot\Objects\ChatInviteLink;
 use Telegram\Bot\Objects\ChatMember;
+use Telegram\Bot\Objects\ChatShareThemeBackdrops;
 use Telegram\Bot\Objects\File;
 use Telegram\Bot\Objects\ForumTopic;
 use Telegram\Bot\Objects\GameHighScore;
@@ -28,6 +29,7 @@ use Telegram\Bot\Objects\MessageId;
 use Telegram\Bot\Objects\PreparedKeyboardButton;
 use Telegram\Bot\Objects\SentGuestMessage;
 use Telegram\Bot\Objects\Sticker;
+use Telegram\Bot\Objects\UniqueGift;
 use Telegram\Bot\Objects\Update;
 use Telegram\Bot\Objects\User;
 use Telegram\Bot\Objects\UserChatBoosts;
@@ -42,6 +44,7 @@ use Telegram\Bot\Requests\AnswerInlineQueryRequest;
 use Telegram\Bot\Requests\AnswerPreCheckoutQueryRequest;
 use Telegram\Bot\Requests\AnswerShippingQueryRequest;
 use Telegram\Bot\Requests\AnswerWebAppQueryRequest;
+use Telegram\Bot\Requests\AnswerWidgetQueryRequest;
 use Telegram\Bot\Requests\ApproveChatJoinRequestRequest;
 use Telegram\Bot\Requests\ApproveSuggestedPostRequest;
 use Telegram\Bot\Requests\BanChatMemberRequest;
@@ -60,6 +63,7 @@ use Telegram\Bot\Requests\CreateNewStickerSetRequest;
 use Telegram\Bot\Requests\DeclineChatJoinRequestRequest;
 use Telegram\Bot\Requests\DeclineSuggestedPostRequest;
 use Telegram\Bot\Requests\DeleteAllMessageReactionsRequest;
+use Telegram\Bot\Requests\DeleteBusinessAccountGiftRequest;
 use Telegram\Bot\Requests\DeleteBusinessMessagesRequest;
 use Telegram\Bot\Requests\DeleteChatPhotoRequest;
 use Telegram\Bot\Requests\DeleteChatStickerSetRequest;
@@ -86,6 +90,8 @@ use Telegram\Bot\Requests\EditMessageLiveLocationRequest;
 use Telegram\Bot\Requests\EditMessageMediaRequest;
 use Telegram\Bot\Requests\EditMessageReplyMarkupRequest;
 use Telegram\Bot\Requests\EditMessageTextRequest;
+use Telegram\Bot\Requests\EditMessageWidgetDataRequest;
+use Telegram\Bot\Requests\EditSharedWidgetDataRequest;
 use Telegram\Bot\Requests\EditStoryRequest;
 use Telegram\Bot\Requests\EditUserStarSubscriptionRequest;
 use Telegram\Bot\Requests\ExportChatInviteLinkRequest;
@@ -100,6 +106,7 @@ use Telegram\Bot\Requests\GetChatMemberCountRequest;
 use Telegram\Bot\Requests\GetChatMemberRequest;
 use Telegram\Bot\Requests\GetChatMenuButtonRequest;
 use Telegram\Bot\Requests\GetChatRequest;
+use Telegram\Bot\Requests\GetChatShareThemeBackdropsRequest;
 use Telegram\Bot\Requests\GetCustomEmojiStickersRequest;
 use Telegram\Bot\Requests\GetFileRequest;
 use Telegram\Bot\Requests\GetForumTopicIconStickersRequest;
@@ -115,6 +122,7 @@ use Telegram\Bot\Requests\GetMyShortDescriptionRequest;
 use Telegram\Bot\Requests\GetMyStarBalanceRequest;
 use Telegram\Bot\Requests\GetStarTransactionsRequest;
 use Telegram\Bot\Requests\GetStickerSetRequest;
+use Telegram\Bot\Requests\GetUniqueGiftRequest;
 use Telegram\Bot\Requests\GetUpdatesRequest;
 use Telegram\Bot\Requests\GetUserChatBoostsRequest;
 use Telegram\Bot\Requests\GetUserPersonalChatMessagesRequest;
@@ -163,11 +171,13 @@ use Telegram\Bot\Requests\SendPhotoRequest;
 use Telegram\Bot\Requests\SendPollRequest;
 use Telegram\Bot\Requests\SendRichMessageDraftRequest;
 use Telegram\Bot\Requests\SendRichMessageRequest;
+use Telegram\Bot\Requests\SendSharedWidgetRequest;
 use Telegram\Bot\Requests\SendStickerRequest;
 use Telegram\Bot\Requests\SendVenueRequest;
 use Telegram\Bot\Requests\SendVideoNoteRequest;
 use Telegram\Bot\Requests\SendVideoRequest;
 use Telegram\Bot\Requests\SendVoiceRequest;
+use Telegram\Bot\Requests\SendWidgetRequest;
 use Telegram\Bot\Requests\SetBusinessAccountBioRequest;
 use Telegram\Bot\Requests\SetBusinessAccountGiftSettingsRequest;
 use Telegram\Bot\Requests\SetBusinessAccountNameRequest;
@@ -3898,5 +3908,197 @@ trait ApiMethodWrappers
         }
 
         return $attachments;
+    }
+
+    /**
+     * Send a message containing an HTML widget.
+     *
+     * @param  array<string, mixed>|SendWidgetRequest  $params  Telegram request parameters
+     * @return Message|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#sendwidget
+     *
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function sendWidget(array|SendWidgetRequest $params): Message|Closure
+    {
+        $request = is_array($params) ? SendWidgetRequest::fromArray($params) : $params;
+        $request->validate();
+
+        $response = $this->post($request->getMethod(), $request->toArray());
+
+        return $this->prepareResponse(
+            static fn (TelegramResponse $response): Message => new Message($response->getResult()),
+            $response,
+        );
+    }
+
+    /**
+     * Send an existing shared widget created by the bot.
+     *
+     * @param  array<string, mixed>|SendSharedWidgetRequest  $params  Telegram request parameters
+     * @return Message|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#sendsharedwidget
+     *
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function sendSharedWidget(array|SendSharedWidgetRequest $params): Message|Closure
+    {
+        $request = is_array($params) ? SendSharedWidgetRequest::fromArray($params) : $params;
+        $request->validate();
+
+        $response = $this->post($request->getMethod(), $request->toArray());
+
+        return $this->prepareResponse(
+            static fn (TelegramResponse $response): Message => new Message($response->getResult()),
+            $response,
+        );
+    }
+
+    /**
+     * Answer a query from a widget.
+     *
+     * @param  array<string, mixed>|AnswerWidgetQueryRequest  $params  Telegram request parameters
+     * @return bool|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#answerwidgetquery
+     *
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function answerWidgetQuery(array|AnswerWidgetQueryRequest $params): bool|Closure
+    {
+        $request = is_array($params) ? AnswerWidgetQueryRequest::fromArray($params) : $params;
+        $request->validate();
+
+        $response = $this->post($request->getMethod(), $request->toArray());
+
+        return $this->prepareResponse(
+            static fn (TelegramResponse $response): bool => $response->getResult(),
+            $response,
+        );
+    }
+
+    /**
+     * Edit the data of a widget in a message.
+     *
+     * @param  array<string, mixed>|EditMessageWidgetDataRequest  $params  Telegram request parameters
+     * @return bool|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#editmessagewidgetdata
+     *
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function editMessageWidgetData(array|EditMessageWidgetDataRequest $params): bool|Closure
+    {
+        $request = is_array($params) ? EditMessageWidgetDataRequest::fromArray($params) : $params;
+        $request->validate();
+
+        $response = $this->post($request->getMethod(), $request->toArray());
+
+        return $this->prepareResponse(
+            static fn (TelegramResponse $response): bool => $response->getResult(),
+            $response,
+        );
+    }
+
+    /**
+     * Edit the public data of a shared widget.
+     *
+     * @param  array<string, mixed>|EditSharedWidgetDataRequest  $params  Telegram request parameters
+     * @return bool|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#editsharedwidgetdata
+     *
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function editSharedWidgetData(array|EditSharedWidgetDataRequest $params): bool|Closure
+    {
+        $request = is_array($params) ? EditSharedWidgetDataRequest::fromArray($params) : $params;
+        $request->validate();
+
+        $response = $this->post($request->getMethod(), $request->toArray());
+
+        return $this->prepareResponse(
+            static fn (TelegramResponse $response): bool => $response->getResult(),
+            $response,
+        );
+    }
+
+    /**
+     * Get the available backdrops for chat share themes.
+     *
+     * @param  array<string, mixed>|GetChatShareThemeBackdropsRequest  $params  Telegram request parameters
+     * @return ChatShareThemeBackdrops|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#getchatsharethemebackdrops
+     *
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function getChatShareThemeBackdrops(array|GetChatShareThemeBackdropsRequest $params = []): ChatShareThemeBackdrops|Closure
+    {
+        $request = is_array($params) ? GetChatShareThemeBackdropsRequest::fromArray($params) : $params;
+        $request->validate();
+
+        $response = $this->post($request->getMethod(), $request->toArray());
+
+        return $this->prepareResponse(
+            static fn (TelegramResponse $response): ChatShareThemeBackdrops => new ChatShareThemeBackdrops($response->getResult()),
+            $response,
+        );
+    }
+
+    /**
+     * Get a unique gift by its name.
+     *
+     * @param  array<string, mixed>|GetUniqueGiftRequest  $params  Telegram request parameters
+     * @return UniqueGift|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#getuniquegift
+     *
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function getUniqueGift(array|GetUniqueGiftRequest $params): UniqueGift|Closure
+    {
+        $request = is_array($params) ? GetUniqueGiftRequest::fromArray($params) : $params;
+        $request->validate();
+
+        $response = $this->post($request->getMethod(), $request->toArray());
+
+        return $this->prepareResponse(
+            static fn (TelegramResponse $response): UniqueGift => new UniqueGift($response->getResult()),
+            $response,
+        );
+    }
+
+    /**
+     * Delete a regular gift owned by a managed business account.
+     *
+     * @param  array<string, mixed>|DeleteBusinessAccountGiftRequest  $params  Telegram request parameters
+     * @return bool|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#deletebusinessaccountgift
+     *
+     * @throws TelegramSDKException
+     * @throws TelegramValidationException
+     */
+    public function deleteBusinessAccountGift(array|DeleteBusinessAccountGiftRequest $params): bool|Closure
+    {
+        $request = is_array($params) ? DeleteBusinessAccountGiftRequest::fromArray($params) : $params;
+        $request->validate();
+
+        $response = $this->post($request->getMethod(), $request->toArray());
+
+        return $this->prepareResponse(
+            static fn (TelegramResponse $response): bool => $response->getResult(),
+            $response,
+        );
     }
 }

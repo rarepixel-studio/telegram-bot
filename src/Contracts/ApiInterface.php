@@ -10,6 +10,7 @@ use Telegram\Bot\Objects\BotName;
 use Telegram\Bot\Objects\BotShortDescription;
 use Telegram\Bot\Objects\Chat;
 use Telegram\Bot\Objects\ChatMember;
+use Telegram\Bot\Objects\ChatShareThemeBackdrops;
 use Telegram\Bot\Objects\File;
 use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\MessageId;
@@ -17,6 +18,7 @@ use Telegram\Bot\Objects\Poll;
 use Telegram\Bot\Objects\SentGuestMessage;
 use Telegram\Bot\Objects\SentWebAppMessage;
 use Telegram\Bot\Objects\StickerSet;
+use Telegram\Bot\Objects\UniqueGift;
 use Telegram\Bot\Objects\UnknownObject;
 use Telegram\Bot\Objects\Update;
 use Telegram\Bot\Objects\User;
@@ -24,7 +26,9 @@ use Telegram\Bot\Objects\UserProfilePhotos;
 use Telegram\Bot\Objects\WebhookInfo;
 use Telegram\Bot\Requests\AnswerChatJoinRequestQueryRequest;
 use Telegram\Bot\Requests\AnswerGuestQueryRequest;
+use Telegram\Bot\Requests\AnswerWidgetQueryRequest;
 use Telegram\Bot\Requests\DeleteAllMessageReactionsRequest;
+use Telegram\Bot\Requests\DeleteBusinessAccountGiftRequest;
 use Telegram\Bot\Requests\DeleteEphemeralMessageRequest;
 use Telegram\Bot\Requests\DeleteMessageReactionRequest;
 use Telegram\Bot\Requests\DeleteMyCommandsRequest;
@@ -33,16 +37,22 @@ use Telegram\Bot\Requests\EditEphemeralMessageMediaRequest;
 use Telegram\Bot\Requests\EditEphemeralMessageReplyMarkupRequest;
 use Telegram\Bot\Requests\EditEphemeralMessageTextRequest;
 use Telegram\Bot\Requests\EditMessageTextRequest;
+use Telegram\Bot\Requests\EditMessageWidgetDataRequest;
+use Telegram\Bot\Requests\EditSharedWidgetDataRequest;
+use Telegram\Bot\Requests\GetChatShareThemeBackdropsRequest;
 use Telegram\Bot\Requests\GetManagedBotAccessSettingsRequest;
 use Telegram\Bot\Requests\GetMyCommandsRequest;
 use Telegram\Bot\Requests\GetMyDescriptionRequest;
 use Telegram\Bot\Requests\GetMyNameRequest;
 use Telegram\Bot\Requests\GetMyShortDescriptionRequest;
+use Telegram\Bot\Requests\GetUniqueGiftRequest;
 use Telegram\Bot\Requests\GetUserPersonalChatMessagesRequest;
 use Telegram\Bot\Requests\SendChatJoinRequestWebAppRequest;
 use Telegram\Bot\Requests\SendLivePhotoRequest;
 use Telegram\Bot\Requests\SendRichMessageDraftRequest;
 use Telegram\Bot\Requests\SendRichMessageRequest;
+use Telegram\Bot\Requests\SendSharedWidgetRequest;
+use Telegram\Bot\Requests\SendWidgetRequest;
 use Telegram\Bot\Requests\SetManagedBotAccessSettingsRequest;
 use Telegram\Bot\Requests\SetMyCommandsRequest;
 use Telegram\Bot\Requests\SetMyDescriptionRequest;
@@ -299,4 +309,108 @@ interface ApiInterface
     public function onFulfilled(?Closure $onFulfilled = null): self;
 
     public function onRejected(?Closure $onRejected = null): self;
+
+    /**
+     * Send a message containing an HTML widget.
+     *
+     * @param  array<string, mixed>|SendWidgetRequest  $params  Telegram request parameters
+     * @return Message|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#sendwidget
+     *
+     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
+     * @throws \Telegram\Bot\Exceptions\TelegramValidationException
+     */
+    public function sendWidget(array|SendWidgetRequest $params): Message|Closure;
+
+    /**
+     * Send an existing shared widget created by the bot.
+     *
+     * @param  array<string, mixed>|SendSharedWidgetRequest  $params  Telegram request parameters
+     * @return Message|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#sendsharedwidget
+     *
+     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
+     * @throws \Telegram\Bot\Exceptions\TelegramValidationException
+     */
+    public function sendSharedWidget(array|SendSharedWidgetRequest $params): Message|Closure;
+
+    /**
+     * Answer a query from a widget.
+     *
+     * @param  array<string, mixed>|AnswerWidgetQueryRequest  $params  Telegram request parameters
+     * @return bool|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#answerwidgetquery
+     *
+     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
+     * @throws \Telegram\Bot\Exceptions\TelegramValidationException
+     */
+    public function answerWidgetQuery(array|AnswerWidgetQueryRequest $params): bool|Closure;
+
+    /**
+     * Edit the data of a widget in a message.
+     *
+     * @param  array<string, mixed>|EditMessageWidgetDataRequest  $params  Telegram request parameters
+     * @return bool|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#editmessagewidgetdata
+     *
+     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
+     * @throws \Telegram\Bot\Exceptions\TelegramValidationException
+     */
+    public function editMessageWidgetData(array|EditMessageWidgetDataRequest $params): bool|Closure;
+
+    /**
+     * Edit the public data of a shared widget.
+     *
+     * @param  array<string, mixed>|EditSharedWidgetDataRequest  $params  Telegram request parameters
+     * @return bool|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#editsharedwidgetdata
+     *
+     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
+     * @throws \Telegram\Bot\Exceptions\TelegramValidationException
+     */
+    public function editSharedWidgetData(array|EditSharedWidgetDataRequest $params): bool|Closure;
+
+    /**
+     * Get the available backdrops for chat share themes.
+     *
+     * @param  array<string, mixed>|GetChatShareThemeBackdropsRequest  $params  Telegram request parameters
+     * @return ChatShareThemeBackdrops|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#getchatsharethemebackdrops
+     *
+     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
+     * @throws \Telegram\Bot\Exceptions\TelegramValidationException
+     */
+    public function getChatShareThemeBackdrops(array|GetChatShareThemeBackdropsRequest $params = []): ChatShareThemeBackdrops|Closure;
+
+    /**
+     * Get a unique gift by its name.
+     *
+     * @param  array<string, mixed>|GetUniqueGiftRequest  $params  Telegram request parameters
+     * @return UniqueGift|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#getuniquegift
+     *
+     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
+     * @throws \Telegram\Bot\Exceptions\TelegramValidationException
+     */
+    public function getUniqueGift(array|GetUniqueGiftRequest $params): UniqueGift|Closure;
+
+    /**
+     * Delete a regular gift owned by a managed business account.
+     *
+     * @param  array<string, mixed>|DeleteBusinessAccountGiftRequest  $params  Telegram request parameters
+     * @return bool|Closure The Telegram result or the async response resolver
+     *
+     * @link https://core.telegram.org/bots/api#deletebusinessaccountgift
+     *
+     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
+     * @throws \Telegram\Bot\Exceptions\TelegramValidationException
+     */
+    public function deleteBusinessAccountGift(array|DeleteBusinessAccountGiftRequest $params): bool|Closure;
 }

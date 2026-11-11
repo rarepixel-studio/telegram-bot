@@ -25,6 +25,8 @@ sendVideo
 sendAnimation
 sendVoice
 sendVideoNote
+sendWidget
+sendSharedWidget
 sendPaidMedia
 sendMediaGroup
 sendLocation
@@ -72,6 +74,7 @@ getChat
 getChatAdministrators
 getChatMemberCount
 getChatMember
+getChatShareThemeBackdrops
 getUserPersonalChatMessages
 setChatStickerSet
 deleteChatStickerSet
@@ -89,6 +92,7 @@ hideGeneralForumTopic
 unhideGeneralForumTopic
 unpinAllGeneralForumTopicMessages
 answerCallbackQuery
+answerWidgetQuery
 answerGuestQuery
 getUserChatBoosts
 getBusinessConnection
@@ -123,9 +127,11 @@ setBusinessAccountGiftSettings
 getBusinessAccountStarBalance
 transferBusinessAccountStars
 getBusinessAccountGifts
+getUniqueGift
 convertGiftToStars
 upgradeGift
 transferGift
+deleteBusinessAccountGift
 postStory
 editStory
 deleteStory
@@ -135,6 +141,8 @@ editMessageMedia
 editMessageLiveLocation
 stopMessageLiveLocation
 editMessageChecklist
+editMessageWidgetData
+editSharedWidgetData
 editMessageReplyMarkup
 editEphemeralMessageText
 editEphemeralMessageCaption

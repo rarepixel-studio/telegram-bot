@@ -23,7 +23,7 @@ class RichMessageButton extends BaseObject implements ClientConstructibleObjectI
     public function relations(): array
     {
         return [
-            'text' => RichText::class,
+            'text' => RichText::hydrate(...),
             'web_app' => WebAppInfo::class,
             'login_url' => LoginUrl::class,
             'switch_inline_query_chosen_chat' => SwitchInlineQueryChosenChat::class,

@@ -6,3 +6,4 @@ build/
 .claude/
 .phpunit.result.cache
 tests/env.php
+/.serena/

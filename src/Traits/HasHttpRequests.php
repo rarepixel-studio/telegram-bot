@@ -8,6 +8,7 @@ use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\Exceptions\TelegramValidationException;
 use Telegram\Bot\FileUpload\InputFile;
 use Telegram\Bot\FileUpload\InputFileInterface;
+use Telegram\Bot\Objects\EphemeralMessageParameters;
 use Telegram\Bot\Objects\InputMedia;
 use Telegram\Bot\Objects\Message;
 use Telegram\Bot\TelegramRequest;
@@ -25,6 +26,25 @@ trait HasHttpRequests
      */
     protected function post(string $endpoint, array $params = [], array $files = [], array $attachments = []): TelegramResponse
     {
+        $ephemeralParameters = $params['ephemeral_message_parameters'] ?? null;
+        if (is_array($ephemeralParameters)) {
+            $ephemeralParameters = EphemeralMessageParameters::fromArray($ephemeralParameters);
+        }
+
+        if ($ephemeralParameters instanceof EphemeralMessageParameters) {
+            $params['ephemeral_message_parameters'] = json_encode($ephemeralParameters->toArray());
+        }
+
+        $verificationEntities = $params['custom_description_entities'] ?? null;
+        if (is_array($verificationEntities)) {
+            $params['custom_description_entities'] = json_encode($verificationEntities);
+        }
+
+        $replyParameters = $params['reply_parameters'] ?? null;
+        if ((is_array($replyParameters) || $replyParameters instanceof \ArrayAccess) && isset($replyParameters['quote_rich_texts'])) {
+            $params['reply_parameters'] = json_encode($replyParameters);
+        }
+
         $token = $this->extractAccessToken($params);
 
         return $this->sendRequest($endpoint, $params, $files, $attachments, $token);

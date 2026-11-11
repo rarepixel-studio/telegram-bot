@@ -37,12 +37,12 @@ class SendLivePhotoRequest extends TelegramApiRequest
     protected array $params = [];
 
     /**
-     * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel
+     * @param  int|string|null  $chat_id  Unique identifier for the target chat or username of the target channel
      * @param  InputFile|string  $live_photo  Video of the live photo to send
      * @param  InputFile|string  $photo  The static photo to send
      */
     public function __construct(
-        protected int|string $chat_id,
+        protected int|string|null $chat_id,
         protected InputFile|string $live_photo,
         protected InputFile|string $photo,
     ) {}
@@ -168,6 +168,7 @@ class SendLivePhotoRequest extends TelegramApiRequest
     public function validate(): void
     {
         $this->validateEphemeralMessageParameters($this->params);
+        $this->validateEphemeralTarget($this->chat_id, $this->params['ephemeral_message_parameters'] ?? null);
 
         if (isset($this->params['parse_mode'], $this->params['caption_entities'])) {
             throw new TelegramValidationException('parse_mode cannot be used with caption_entities');

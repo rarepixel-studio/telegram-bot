@@ -28,6 +28,8 @@ class Update extends BaseObject
             'message_reaction_count' => MessageReactionCountUpdated::class,
             'inline_query' => InlineQuery::class,
             'chosen_inline_result' => ChosenInlineResult::class,
+            'widget_query' => WidgetQuery::class,
+            'shared_widget_query' => SharedWidgetQuery::class,
             'callback_query' => CallbackQuery::class,
             'shipping_query' => ShippingQuery::class,
             'pre_checkout_query' => PreCheckOutQuery::class,
@@ -76,6 +78,8 @@ class Update extends BaseObject
             'message_reaction_count',
             'inline_query',
             'chosen_inline_result',
+            'widget_query',
+            'shared_widget_query',
             'callback_query',
             'shipping_query',
             'pre_checkout_query',
@@ -138,7 +142,7 @@ class Update extends BaseObject
             return $message->getChat();
         }
 
-        return null;
+        return $this->getWidgetQuery()?->getChat();
     }
 
     /**
@@ -166,7 +170,7 @@ class Update extends BaseObject
             return $this->getShippingQuery()->getFrom();
         }
 
-        return null;
+        return $this->getWidgetQuery()?->getFrom() ?? $this->getSharedWidgetQuery()?->getFrom();
     }
 
     /**
@@ -391,5 +395,21 @@ class Update extends BaseObject
     public function getStoppedMessageGeneration(): ?MessageGenerationStopped
     {
         return $this->items['stopped_message_generation'] ?? null;
+    }
+
+    /**
+     * An incoming query from a widget sent by or via the bot.
+     */
+    public function getWidgetQuery(): ?WidgetQuery
+    {
+        return $this->items['widget_query'] ?? null;
+    }
+
+    /**
+     * An incoming query from a forwarded shared widget.
+     */
+    public function getSharedWidgetQuery(): ?SharedWidgetQuery
+    {
+        return $this->items['shared_widget_query'] ?? null;
     }
 }

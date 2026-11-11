@@ -2,6 +2,7 @@
 
 namespace Telegram\Bot\Objects;
 
+use Illuminate\Support\Collection;
 use Telegram\Bot\Contracts\ClientConstructibleObjectInterface;
 use Telegram\Bot\Enums\ParseMode;
 use Telegram\Bot\Exceptions\TelegramValidationException;
@@ -19,6 +20,7 @@ class ReplyParameters extends BaseObject implements ClientConstructibleObjectInt
     public function relations(): array
     {
         return [
+            'quote_rich_texts' => static fn (array $items): array => array_map(RichText::hydrate(...), $items),
             'quote_entities' => MessageEntity::class,
         ];
     }
@@ -143,7 +145,11 @@ class ReplyParameters extends BaseObject implements ClientConstructibleObjectInt
             throw new TelegramValidationException('Either message_id or ephemeral_message_id is required');
         }
 
-        if (isset($this->items['quote_parse_mode'], $this->items['quote_entities'])) {
+        if (count($this->getQuoteRichTexts() ?? []) > 32) {
+            throw new TelegramValidationException('quote_rich_texts cannot contain more than 32 quoted texts');
+        }
+
+        if (empty($this->items['quote_rich_texts']) && isset($this->items['quote_parse_mode'], $this->items['quote_entities'])) {
             throw new TelegramValidationException('quote_parse_mode cannot be used with quote_entities');
         }
     }
@@ -210,5 +216,28 @@ class ReplyParameters extends BaseObject implements ClientConstructibleObjectInt
     public function getQuotePosition(): ?int
     {
         return $this->items['quote_position'] ?? null;
+    }
+
+    /**
+     * The quoted parts of a rich message.
+     *
+     * @return list<RichText|string|Collection>|null
+     */
+    public function getQuoteRichTexts(): ?array
+    {
+        return $this->items['quote_rich_texts'] ?? null;
+    }
+
+    /**
+     * Set the quoted parts of a rich message.
+     *
+     * @param  list<RichText|string|array|Collection>|null  $quoteRichTexts  The quoted parts in message order
+     * @return $this
+     */
+    public function withQuoteRichTexts(?array $quoteRichTexts): self
+    {
+        $this->items['quote_rich_texts'] = $quoteRichTexts === null ? null : array_map(RichText::hydrate(...), $quoteRichTexts);
+
+        return $this;
     }
 }

@@ -34,12 +34,12 @@ class SendContactRequest extends TelegramApiRequest
     protected array $params = [];
 
     /**
-     * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel
+     * @param  int|string|null  $chat_id  Unique identifier for the target chat or username of the target channel
      * @param  string  $phone_number  Contact's phone number
      * @param  string  $first_name  Contact's first name
      */
     public function __construct(
-        protected int|string $chat_id,
+        protected int|string|null $chat_id,
         protected string $phone_number,
         protected string $first_name,
     ) {}
@@ -172,6 +172,7 @@ class SendContactRequest extends TelegramApiRequest
     public function validate(): void
     {
         $this->validateEphemeralMessageParameters($this->params);
+        $this->validateEphemeralTarget($this->chat_id, $this->params['ephemeral_message_parameters'] ?? null);
 
         if (mb_strlen($this->first_name) === 0) {
             throw new TelegramValidationException('First name cannot be empty');

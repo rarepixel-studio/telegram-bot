@@ -37,11 +37,11 @@ class SendVideoNoteRequest extends TelegramApiRequest
     protected array $params = [];
 
     /**
-     * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param  int|string|null  $chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param  InputFile|string  $video_note  Video note to send
      */
     public function __construct(
-        protected int|string $chat_id,
+        protected int|string|null $chat_id,
         protected InputFile|string $video_note,
     ) {}
 
@@ -218,6 +218,7 @@ class SendVideoNoteRequest extends TelegramApiRequest
     public function validate(): void
     {
         $this->validateEphemeralMessageParameters($this->params);
+        $this->validateEphemeralTarget($this->chat_id, $this->params['ephemeral_message_parameters'] ?? null);
 
         $this->validateSuggestedPostParameters($this->params);
         $this->validateReplyParameters($this->params);

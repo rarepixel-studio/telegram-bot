@@ -34,7 +34,7 @@ class KeyboardButtonRequestManagedBot extends BaseObject
     }
 
     /**
-     * Optional. Suggested username for the new bot.
+     * Optional. Suggested bot username. Premium users can also suggest secondary usernames ending in agent, ai, app, game, or gay.
      */
     public function getSuggestedUsername(): ?string
     {

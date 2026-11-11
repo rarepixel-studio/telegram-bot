@@ -32,8 +32,8 @@ class SendMessageRequest extends TelegramApiRequest
         'reply_markup',
     ];
 
-    /** @var int|string Unique identifier for the target chat or username */
-    protected int|string $chatId;
+    /** @var int|string|null Unique identifier for the target chat or username */
+    protected int|string|null $chatId;
 
     /** @var string Text of the message to be sent, 1-4096 characters */
     protected string $text;
@@ -83,10 +83,10 @@ class SendMessageRequest extends TelegramApiRequest
     /**
      * Create a new SendMessageRequest instance.
      *
-     * @param  int|string  $chatId  Unique identifier for the target chat or username
+     * @param  int|string|null  $chatId  Unique identifier for the target chat or username
      * @param  string  $text  Text of the message to be sent, 1-4096 characters
      */
-    public function __construct(int|string $chatId, string $text)
+    public function __construct(int|string|null $chatId, string $text)
     {
         $this->chatId = $chatId;
         $this->text = $text;
@@ -330,6 +330,7 @@ class SendMessageRequest extends TelegramApiRequest
         $this->validateLinkPreviewOptions();
         $this->validateSuggestedPostParametersProperty();
         $this->validateEphemeralMessageParametersProperty($this->ephemeralMessageParameters);
+        $this->validateEphemeralTarget($this->chatId, $this->ephemeralMessageParameters);
         $this->validateReplyParametersProperty();
 
         if ($this->replyMarkup !== null) {

@@ -34,11 +34,11 @@ class SendAudioRequest extends TelegramApiRequest
     protected array $params = [];
 
     /**
-     * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param  int|string|null  $chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param  InputFile|string  $audio  Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data.
      */
     public function __construct(
-        protected int|string $chat_id,
+        protected int|string|null $chat_id,
         protected InputFile|string $audio,
     ) {}
 
@@ -191,6 +191,7 @@ class SendAudioRequest extends TelegramApiRequest
     public function validate(): void
     {
         $this->validateEphemeralMessageParameters($this->params);
+        $this->validateEphemeralTarget($this->chat_id, $this->params['ephemeral_message_parameters'] ?? null);
 
         if (isset($this->params['parse_mode'], $this->params['caption_entities'])) {
             throw new TelegramValidationException('parse_mode cannot be used with caption_entities');

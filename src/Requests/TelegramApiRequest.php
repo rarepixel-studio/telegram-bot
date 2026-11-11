@@ -341,4 +341,19 @@ abstract class TelegramApiRequest implements ApiRequestInterface
 
         return null;
     }
+
+    /**
+     * Require a target chat unless Telegram can infer it from the callback.
+     *
+     * @param  int|string|null  $chatId  Target chat
+     * @param  EphemeralMessageParameters|null  $parameters  Validated ephemeral parameters
+     *
+     * @throws TelegramValidationException
+     */
+    protected function validateEphemeralTarget(int|string|null $chatId, ?EphemeralMessageParameters $parameters): void
+    {
+        if ($chatId === null && ($parameters?->getCallbackQueryId() === null || $parameters->getReceiverUserId() !== null)) {
+            throw new TelegramValidationException('chat_id is required unless replying to a callback query without receiver_user_id');
+        }
+    }
 }

@@ -19,10 +19,10 @@ class RichBlock extends BaseObject
     public function relations(): array
     {
         return [
-            'text' => RichText::class,
+            'text' => RichText::hydrate(...),
             'caption' => RichBlockCaption::class,
-            'credit' => RichText::class,
-            'summary' => RichText::class,
+            'credit' => RichText::hydrate(...),
+            'summary' => RichText::hydrate(...),
             'blocks' => self::class,
             'items' => RichBlockListItem::class,
             'cells' => RichBlockTableCell::class,

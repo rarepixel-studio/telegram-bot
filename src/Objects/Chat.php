@@ -13,6 +13,8 @@ class Chat extends BaseObject
     public function relations(): array
     {
         return [
+            'ton_wallet_card' => TonWalletCard::class,
+            'share_theme' => ChatShareTheme::class,
             'photo' => ChatPhoto::class,
             'pinned_message' => Message::class,
             'background' => ChatBackground::class,
@@ -182,5 +184,21 @@ class Chat extends BaseObject
     public function getCommunity(): ?Community
     {
         return $this->items['community'] ?? null;
+    }
+
+    /**
+     * The TON wallet card displayed on the chat profile.
+     */
+    public function getTonWalletCard(): ?TonWalletCard
+    {
+        return $this->items['ton_wallet_card'] ?? null;
+    }
+
+    /**
+     * The theme used when sharing a link to the chat.
+     */
+    public function getShareTheme(): ?ChatShareTheme
+    {
+        return $this->items['share_theme'] ?? null;
     }
 }

@@ -56,4 +56,15 @@ class ForumTopic extends BaseObject
     {
         return $this->items['is_name_implicit'] ?? null;
     }
+
+    /**
+     * Build the link to this topic in a private chat with the bot.
+     *
+     * @param  string  $botUsername  Username of the bot, with or without a leading @
+     * @return string The private topic URL
+     */
+    public function getPrivateTopicLink(string $botUsername): string
+    {
+        return 'https://t.me/'.ltrim($botUsername, '@').'/'.$this->getMessageThreadId();
+    }
 }

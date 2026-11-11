@@ -2,6 +2,7 @@
 
 namespace Telegram\Bot\Objects;
 
+use Closure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -35,6 +36,8 @@ abstract class BaseObject extends Collection
 
     /**
      * Property relations.
+     *
+     * @return array<string, class-string<BaseObject>|Closure(array): mixed>
      */
     abstract public function relations(): array;
 
@@ -53,7 +56,9 @@ abstract class BaseObject extends Collection
         foreach ($results as $key => $data) {
             if (is_array($data) && array_key_exists($key, $relations)) {
                 $class = $relations[$key];
-                $results[$key] = $this->recursiveMapRelatives($class, $data);
+                $results[$key] = $class instanceof Closure
+                    ? $class($data)
+                    : $this->recursiveMapRelatives($class, $data);
             }
         }
 
@@ -70,7 +75,7 @@ abstract class BaseObject extends Collection
 
             return new Collection($array);
         } else {
-            return new $class($data);
+            return is_array($data) ? $class::fromArray($data) : new $class($data);
         }
     }
 

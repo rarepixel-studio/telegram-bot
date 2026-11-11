@@ -39,11 +39,11 @@ class SendVoiceRequest extends TelegramApiRequest
     protected array $params = [];
 
     /**
-     * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param  int|string|null  $chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param  InputFile|string  $voice  Audio file to send
      */
     public function __construct(
-        protected int|string $chat_id,
+        protected int|string|null $chat_id,
         protected InputFile|string $voice,
     ) {}
 
@@ -242,6 +242,7 @@ class SendVoiceRequest extends TelegramApiRequest
     public function validate(): void
     {
         $this->validateEphemeralMessageParameters($this->params);
+        $this->validateEphemeralTarget($this->chat_id, $this->params['ephemeral_message_parameters'] ?? null);
 
         if (isset($this->params['parse_mode'], $this->params['caption_entities'])) {
             throw new TelegramValidationException('parse_mode cannot be used with caption_entities');

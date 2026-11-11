@@ -40,6 +40,9 @@ class Message extends BaseObject
             'entities' => MessageEntity::class,
             'link_preview_options' => LinkPreviewOptions::class,
             'suggested_post_info' => SuggestedPostInfo::class,
+            'widget' => Widget::class,
+            'ton_wallet_transfer' => TonWalletTransfer::class,
+            'paid_messages_waived' => PaidMessagesWaived::class,
             'rich_message' => RichMessage::class,
             'caption_entities' => MessageEntity::class,
             'animation' => Animation::class,
@@ -320,6 +323,9 @@ class Message extends BaseObject
             'document',
             // 'animation', disable animation type here for backward compatibility.
             'paid_media',
+            'widget',
+            'ton_wallet_transfer',
+            'paid_messages_waived',
             'rich_message',
             'photo',
             'sticker',
@@ -1306,5 +1312,29 @@ class Message extends BaseObject
     public function getNewChatMember(): ?User
     {
         return $this->items['new_chat_member'] ?? null;
+    }
+
+    /**
+     * The HTML widget attached to the message.
+     */
+    public function getWidget(): ?Widget
+    {
+        return $this->items['widget'] ?? null;
+    }
+
+    /**
+     * The TON wallet transfer described by the service message.
+     */
+    public function getTonWalletTransfer(): ?TonWalletTransfer
+    {
+        return $this->items['ton_wallet_transfer'] ?? null;
+    }
+
+    /**
+     * The service message indicating that the sender used a link waiving payment.
+     */
+    public function getPaidMessagesWaived(): ?PaidMessagesWaived
+    {
+        return $this->items['paid_messages_waived'] ?? null;
     }
 }

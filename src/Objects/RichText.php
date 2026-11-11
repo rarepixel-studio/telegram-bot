@@ -2,6 +2,8 @@
 
 namespace Telegram\Bot\Objects;
 
+use Illuminate\Support\Collection;
+
 /**
  * Class RichText.
  *
@@ -17,7 +19,7 @@ class RichText extends BaseObject
     public function relations(): array
     {
         return [
-            'text' => self::class,
+            'text' => self::hydrate(...),
             'user' => User::class,
             'button' => RichMessageButton::class,
         ];
@@ -189,5 +191,50 @@ class RichText extends BaseObject
     public function getButton(): ?RichMessageButton
     {
         return $this->items['button'] ?? null;
+    }
+
+    /**
+     * Hydrate the variant identified by Telegram.
+     *
+     * @param  array<string, mixed>  $data  The Telegram object payload
+     * @return static The hydrated object
+     */
+    public static function fromArray(array $data): static
+    {
+        if (static::class !== self::class) {
+            return parent::fromArray($data);
+        }
+
+        return match ($data['type'] ?? null) {
+            'ton_address' => new RichTextTonAddress($data),
+            default => new self($data),
+        };
+    }
+
+    /**
+     * The TON blockchain address, when present.
+     */
+    public function getAddress(): ?string
+    {
+        return $this->items['address'] ?? null;
+    }
+
+    /**
+     * Hydrate rich text while preserving plain strings and nested lists.
+     *
+     * @param  RichText|string|array<mixed>|Collection  $text  The rich text payload
+     * @return RichText|string|Collection The hydrated text
+     */
+    public static function hydrate(self|string|array|Collection $text): self|string|Collection
+    {
+        if (! is_array($text)) {
+            return $text;
+        }
+
+        if (array_is_list($text)) {
+            return new Collection(array_map(self::hydrate(...), $text));
+        }
+
+        return self::fromArray($text);
     }
 }

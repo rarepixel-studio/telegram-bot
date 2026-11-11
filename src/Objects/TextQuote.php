@@ -17,6 +17,7 @@ class TextQuote extends BaseObject
     public function relations(): array
     {
         return [
+            'rich_texts' => static fn (array $items): array => array_map(RichText::hydrate(...), $items),
             'entities' => MessageEntity::class,
         ];
     }
@@ -51,5 +52,15 @@ class TextQuote extends BaseObject
     public function getIsManual(): ?bool
     {
         return $this->items['is_manual'] ?? null;
+    }
+
+    /**
+     * Rich text from the quoted message.
+     *
+     * @return list<RichText|string|Collection>|null
+     */
+    public function getRichTexts(): ?array
+    {
+        return $this->items['rich_texts'] ?? null;
     }
 }

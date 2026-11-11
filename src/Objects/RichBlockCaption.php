@@ -17,8 +17,8 @@ class RichBlockCaption extends BaseObject
     public function relations(): array
     {
         return [
-            'text' => RichText::class,
-            'credit' => RichText::class,
+            'text' => RichText::hydrate(...),
+            'credit' => RichText::hydrate(...),
         ];
     }
 

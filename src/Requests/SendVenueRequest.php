@@ -34,14 +34,14 @@ class SendVenueRequest extends TelegramApiRequest
     protected array $params = [];
 
     /**
-     * @param  int|string  $chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param  int|string|null  $chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param  float  $latitude  Latitude of the venue
      * @param  float  $longitude  Longitude of the venue
      * @param  string  $title  Name of the venue
      * @param  string  $address  Address of the venue
      */
     public function __construct(
-        protected int|string $chat_id,
+        protected int|string|null $chat_id,
         protected float $latitude,
         protected float $longitude,
         protected string $title,
@@ -197,6 +197,7 @@ class SendVenueRequest extends TelegramApiRequest
     public function validate(): void
     {
         $this->validateEphemeralMessageParameters($this->params);
+        $this->validateEphemeralTarget($this->chat_id, $this->params['ephemeral_message_parameters'] ?? null);
 
         if ($this->latitude < -90 || $this->latitude > 90) {
             throw new TelegramValidationException('Latitude must be between -90 and 90');

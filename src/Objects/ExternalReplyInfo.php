@@ -17,6 +17,7 @@ class ExternalReplyInfo extends BaseObject
     public function relations(): array
     {
         return [
+            'widget' => Widget::class,
             'origin' => MessageOrigin::class,
             'chat' => Chat::class,
             'link_preview_options' => LinkPreviewOptions::class,
@@ -250,5 +251,13 @@ class ExternalReplyInfo extends BaseObject
     public function getVenue(): ?Venue
     {
         return $this->items['venue'] ?? null;
+    }
+
+    /**
+     * The HTML widget in the replied-to message.
+     */
+    public function getWidget(): ?Widget
+    {
+        return $this->items['widget'] ?? null;
     }
 }

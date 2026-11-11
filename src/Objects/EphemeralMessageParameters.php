@@ -54,7 +54,7 @@ class EphemeralMessageParameters extends BaseObject implements ClientConstructib
     /**
      * Set the identifier of the user who will receive the message.
      */
-    public function withReceiverUserId(int $receiverUserId): self
+    public function withReceiverUserId(?int $receiverUserId): self
     {
         $this->items['receiver_user_id'] = $receiverUserId;
 
@@ -83,30 +83,37 @@ class EphemeralMessageParameters extends BaseObject implements ClientConstructib
 
     /**
      * {@inheritDoc}
+     *
+     * @throws TelegramValidationException
      */
     public function validate(): void
     {
-        if (! isset($this->items['receiver_user_id'])) {
-            throw new TelegramValidationException('receiver_user_id is required');
+        $receiverUserId = $this->items['receiver_user_id'] ?? null;
+        $callbackQueryId = $this->items['callback_query_id'] ?? null;
+
+        if ($receiverUserId === null && $callbackQueryId === null) {
+            throw new TelegramValidationException('receiver_user_id is required unless callback_query_id is provided');
         }
 
-        if (! is_int($this->items['receiver_user_id']) || $this->items['receiver_user_id'] <= 0) {
+        if ($receiverUserId !== null && (! is_int($receiverUserId) || $receiverUserId <= 0)) {
             throw new TelegramValidationException('receiver_user_id must be greater than 0');
         }
 
-        if (array_key_exists('callback_query_id', $this->items) && $this->items['callback_query_id'] !== null) {
-            if (! is_string($this->items['callback_query_id']) || $this->items['callback_query_id'] === '') {
-                throw new TelegramValidationException('callback_query_id cannot be empty');
-            }
+        if ($callbackQueryId !== null && (! is_string($callbackQueryId) || $callbackQueryId === '')) {
+            throw new TelegramValidationException('callback_query_id must be a non-empty string');
+        }
+
+        if (isset($this->items['replace_callback_query_message']) && ! is_bool($this->items['replace_callback_query_message'])) {
+            throw new TelegramValidationException('replace_callback_query_message must be a boolean');
         }
     }
 
     /**
      * Identifier of the user who will receive the message.
      */
-    public function getReceiverUserId(): int
+    public function getReceiverUserId(): ?int
     {
-        return $this->items['receiver_user_id'];
+        return $this->items['receiver_user_id'] ?? null;
     }
 
     /**
@@ -123,5 +130,15 @@ class EphemeralMessageParameters extends BaseObject implements ClientConstructib
     public function getReplaceCallbackQueryMessage(): ?bool
     {
         return $this->items['replace_callback_query_message'] ?? null;
+    }
+
+    /**
+     * Serialize the ephemeral parameters, omitting unset fields.
+     *
+     * @return array<string, int|string|bool>
+     */
+    public function toArray(): array
+    {
+        return array_filter(parent::toArray(), static fn (mixed $value): bool => $value !== null);
     }
 }
