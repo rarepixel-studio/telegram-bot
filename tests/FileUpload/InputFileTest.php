@@ -18,13 +18,21 @@ class InputFileTest extends TestCase
         $this->assertEquals('This is test.', $stream->getContents());
     }
 
-    public function test_input_file_open()
+    public function test_input_file_open(): void
     {
-        $path = __DIR__ . '/test.txt';
-        $file = new InputFile($path);
-        $stream = $file->open();
-        $this->assertEquals($path, $stream->getMetadata('uri'));
-        $this->assertEquals('This is test!', $stream->getContents());
+        $fixture = tmpfile();
+        $this->assertIsResource($fixture);
+
+        try {
+            fwrite($fixture, 'This is test!');
+            $path = stream_get_meta_data($fixture)['uri'];
+            $file = new InputFile($path);
+            $stream = $file->open();
+            $this->assertEquals($path, $stream->getMetadata('uri'));
+            $this->assertEquals('This is test!', $stream->getContents());
+        } finally {
+            fclose($fixture);
+        }
     }
 
     public function test_file_id_open()

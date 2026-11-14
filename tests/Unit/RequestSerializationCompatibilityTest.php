@@ -135,7 +135,10 @@ class RequestSerializationCompatibilityTest extends TestCase
 
     public function test_it_preserves_photo_upload_inputs_when_building_multipart_requests(): void
     {
-        $path = __DIR__.'/../FileUpload/test.txt';
+        $fixture = tmpfile();
+        $this->assertIsResource($fixture);
+        fwrite($fixture, 'This is test!');
+        $path = stream_get_meta_data($fixture)['uri'];
         $resource = fopen($path, 'rb');
         $stream = Utils::streamFor('stream contents');
 
@@ -158,7 +161,7 @@ class RequestSerializationCompatibilityTest extends TestCase
                 }
 
                 $body = (string) $transport->getLastRequest()->getBody();
-                $this->assertStringContainsString($photo === $stream ? 'stream contents' : file_get_contents($path), $body);
+                $this->assertStringContainsString($photo === $stream ? 'stream contents' : 'This is test!', $body);
                 if ($photo instanceof InputFile) {
                     $this->assertStringContainsString('filename="custom.txt"', $body);
                 }
@@ -167,6 +170,7 @@ class RequestSerializationCompatibilityTest extends TestCase
             if (is_resource($resource)) {
                 fclose($resource);
             }
+            fclose($fixture);
         }
     }
 
