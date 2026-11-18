@@ -236,6 +236,8 @@ use Telegram\Bot\TelegramResponse;
  */
 trait ApiMethodWrappers
 {
+    use ParsesMessageResponses;
+
     /**
      * Handle an API request using a typed request object.
      *
@@ -265,9 +267,7 @@ trait ApiMethodWrappers
             $attachments = $this->extractInputMedia($params);
             $response = $this->post($method, $params, [], $attachments);
 
-            return $this->prepareResponse(function (TelegramResponse $response) {
-                return new Message($response->getDecodedBody());
-            }, $response);
+            return $this->prepareResponse($this->messageResponseParser(), $response);
         }
 
         $params = $request->toArray();
@@ -473,9 +473,7 @@ trait ApiMethodWrappers
      */
     public function sendMessage(array|SendMessageRequest $params): Message|Closure
     {
-        return $this->executeApiPost('sendMessage', $params, function (TelegramResponse $response) {
-            return new Message($response->getDecodedBody());
-        });
+        return $this->executeApiPost('sendMessage', $params, $this->messageResponseParser());
     }
 
     /**
@@ -515,9 +513,7 @@ trait ApiMethodWrappers
 
         $response = $this->post('sendRichMessage', $params);
 
-        return $this->prepareResponse(function (TelegramResponse $response) {
-            return new Message($response->getDecodedBody());
-        }, $response);
+        return $this->prepareResponse($this->messageResponseParser(), $response);
     }
 
     /**
@@ -557,9 +553,7 @@ trait ApiMethodWrappers
 
         $response = $this->post('forwardMessage', $params);
 
-        return $this->prepareResponse(function (TelegramResponse $response) {
-            return new Message($response->getDecodedBody());
-        }, $response);
+        return $this->prepareResponse($this->messageResponseParser(), $response);
     }
 
     /**
@@ -785,9 +779,7 @@ trait ApiMethodWrappers
 
         $response = $this->post('sendPaidMedia', $params, [], $attachments);
 
-        return $this->prepareResponse(function (TelegramResponse $response) {
-            return new Message($response->getDecodedBody());
-        }, $response);
+        return $this->prepareResponse($this->messageResponseParser(), $response);
     }
 
     /**
@@ -821,20 +813,15 @@ trait ApiMethodWrappers
      *
      * @link https://core.telegram.org/bots/api#sendlocation
      *
+     * @param  array<string, mixed>|SendLocationRequest  $params  Telegram method parameters.
+     * @return Message|Closure The result, or a closure that resolves it in async mode.
+     *
      * @throws TelegramValidationException|TelegramSDKException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function sendLocation(array|SendLocationRequest $params): Message|Closure
     {
-        if ($params instanceof SendLocationRequest) {
-            $params->validate();
-            $params = $params->toArray();
-        }
-
-        $response = $this->post('sendLocation', $params);
-
-        return $this->prepareResponse(function (TelegramResponse $response) {
-            return new Message($response->getDecodedBody());
-        }, $response);
+        return $this->executeApiPost('sendLocation', $params, $this->messageResponseParser());
     }
 
     /**
@@ -842,20 +829,15 @@ trait ApiMethodWrappers
      *
      * @link https://core.telegram.org/bots/api#sendvenue
      *
+     * @param  array<string, mixed>|SendVenueRequest  $params  Telegram method parameters.
+     * @return Message|Closure The result, or a closure that resolves it in async mode.
+     *
      * @throws TelegramValidationException|TelegramSDKException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function sendVenue(array|SendVenueRequest $params): Message|Closure
     {
-        if ($params instanceof SendVenueRequest) {
-            $params->validate();
-            $params = $params->toArray();
-        }
-
-        $response = $this->post('sendVenue', $params);
-
-        return $this->prepareResponse(function (TelegramResponse $response) {
-            return new Message($response->getDecodedBody());
-        }, $response);
+        return $this->executeApiPost('sendVenue', $params, $this->messageResponseParser());
     }
 
     /**
@@ -863,20 +845,15 @@ trait ApiMethodWrappers
      *
      * @link https://core.telegram.org/bots/api#sendcontact
      *
+     * @param  array<string, mixed>|SendContactRequest  $params  Telegram method parameters.
+     * @return Message|Closure The result, or a closure that resolves it in async mode.
+     *
      * @throws TelegramValidationException|TelegramSDKException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function sendContact(array|SendContactRequest $params): Message|Closure
     {
-        if ($params instanceof SendContactRequest) {
-            $params->validate();
-            $params = $params->toArray();
-        }
-
-        $response = $this->post('sendContact', $params);
-
-        return $this->prepareResponse(function (TelegramResponse $response) {
-            return new Message($response->getDecodedBody());
-        }, $response);
+        return $this->executeApiPost('sendContact', $params, $this->messageResponseParser());
     }
 
     /**
@@ -895,9 +872,7 @@ trait ApiMethodWrappers
 
         $response = $this->post('sendPoll', $params);
 
-        return $this->prepareResponse(function (TelegramResponse $response) {
-            return new Message($response->getDecodedBody());
-        }, $response);
+        return $this->prepareResponse($this->messageResponseParser(), $response);
     }
 
     /**
@@ -916,9 +891,7 @@ trait ApiMethodWrappers
 
         $response = $this->post('sendChecklist', $params);
 
-        return $this->prepareResponse(function (TelegramResponse $response) {
-            return new Message($response->getDecodedBody());
-        }, $response);
+        return $this->prepareResponse($this->messageResponseParser(), $response);
     }
 
     /**
@@ -2877,9 +2850,7 @@ trait ApiMethodWrappers
 
         $response = $this->post('editMessageCaption', $params);
 
-        return $this->prepareResponse(function (TelegramResponse $response) {
-            return new Message($response->getDecodedBody());
-        }, $response);
+        return $this->prepareResponse($this->messageResponseParser(), $response);
     }
 
     /**
@@ -2967,9 +2938,7 @@ trait ApiMethodWrappers
 
         $response = $this->post('editMessageReplyMarkup', $params);
 
-        return $this->prepareResponse(function (TelegramResponse $response) {
-            return new Message($response->getDecodedBody());
-        }, $response);
+        return $this->prepareResponse($this->messageResponseParser(), $response);
     }
 
     /**

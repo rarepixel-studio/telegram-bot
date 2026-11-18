@@ -5,7 +5,6 @@ namespace Telegram\Bot\Traits;
 use Closure;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\Exceptions\TelegramValidationException;
-use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Requests\RequestSerializer;
 use Telegram\Bot\TelegramRequest;
 use Telegram\Bot\TelegramResponse;
@@ -15,6 +14,8 @@ use Telegram\Bot\TelegramResponse;
  */
 trait HasHttpRequests
 {
+    use ParsesMessageResponses;
+
     /**
      * Sends a POST request to Telegram Bot API and returns the result.
      *
@@ -55,13 +56,7 @@ trait HasHttpRequests
 
         $response = $this->post($endpoint, $params, $files);
 
-        if (! $parser) {
-            $parser = function (TelegramResponse $response) {
-                return new Message($response->getDecodedBody());
-            };
-        }
-
-        return $this->prepareResponse($parser, $response);
+        return $this->prepareResponse($parser ?? $this->messageResponseParser(), $response);
     }
 
     /**

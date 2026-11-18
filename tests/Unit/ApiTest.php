@@ -2,6 +2,9 @@
 
 namespace Telegram\Bot\Tests\Unit;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Response;
@@ -390,10 +393,18 @@ class ApiTest extends TestCase
     /**
      * @test
      */
-    public function it_throws_exception_if_invalid_chat_action_is_sent()
+    public function it_throws_exception_if_invalid_chat_action_is_sent(): void
     {
-        $this->expectException(TelegramSDKException::class);
-        $this->api->sendChatAction(['action' => 'zzz']);
+        $description = 'Bad Request: wrong action type';
+        $handler = HandlerStack::create(new MockHandler([
+            new Response(400, [], json_encode(['ok' => false, 'error_code' => 400, 'description' => $description])),
+        ]));
+        $api = new Api('token', false, new GuzzleHttpClient(new Client(['handler' => $handler])));
+
+        $this->expectException(TelegramResponseException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage($description);
+        $api->sendChatAction(['chat_id' => 123, 'action' => 'zzz']);
     }
 
     /** @test */
